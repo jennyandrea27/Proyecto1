@@ -16,8 +16,9 @@ public class Proyecto1 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        //GenerarLexico.generar("src/Analisis/LexicoH.jflex");
+    public static void main(String[] args) {        
+        FormInicio inicio=new FormInicio();
+        inicio.setVisible(true);
     }
     
 }

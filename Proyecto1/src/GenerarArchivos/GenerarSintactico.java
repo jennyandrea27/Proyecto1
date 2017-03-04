@@ -9,7 +9,8 @@ package GenerarArchivos;
  *
  * @author Jenny
  */
-public class GenerarSintactico {    
+public class GenerarSintactico {                
+    
     public static void generarHaskell(){
         String [] opciones=new String[7];
         opciones[0]="-destdir";
