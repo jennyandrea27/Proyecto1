@@ -11,7 +11,7 @@ package GenerarArchivos;
  */
 public class Generar {
     public static void main(String args[]) {
-        GenerarLexico.generarHaskell("src/Analisis/LexicoH.jflex");
+        GenerarLexico.generarHaskell("src/Analisis/HaskellArchivo/LexicoH.jflex");
         GenerarSintactico.generarHaskell();
     }
     

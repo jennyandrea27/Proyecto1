@@ -14,12 +14,12 @@ public class GenerarSintactico {
     public static void generarHaskell(){
         String [] opciones=new String[7];
         opciones[0]="-destdir";
-        opciones[1]="src/Analisis";
+        opciones[1]="src/Analisis/HaskellArchivo";
         opciones[2]="-symbols";
         opciones[3]="TSHaskell";
         opciones[4]="-parser";
         opciones[5]="SintacticoH";
-        opciones[6]="src/Analisis/SintacticoH.cup";
+        opciones[6]="src/Analisis/HaskellArchivo/SintacticoH.cup";
         try{
             java_cup.Main.main(opciones);
         }catch(Exception e){

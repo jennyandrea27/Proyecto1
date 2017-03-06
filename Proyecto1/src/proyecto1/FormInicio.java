@@ -5,6 +5,15 @@
  */
 package proyecto1;
 
+import Analisis.HaskellArchivo.LexicoH;
+import Analisis.HaskellArchivo.SintacticoH;
+import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Jenny
@@ -31,7 +40,7 @@ public class FormInicio extends javax.swing.JFrame {
         tpPestanas = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbSalida = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
+        tbEntrada = new javax.swing.JTextField();
         bIniciarSesion = new javax.swing.JButton();
         bPublicar = new javax.swing.JButton();
         bImportar = new javax.swing.JButton();
@@ -63,16 +72,23 @@ public class FormInicio extends javax.swing.JFrame {
         tbSalida.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         tbSalida.setForeground(new java.awt.Color(255, 255, 255));
         tbSalida.setRows(5);
+        tbSalida.setName("tbSalida"); // NOI18N
         jScrollPane1.setViewportView(tbSalida);
 
         getContentPane().add(jScrollPane1);
         jScrollPane1.setBounds(12, 520, 1250, 211);
 
-        jTextField1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jTextField1.setToolTipText("");
-        jTextField1.setName("tbEntrada"); // NOI18N
-        getContentPane().add(jTextField1);
-        jTextField1.setBounds(12, 749, 1250, 43);
+        tbEntrada.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        tbEntrada.setText("> ");
+        tbEntrada.setToolTipText("");
+        tbEntrada.setName("tbEntrada"); // NOI18N
+        tbEntrada.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tbEntradaKeyPressed(evt);
+            }
+        });
+        getContentPane().add(tbEntrada);
+        tbEntrada.setBounds(12, 749, 1250, 43);
 
         bIniciarSesion.setBackground(new java.awt.Color(204, 204, 255));
         bIniciarSesion.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
@@ -158,6 +174,27 @@ public class FormInicio extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
+    private void tbEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbEntradaKeyPressed
+        if(evt.getKeyCode() == KeyEvent.VK_ENTER){
+            String texto=tbEntrada.getText();
+            String entrada=texto.substring(1);
+            if(entrada.equals("")){
+                JOptionPane.showMessageDialog(null, "Entrada incorrecta");
+            }else{
+                System.out.println(entrada);
+                tbEntrada.setText(">");
+                try {
+                    LexicoH lexico = new LexicoH(new BufferedReader( new StringReader(entrada)));
+                    SintacticoH sintactico= new SintacticoH(lexico);
+                    sintactico.parse();
+                } catch (Exception ex) {
+                    System.out.println("Error "+ex.getMessage());
+                }
+            }
+            
+        }
+    }//GEN-LAST:event_tbEntradaKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -209,7 +246,7 @@ public class FormInicio extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField tbEntrada;
     private javax.swing.JTextArea tbSalida;
     private javax.swing.JTabbedPane tpPestanas;
     // End of variables declaration//GEN-END:variables

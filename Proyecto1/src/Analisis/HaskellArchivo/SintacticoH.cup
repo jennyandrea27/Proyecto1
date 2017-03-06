@@ -1,0 +1,194 @@
+package Analisis.HaskellArchivo;
+
+import java_cup.runtime.Symbol;
+import Extras.*;
+import Analisis.*;
+
+parser code
+{://Codigo visible
+
+    public void syntax_error(Symbol s){
+        System.err.println(s);
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
+        System.err.println("T.T");
+        System.err.println(s);
+    }
+
+:}
+
+action code
+{://Codigo de acciones
+      
+:}
+
+terminal String mod, sqrt, pot, let, calcular, succ, decc, min, max, sum, product, revers, impr, par, asc, desc, length, si, entonces, fin, sino, caso, concatenacion, suma, resta, mult, div,eol,puntoycoma, acceso;
+terminal String o, y, mayor, menor, mayorigual, menorigual, igualacion, distinto, igual, dolar, corchetea, corchetec, llavea, llavec, num, id, coma, cadena,caracter, parentesisa, parentesisc,dospuntos;
+nonterminal Nodo S, HASKELL, LISTA, VALLISTA, EXP, LPARLISTA, PARLISTA, CALCULAR, SUCC, DECC, MIN, MAX, CONCAT, OTRA;
+nonterminal Nodo LVOTRA, VOTRA, VALOTRA, ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, DECFUN, PDECFUN,CUERPO;
+nonterminal Nodo LLAMADO, LPFUN, PFUN, SI, COND, REL, OPREL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, LENGTH;
+
+precedence left o;
+precedence left y;
+precedence left mayor, menor, mayorigual,menorigual, distinto, igualacion;
+precedence left suma, resta;
+precedence left mult, div, mod; 
+precedence right pot,sqrt; 
+precedence left concatenacion, acceso;
+
+start with S;
+
+S ::=   HASKELL{:System.out.println("Archivo finalizado");:};
+HASKELL ::= HASKELL DECFUN
+                        | DECFUN;
+
+LISTA ::=  let id igual VALLISTA;
+
+VALLISTA ::=   CONCAT
+                          | cadena
+                          | id
+                          | LLAMADO
+                          | OPLISTA
+                          | corchetea LPARLISTA corchetec;
+
+LPARLISTA ::= LPARLISTA coma PARLISTA
+                          | PARLISTA;
+PARLISTA ::= CALCULAR
+                         | caracter
+                         | OTRA;
+OTRA::= corchetea VALOTRA corchetec;
+
+VALOTRA ::= cadena
+                        | LVOTRA;
+
+LVOTRA ::= LVOTRA coma VOTRA
+                    | VOTRA;
+VOTRA ::= CALCULAR
+                  | caracter;
+
+CALCULAR ::= dolar calcular EXP dolar;
+
+SUCC ::=    dolar succ VALFUN dolar;
+
+DECC ::=    dolar decc VALFUN dolar;
+
+MIN ::=     dolar min VALLISTA dolar;
+
+MAX ::=    dolar max VALLISTA dolar;
+
+VALFUN ::= id
+                    | CALCULAR
+                    | LLAMADO;
+
+SUM ::= dolar sum VALLISTA dolar;
+PRODUCT ::= dolar product VALLISTA dolar;
+REVERS ::= dolar revers VALLISTA dolar;
+IMPR::= dolar impr VALLISTA dolar;
+PAR ::= dolar par VALLISTA dolar;
+ASC ::= dolar asc VALLISTA dolar;
+DESC ::= dolar desc VALLISTA dolar;
+LENGTH ::= dolar length VALLISTA dolar;
+
+CONCAT ::= VALLISTA concatenacion VALLISTA;
+
+ACCESO ::= VALLISTA acceso EXP;
+
+OPLISTA ::= REVERS
+                     | IMPR
+                     | PAR
+                     | ASC
+                     | DESC;
+
+DECFUN ::= id PDECFUN igual CUERPO fin;
+
+PDECFUN ::= PDECFUN coma id
+                        |id
+                        |{::};
+CUERPO ::= CUERPO SENTENCIAS
+                     | SENTENCIAS;
+
+SENTENCIAS ::= LISTA
+                             | CALCULAR
+                             | SUCC
+                             | DECC
+                             | MIN
+                             | MAX
+                             | CONCAT
+                             | ACCESO
+                             | SUM
+                             | PRODUCT
+                             | REVERS
+                             | IMPR
+                             | PAR
+                             | ASC  
+                             | DESC
+                             | LENGTH
+                             | LLAMADO
+                             | SI
+                             | CASO
+                             | eol;
+
+LLAMADO ::= dolar id llavea LPFUN llavec dolar;
+
+LPFUN ::= LPFUN coma PFUN
+                        | PFUN;
+
+PFUN ::= EXP
+               | id
+               | {::};
+
+EXP ::= EXP suma EXP
+             | EXP resta EXP
+             | EXP mult EXP             
+             | EXP div EXP             
+             | EXP mod EXP
+             | EXP sqrt EXP
+             | EXP pot EXP             
+             | resta EXP
+             | parentesisa EXP parentesisc
+             | CALCULAR
+             | SUCC
+             | DECC
+             | MIN
+             | MAX
+             | CONCAT
+             | ACCESO   
+             | SUM
+             | PRODUCT
+             | LENGTH
+             | LLAMADO             
+             | num
+             | caracter;
+
+SI ::= si COND entonces CUERPO sino CUERPO fin;
+COND ::= REL o REL
+                | REL y REL
+                | REL;
+REL ::= EXP OPREL EXP;
+OPREL ::= mayor
+                    | menor
+                    | mayorigual
+                    | menorigual
+                    | igualacion
+                    | distinto;
+
+CASO ::= caso VALFUN eol LCASOS fin;
+VCASO ::= CALCULAR
+                    | caracter;
+LCASOS ::= LCASOS CASOS
+                    | CASOS;
+CASOS ::= VCASO dospuntos CUERPO puntoycoma eol;
+
+
+
+
+
+
+
+
+
+
+
+
+

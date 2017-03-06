@@ -1,4 +1,4 @@
-package Analisis;
+package Analisis.HaskellArchivo;
 import java_cup.runtime.*;
 
 %%
@@ -20,11 +20,12 @@ StringBuffer string=new StringBuffer();
 //expresiones regulares
 num = [0-9]+
 id=[a-zA-Z]([a-zA-Z] | [0-9] | "_")*
-caracter=['][.][']
+caracter="'"."'"
 enter= \r|\n|\r\n
+eol=\n
 espacio={enter}|[ \t\f]
+cadena=\'(\\.|[^\'])*\'
 //estados
-%state STRING
 %%
 
 //lexico
@@ -105,8 +106,6 @@ espacio={enter}|[ \t\f]
 {return new Symbol (TSHaskell.igual, yycolumn, yyline, yytext());}
 "$"               
 {return new Symbol (TSHaskell.dolar, yycolumn, yyline, yytext());}
-"%"        
-{return new Symbol (TSHaskell.porcentaje, yycolumn, yyline, yytext());}
 "["         
 {return new Symbol (TSHaskell.corchetea, yycolumn, yyline, yytext());}
 "]"         
@@ -121,6 +120,14 @@ espacio={enter}|[ \t\f]
 {return new Symbol (TSHaskell.parentesisc, yycolumn, yyline, yytext());}
 ","          
 {return new Symbol (TSHaskell.coma, yycolumn, yyline, yytext());}
+";"          
+{return new Symbol (TSHaskell.puntoycoma, yycolumn, yyline, yytext());}
+":"          
+{return new Symbol (TSHaskell.dospuntos, yycolumn, yyline, yytext());}
+"!!"          
+{return new Symbol (TSHaskell.acceso, yycolumn, yyline, yytext());}
+{eol}
+{return new Symbol (TSHaskell.eol, yycolumn, yyline, yytext());}
 {num}         
 {return new Symbol (TSHaskell.num, yycolumn, yyline, yytext());}
 {id}          
@@ -130,18 +137,7 @@ espacio={enter}|[ \t\f]
 {espacio}          
 {/*se ignora*/}
 }
-<STRING> {
-      \"                             { yybegin(YYINITIAL); 
-                                       return new Symbol(TSHaskell.cadena, 
-                                       string.toString()); }
-      [^\n\r\"\\]+                   { string.append( yytext() ); }
-      \\t                            { string.append('\t'); }
-      \\n                            { string.append('\n'); }
 
-      \\r                            { string.append('\r'); }
-      \\\"                           { string.append('\"'); }
-      \\                             { string.append('\\'); }
-    }
     
 [^]             {/*errores lexicos*/}
 
