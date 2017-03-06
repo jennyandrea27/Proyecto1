@@ -3,17 +3,19 @@ package Analisis.HaskellArchivo;
 import java_cup.runtime.Symbol;
 import Extras.*;
 import Analisis.*;
+import Reportes.*;
 
 parser code
 {://Codigo visible
 
     public void syntax_error(Symbol s){
-        System.err.println(s);
+        TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
     }
 
-    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{ 
-        System.err.println("T.T");
-        System.err.println(s);
+    public void unrecovered_syntax_error(Symbol s){        
+        TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
     }
 
 :}
@@ -27,7 +29,7 @@ terminal String mod, sqrt, pot, let, calcular, succ, decc, min, max, sum, produc
 terminal String o, y, mayor, menor, mayorigual, menorigual, igualacion, distinto, igual, dolar, corchetea, corchetec, llavea, llavec, num, id, coma, cadena,caracter, parentesisa, parentesisc,dospuntos;
 nonterminal Nodo S, HASKELL, LISTA, VALLISTA, EXP, LPARLISTA, PARLISTA, CALCULAR, SUCC, DECC, MIN, MAX, CONCAT, OTRA;
 nonterminal Nodo LVOTRA, VOTRA, VALOTRA, ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, DECFUN, PDECFUN,CUERPO;
-nonterminal Nodo LLAMADO, LPFUN, PFUN, SI, COND, REL, OPREL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, LENGTH;
+nonterminal Nodo LLAMADO, LPFUN, SI, COND, REL, OPREL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, LENGTH;
 
 precedence left o;
 precedence left y;
@@ -47,7 +49,7 @@ LISTA ::=  let id igual VALLISTA;
 
 VALLISTA ::=   CONCAT
                           | cadena
-                          | id
+                          | id:id{:RESULT = Fabrica.crearNodoId(id);:}
                           | LLAMADO
                           | OPLISTA
                           | corchetea LPARLISTA corchetec;
@@ -77,7 +79,7 @@ MIN ::=     dolar min VALLISTA dolar;
 
 MAX ::=    dolar max VALLISTA dolar;
 
-VALFUN ::= id
+VALFUN ::= id:id{:RESULT = Fabrica.crearNodoId(id);:}
                     | CALCULAR
                     | LLAMADO;
 
@@ -100,10 +102,11 @@ OPLISTA ::= REVERS
                      | ASC
                      | DESC;
 
-DECFUN ::= id PDECFUN igual CUERPO fin;
+DECFUN ::= id PDECFUN igual CUERPO fin
+                       | eol;
 
 PDECFUN ::= PDECFUN coma id
-                        |id
+                        |id:id{:RESULT = Fabrica.crearNodoId(id);:}
                         |{::};
 CUERPO ::= CUERPO SENTENCIAS
                      | SENTENCIAS;
@@ -131,12 +134,9 @@ SENTENCIAS ::= LISTA
 
 LLAMADO ::= dolar id llavea LPFUN llavec dolar;
 
-LPFUN ::= LPFUN coma PFUN
-                        | PFUN;
-
-PFUN ::= EXP
-               | id
-               | {::};
+LPFUN ::= LPFUN coma VALFUN
+                        | VALFUN
+                        | ;
 
 EXP ::= EXP suma EXP
              | EXP resta EXP
@@ -159,26 +159,28 @@ EXP ::= EXP suma EXP
              | LENGTH
              | LLAMADO             
              | num
-             | caracter;
+             | caracter
+             | id:id{:RESULT = Fabrica.crearNodoId(id);:};
 
 SI ::= si COND entonces CUERPO sino CUERPO fin;
 COND ::= REL o REL
                 | REL y REL
                 | REL;
-REL ::= EXP OPREL EXP;
+REL ::= VALFUN OPREL VALFUN  ;
 OPREL ::= mayor
                     | menor
                     | mayorigual
-                    | menorigual
+                    | menorigual 
                     | igualacion
                     | distinto;
 
 CASO ::= caso VALFUN eol LCASOS fin;
-VCASO ::= CALCULAR
+VCASO ::= num
                     | caracter;
 LCASOS ::= LCASOS CASOS
                     | CASOS;
 CASOS ::= VCASO dospuntos CUERPO puntoycoma eol;
+
 
 
 

@@ -90,14 +90,14 @@ cadena=\'(\\.|[^\'])*\'
 {return new Symbol (TSHaskell.o, yycolumn, yyline, yytext());}
 "&&"               
 {return new Symbol (TSHaskell.y, yycolumn, yyline, yytext());}
-">"         
-{return new Symbol (TSHaskell.mayor, yycolumn, yyline, yytext());}
-"<"     
-{return new Symbol (TSHaskell.menor, yycolumn, yyline, yytext());}
 ">="  
 {return new Symbol (TSHaskell.mayorigual, yycolumn, yyline, yytext());}
 "<="     
 {return new Symbol (TSHaskell.menorigual, yycolumn, yyline, yytext());}
+">"         
+{return new Symbol (TSHaskell.mayor, yycolumn, yyline, yytext());}
+"<"     
+{return new Symbol (TSHaskell.menor, yycolumn, yyline, yytext());}
 "=="    
 {return new Symbol (TSHaskell.igualacion, yycolumn, yyline, yytext());}
 "!="          

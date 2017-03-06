@@ -12,11 +12,27 @@ import java.util.LinkedList;
  * @author Jenny
  */
 public class Nodo {
-    String nombre="";
+    String nombre;
     int tipo;
     int fila;
     int columna;
     String valor;
     LinkedList <Nodo>  hijos=new LinkedList<Nodo>();
+
+    public Nodo(String nombre, int tipo, int fila, int columna, String valor) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.fila = fila;
+        this.columna = columna;
+        this.valor = valor;
+    }
+
+    public Nodo(String nombre) {
+        this.nombre = nombre;
+    }
+
+    
+    
+    
     
 }

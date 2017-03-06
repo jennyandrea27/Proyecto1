@@ -38,6 +38,8 @@ public class FormInicio extends javax.swing.JFrame {
 
         jMenuItem3 = new javax.swing.JMenuItem();
         tpPestanas = new javax.swing.JTabbedPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tbArchivo = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbSalida = new javax.swing.JTextArea();
         tbEntrada = new javax.swing.JTextField();
@@ -62,8 +64,16 @@ public class FormInicio extends javax.swing.JFrame {
         setBackground(new java.awt.Color(153, 255, 153));
         getContentPane().setLayout(null);
 
-        tpPestanas.setBackground(new java.awt.Color(255, 0, 153));
+        tpPestanas.setBackground(new java.awt.Color(0, 153, 102));
         tpPestanas.setOpaque(true);
+
+        tbArchivo.setColumns(20);
+        tbArchivo.setRows(5);
+        tbArchivo.setText("IncrementaSegunN n,Val = \n\tif n<=$Calcular 1$ then\n\t\t$Succ $calcular 1$$\n\telse\n\t\t$Succ $IncrementaSegunN {$Calcular n-1 $,Val}$$\n\tend\nend\n\nConjuntoFuncPolinomial i,x = CASE i\n\t\t1: $Polinomial1 {x}$;\n\t\t2: $Polinomial2 {x}$;\n\t\t3: $Polinomial3 {x}$;\n\tend\nend\n\nPolinomial1 x = $Calcular 3 * x'pot'5 - x 'pot'2 + 7 * x -1$ \n\t\t\t\tend\nPolinomial2 x = $Calcular 5 * x'pot'2 - x + 8 * x 'pot'(-1) -1$ \n\t\t\t\tend\nPolinomial3 x = $Calcular x'pot'4 + x 'pot'2 + (9*3) * x +80$ \n\t\t\t\tend\nPolinomial4 x = $Calcular x'pot'3 + x 'pot'2 - 4 * x -4 $ \n\t\t\t\tend\n\nObtenerModa LIST = $Max LIST$ \n\t\t\t\t   end\n\nObtenerPromedio LIST = \t$Calcular $sum LIST$ / $length LIST$ $\n\t\t\t\t\t    end");
+        jScrollPane2.setViewportView(tbArchivo);
+
+        tpPestanas.addTab("tab1", jScrollPane2);
+
         getContentPane().add(tpPestanas);
         tpPestanas.setBounds(12, 92, 889, 410);
 
@@ -90,7 +100,7 @@ public class FormInicio extends javax.swing.JFrame {
         getContentPane().add(tbEntrada);
         tbEntrada.setBounds(12, 749, 1250, 43);
 
-        bIniciarSesion.setBackground(new java.awt.Color(204, 204, 255));
+        bIniciarSesion.setBackground(new java.awt.Color(0, 204, 204));
         bIniciarSesion.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         bIniciarSesion.setText("Iniciar Sesion");
         bIniciarSesion.setContentAreaFilled(false);
@@ -98,7 +108,7 @@ public class FormInicio extends javax.swing.JFrame {
         getContentPane().add(bIniciarSesion);
         bIniciarSesion.setBounds(952, 92, 139, 31);
 
-        bPublicar.setBackground(new java.awt.Color(204, 204, 255));
+        bPublicar.setBackground(new java.awt.Color(0, 204, 204));
         bPublicar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         bPublicar.setText("Publicar");
         bPublicar.setContentAreaFilled(false);
@@ -106,7 +116,7 @@ public class FormInicio extends javax.swing.JFrame {
         getContentPane().add(bPublicar);
         bPublicar.setBounds(952, 141, 139, 31);
 
-        bImportar.setBackground(new java.awt.Color(204, 204, 255));
+        bImportar.setBackground(new java.awt.Color(0, 204, 204));
         bImportar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         bImportar.setText("Importar");
         bImportar.setContentAreaFilled(false);
@@ -114,16 +124,20 @@ public class FormInicio extends javax.swing.JFrame {
         getContentPane().add(bImportar);
         bImportar.setBounds(952, 190, 139, 31);
 
-        bCargar.setBackground(new java.awt.Color(204, 204, 255));
+        bCargar.setBackground(new java.awt.Color(0, 204, 204));
         bCargar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         bCargar.setText("Cargar");
         bCargar.setContentAreaFilled(false);
         bCargar.setOpaque(true);
+        bCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCargarActionPerformed(evt);
+            }
+        });
         getContentPane().add(bCargar);
         bCargar.setBounds(952, 351, 139, 31);
 
-        jLabel2.setBackground(new java.awt.Color(255, 0, 153));
-        jLabel2.setText("jLabel2");
+        jLabel2.setBackground(new java.awt.Color(204, 255, 204));
         jLabel2.setOpaque(true);
         getContentPane().add(jLabel2);
         jLabel2.setBounds(0, 0, 1280, 810);
@@ -195,6 +209,22 @@ public class FormInicio extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbEntradaKeyPressed
 
+    private void bCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarActionPerformed
+        // TODO add your handling code here:
+        String entrada=tbArchivo.getText();            
+            if(entrada.equals("")){
+                JOptionPane.showMessageDialog(null, "Entrada incorrecta");
+            }else{                
+                try {
+                    LexicoH lexico = new LexicoH(new BufferedReader( new StringReader(entrada)));
+                    SintacticoH sintactico= new SintacticoH(lexico);
+                    sintactico.parse();
+                } catch (Exception ex) {
+                    System.out.println("Error "+ex.getMessage());
+                }
+            }
+    }//GEN-LAST:event_bCargarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -246,6 +276,8 @@ public class FormInicio extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea tbArchivo;
     private javax.swing.JTextField tbEntrada;
     private javax.swing.JTextArea tbSalida;
     private javax.swing.JTabbedPane tpPestanas;

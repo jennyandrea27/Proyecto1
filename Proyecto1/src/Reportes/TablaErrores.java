@@ -10,7 +10,7 @@ package Reportes;
  * @author Jenny
  */
 
-class TablaErrores
+public class TablaErrores
 {
     public static boolean error = false;
     public static String tabla = "";
