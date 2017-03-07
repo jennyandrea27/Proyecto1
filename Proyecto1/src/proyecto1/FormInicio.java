@@ -68,8 +68,9 @@ public class FormInicio extends javax.swing.JFrame {
         tpPestanas.setOpaque(true);
 
         tbArchivo.setColumns(20);
+        tbArchivo.setFont(new java.awt.Font("Monospaced", 0, 20)); // NOI18N
         tbArchivo.setRows(5);
-        tbArchivo.setText("IncrementaSegunN n,Val = \n\tif n<=$Calcular 1$ then\n\t\t$Succ $calcular 1$$\n\telse\n\t\t$Succ $IncrementaSegunN {$Calcular n-1 $,Val}$$\n\tend\nend\n\nConjuntoFuncPolinomial i,x = CASE i\n\t\t1: $Polinomial1 {x}$;\n\t\t2: $Polinomial2 {x}$;\n\t\t3: $Polinomial3 {x}$;\n\tend\nend\n\nPolinomial1 x = $Calcular 3 * x'pot'5 - x 'pot'2 + 7 * x -1$ \n\t\t\t\tend\nPolinomial2 x = $Calcular 5 * x'pot'2 - x + 8 * x 'pot'(-1) -1$ \n\t\t\t\tend\nPolinomial3 x = $Calcular x'pot'4 + x 'pot'2 + (9*3) * x +80$ \n\t\t\t\tend\nPolinomial4 x = $Calcular x'pot'3 + x 'pot'2 - 4 * x -4 $ \n\t\t\t\tend\n\nObtenerModa LIST = $Max LIST$ \n\t\t\t\t   end\n\nObtenerPromedio LIST = \t$Calcular $sum LIST$ / $length LIST$ $\n\t\t\t\t\t    end");
+        tbArchivo.setText("IncrementaSegunN n,Val = \n\t$Calcular 3 * x'pot'5 - x 'pot'2 + 7 * x -1$ \nlet lista1 = k\nlet lista1 = \"asdfadsf\"\nlet lista1 = k\nend\n");
         jScrollPane2.setViewportView(tbArchivo);
 
         tpPestanas.addTab("tab1", jScrollPane2);

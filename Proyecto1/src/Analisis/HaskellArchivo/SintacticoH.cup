@@ -45,10 +45,11 @@ start with S;
 S ::=   HASKELL:hk
     {:
         System.out.println("Archivo finalizado");
-        RESULT = hk;
+        SemanticoHaskell.raiz=hk;
+        SemanticoHaskell.graficar();
     :};
-HASKELL ::= HASKELL:hk DECFUN:decfun{:RESULT = Fabrica.insertarFuncion(hk,decfun);:}
-                        | DECFUN:decfun {:RESULT = Fabrica.crearNodoFunciones(decfun);:};
+HASKELL ::= HASKELL:hk DECFUN:decfun{:RESULT=Fabrica.insertarFuncion(hk,decfun);:}
+                        | DECFUN:decfun {:RESULT = Fabrica.crearNodoLFunciones(decfun);:};
 
 VALLISTA ::=   CONCAT
                           | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:}
@@ -72,7 +73,7 @@ LVOTRA ::= LVOTRA coma VOTRA
 VOTRA ::= CALCULAR:calc{:RESULT = calc;:}
                   | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:} ;
 
-CALCULAR ::= dolar calcular EXP:exp dolar{:RESULT=exp;:};
+CALCULAR ::= dolar calcular EXP:exp dolar{:RESULT=Fabrica.crearNodoEXP(exp);:};
 
 SUCC ::=    dolar succ VALFUN dolar;
 
@@ -105,16 +106,24 @@ OPLISTA ::= REVERS
                      | ASC
                      | DESC;
 
-DECFUN ::= id PDECFUN igual CUERPO:cuerpo fin {:RESULT = cuerpo;:}
-                       | eol;
+DECFUN ::= id:id PDECFUN:lpar igual CUERPO:cuerpo fin {:RESULT = Fabrica.crearNodoFuncion(id,lpar,cuerpo);:}
+                       | eol{:RESULT=null;:};
 
-PDECFUN ::= PDECFUN coma id
-                        |id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
-                        |{::};
+PDECFUN ::= PDECFUN:lpar coma id:id
+                        {:
+                            Nodo par = Fabrica.crearNodoHoja(id);
+                            RESULT=Fabrica.insertarPar(lpar,par);
+                        :}
+                        |id:id
+                        {:
+                            Nodo par = Fabrica.crearNodoHoja(id);
+                            RESULT=Fabrica.crearNodoLPAR(par);
+                        :}
+                        |{:RESULT=Fabrica.crearNodoLPAR(null);:};
 CUERPO ::= CUERPO:cuerpo SENTENCIAS:sent {:RESULT = Fabrica.insertarSentencia(cuerpo,sent);:}
                      | SENTENCIAS:sent {:RESULT=Fabrica.crearNodoCuerpo(sent);:};
 
-SENTENCIAS ::= LISTA:list {:RESULT = list;:}
+SENTENCIAS ::= LISTA:list {:RESULT = list;System.out.println("lista");:}
                              | CALCULAR:calc{:RESULT = calc;:}
                              | SUCC
                              | DECC
@@ -133,9 +142,9 @@ SENTENCIAS ::= LISTA:list {:RESULT = list;:}
                              | LLAMADO
                              | SI
                              | CASO
-                             | eol;
+                             | eol{:RESULT = null;System.out.println("eol");:};
 
-LISTA ::=  let id igual VALLISTA:val{:RESULT = new Nodo("");:};
+LISTA ::=  let id:id igual VALLISTA:val{:RESULT = Fabrica.crearNodoLista(id,val);:};
 
 LLAMADO ::= dolar id llavea LPFUN llavec dolar;
 

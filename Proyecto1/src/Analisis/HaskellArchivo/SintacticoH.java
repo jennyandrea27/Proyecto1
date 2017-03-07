@@ -664,7 +664,8 @@ class CUP$SintacticoH$actions {
 		Nodo hk = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
 		
         System.out.println("Archivo finalizado");
-        RESULT = hk;
+        SemanticoHaskell.raiz=hk;
+        SemanticoHaskell.graficar();
     
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("S",0, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
@@ -680,7 +681,7 @@ class CUP$SintacticoH$actions {
 		int decfunleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int decfunright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		Nodo decfun = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.insertarFuncion(hk,decfun);
+		RESULT=Fabrica.insertarFuncion(hk,decfun);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("HASKELL",1, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -692,7 +693,7 @@ class CUP$SintacticoH$actions {
 		int decfunleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int decfunright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		Nodo decfun = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoFunciones(decfun);
+		RESULT = Fabrica.crearNodoLFunciones(decfun);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("HASKELL",1, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -887,7 +888,7 @@ class CUP$SintacticoH$actions {
 		int expleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).left;
 		int expright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).right;
 		Nodo exp = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).value;
-		RESULT=exp;
+		RESULT=Fabrica.crearNodoEXP(exp);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("CALCULAR",7, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-3)), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1100,10 +1101,16 @@ class CUP$SintacticoH$actions {
           case 45: // DECFUN ::= id PDECFUN igual CUERPO fin 
             {
               Nodo RESULT =null;
+		int idleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-4)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-4)).right;
+		String id = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-4)).value;
+		int lparleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-3)).left;
+		int lparright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-3)).right;
+		Nodo lpar = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-3)).value;
 		int cuerpoleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).left;
 		int cuerporight = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).right;
 		Nodo cuerpo = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).value;
-		RESULT = cuerpo;
+		RESULT = Fabrica.crearNodoFuncion(id,lpar,cuerpo);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("DECFUN",26, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-4)), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1112,7 +1119,7 @@ class CUP$SintacticoH$actions {
           case 46: // DECFUN ::= eol 
             {
               Nodo RESULT =null;
-
+		RESULT=null;
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("DECFUN",26, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1121,7 +1128,16 @@ class CUP$SintacticoH$actions {
           case 47: // PDECFUN ::= PDECFUN coma id 
             {
               Nodo RESULT =null;
-
+		int lparleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-2)).left;
+		int lparright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-2)).right;
+		Nodo lpar = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-2)).value;
+		int idleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
+		String id = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
+		
+                            Nodo par = Fabrica.crearNodoHoja(id);
+                            RESULT=Fabrica.insertarPar(lpar,par);
+                        
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("PDECFUN",27, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-2)), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1133,7 +1149,10 @@ class CUP$SintacticoH$actions {
 		int idleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int idright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(id);
+		
+                            Nodo par = Fabrica.crearNodoHoja(id);
+                            RESULT=Fabrica.crearNodoLPAR(par);
+                        
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("PDECFUN",27, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1142,7 +1161,7 @@ class CUP$SintacticoH$actions {
           case 49: // PDECFUN ::= 
             {
               Nodo RESULT =null;
-		
+		RESULT=Fabrica.crearNodoLPAR(null);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("PDECFUN",27, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1181,7 +1200,7 @@ class CUP$SintacticoH$actions {
 		int listleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int listright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		Nodo list = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = list;
+		RESULT = list;System.out.println("lista");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("SENTENCIAS",38, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1355,7 +1374,7 @@ class CUP$SintacticoH$actions {
           case 71: // SENTENCIAS ::= eol 
             {
               Nodo RESULT =null;
-
+		RESULT = null;System.out.println("eol");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("SENTENCIAS",38, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1364,10 +1383,13 @@ class CUP$SintacticoH$actions {
           case 72: // LISTA ::= let id igual VALLISTA 
             {
               Nodo RESULT =null;
+		int idleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-2)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-2)).right;
+		String id = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-2)).value;
 		int valleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int valright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		Nodo val = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = new Nodo("");
+		RESULT = Fabrica.crearNodoLista(id,val);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("LISTA",2, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-3)), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;

@@ -31,6 +31,11 @@ public class Nodo {
         this.nombre = nombre;
     }
 
+    public Nodo(String nombre, String valor) {
+        this.nombre = nombre;
+        this.valor = valor;
+    }
+
     public void insertarHijo(Nodo hijo){
         this.hijos.add(hijo);
     }

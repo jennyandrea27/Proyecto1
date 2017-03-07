@@ -31,21 +31,64 @@ public class Fabrica {
     
     public static Nodo crearNodoCuerpo(Nodo sent1){
         Nodo sentencia=new Nodo(Constante.cuerpo);
-        sentencia.insertarHijo(sent1);
+        if(sent1!=null){               
+            sentencia.insertarHijo(sent1);
+        }
         return sentencia;
     }
     public static Nodo insertarSentencia(Nodo cuerpo, Nodo sent){
-        cuerpo.insertarHijo(sent);
+        if(sent!=null){            
+            cuerpo.insertarHijo(sent);
+        }
         return cuerpo;
     }
-    public static Nodo crearNodoFunciones(Nodo fun1){
-        Nodo funcion=new Nodo(Constante.funcion);
-        funcion.insertarHijo(fun1);
+    public static Nodo crearNodoFuncion(String id, Nodo lpar, Nodo cuerpo){
+        Nodo funcion=new Nodo(Constante.funcion,id);
+        funcion.insertarHijo(lpar);
+        funcion.insertarHijo(cuerpo);
         return funcion;
     }
-    public static Nodo insertarFuncion(Nodo funcion, Nodo fun){
-        funcion.insertarHijo(fun);
-        return funcion;
+    public static Nodo crearNodoLPAR(Nodo par){
+        Nodo lpar=new Nodo(Constante.lpar);
+        if(par!=null){
+            lpar.insertarHijo(par);;
+        }
+        return lpar;
     }
+    
+    public static Nodo insertarPar(Nodo lpar,Nodo par){
+        if(par!=null){
+            lpar.insertarHijo(par);
+        }
+        return lpar;
+    }
+    
+    public static Nodo crearNodoLFunciones(Nodo  fun1){
+        Nodo lfunciones=new Nodo(Constante.lfunciones);
+        if(fun1!=null){
+            lfunciones.insertarHijo(fun1);
+        }
+        return lfunciones;
+    }
+    
+    public static Nodo insertarFuncion(Nodo lfunciones, Nodo fun){
+        if(fun!=null){            
+            lfunciones.insertarHijo(fun);
+        }
+        return lfunciones;
+    }
+    public static Nodo crearNodoEXP(Nodo exp){
+        Nodo ex=new Nodo(Constante.exp);
+        ex.insertarHijo(exp);
+        return ex;
+    }
+    public static Nodo crearNodoLista(String nombre,Nodo asig){
+        Nodo lista=new Nodo(Constante.list,nombre);
+        if(asig!=null){
+            lista.insertarHijo(asig);
+        }
+        return lista;
+    }
+    
     
 }

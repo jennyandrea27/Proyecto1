@@ -50,6 +50,10 @@ public class Constante {
     public static final String concatenacion="++";    
     public static final String cuerpo="cuerpo";    
     public static final String funcion="funcion";    
+    public static final String exp="exp";    
+    public static final String lfunciones="lfunciones";    
+    public static final String lpar="lpar";    
+    public static final String list="list";    
     public static final int tnumerico=1;
     public static final int tcadena=2;
     public static final int tboolean=3;
