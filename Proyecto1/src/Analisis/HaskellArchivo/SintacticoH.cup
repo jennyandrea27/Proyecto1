@@ -29,7 +29,8 @@ terminal String mod, sqrt, pot, let, calcular, succ, decc, min, max, sum, produc
 terminal String o, y, mayor, menor, mayorigual, menorigual, igualacion, distinto, igual, dolar, corchetea, corchetec, llavea, llavec, num, id, coma, cadena,caracter, parentesisa, parentesisc,dospuntos;
 nonterminal Nodo S, HASKELL, LISTA, VALLISTA, EXP, LPARLISTA, PARLISTA, CALCULAR, SUCC, DECC, MIN, MAX, CONCAT, OTRA;
 nonterminal Nodo LVOTRA, VOTRA, VALOTRA, ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, DECFUN, PDECFUN,CUERPO;
-nonterminal Nodo LLAMADO, LPFUN, SI, COND, REL, OPREL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, LENGTH;
+nonterminal Nodo LLAMADO, LPFUN, SI, COND, REL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, LENGTH;
+nonterminal String OPREL;
 
 precedence left o;
 precedence left y;
@@ -41,35 +42,37 @@ precedence left concatenacion, acceso;
 
 start with S;
 
-S ::=   HASKELL{:System.out.println("Archivo finalizado");:};
-HASKELL ::= HASKELL DECFUN
-                        | DECFUN;
-
-LISTA ::=  let id igual VALLISTA;
+S ::=   HASKELL:hk
+    {:
+        System.out.println("Archivo finalizado");
+        RESULT = hk;
+    :};
+HASKELL ::= HASKELL:hk DECFUN:decfun{:RESULT = Fabrica.insertarFuncion(hk,decfun);:}
+                        | DECFUN:decfun {:RESULT = Fabrica.crearNodoFunciones(decfun);:};
 
 VALLISTA ::=   CONCAT
-                          | cadena
-                          | id:id{:RESULT = Fabrica.crearNodoId(id);:}
+                          | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:}
+                          | id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
                           | LLAMADO
                           | OPLISTA
                           | corchetea LPARLISTA corchetec;
 
 LPARLISTA ::= LPARLISTA coma PARLISTA
                           | PARLISTA;
-PARLISTA ::= CALCULAR
-                         | caracter
+PARLISTA ::= CALCULAR:calc{:RESULT = calc;:}
+                         | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:}
                          | OTRA;
 OTRA::= corchetea VALOTRA corchetec;
 
-VALOTRA ::= cadena
+VALOTRA ::= cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:} 
                         | LVOTRA;
 
 LVOTRA ::= LVOTRA coma VOTRA
                     | VOTRA;
-VOTRA ::= CALCULAR
-                  | caracter;
+VOTRA ::= CALCULAR:calc{:RESULT = calc;:}
+                  | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:} ;
 
-CALCULAR ::= dolar calcular EXP dolar;
+CALCULAR ::= dolar calcular EXP:exp dolar{:RESULT=exp;:};
 
 SUCC ::=    dolar succ VALFUN dolar;
 
@@ -79,8 +82,8 @@ MIN ::=     dolar min VALLISTA dolar;
 
 MAX ::=    dolar max VALLISTA dolar;
 
-VALFUN ::= id:id{:RESULT = Fabrica.crearNodoId(id);:}
-                    | CALCULAR
+VALFUN ::= id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
+                    | CALCULAR:calc{:RESULT = calc;:}
                     | LLAMADO;
 
 SUM ::= dolar sum VALLISTA dolar;
@@ -102,17 +105,17 @@ OPLISTA ::= REVERS
                      | ASC
                      | DESC;
 
-DECFUN ::= id PDECFUN igual CUERPO fin
+DECFUN ::= id PDECFUN igual CUERPO:cuerpo fin {:RESULT = cuerpo;:}
                        | eol;
 
 PDECFUN ::= PDECFUN coma id
-                        |id:id{:RESULT = Fabrica.crearNodoId(id);:}
+                        |id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
                         |{::};
-CUERPO ::= CUERPO SENTENCIAS
-                     | SENTENCIAS;
+CUERPO ::= CUERPO:cuerpo SENTENCIAS:sent {:RESULT = Fabrica.insertarSentencia(cuerpo,sent);:}
+                     | SENTENCIAS:sent {:RESULT=Fabrica.crearNodoCuerpo(sent);:};
 
-SENTENCIAS ::= LISTA
-                             | CALCULAR
+SENTENCIAS ::= LISTA:list {:RESULT = list;:}
+                             | CALCULAR:calc{:RESULT = calc;:}
                              | SUCC
                              | DECC
                              | MIN
@@ -132,22 +135,24 @@ SENTENCIAS ::= LISTA
                              | CASO
                              | eol;
 
+LISTA ::=  let id igual VALLISTA:val{:RESULT = new Nodo("");:};
+
 LLAMADO ::= dolar id llavea LPFUN llavec dolar;
 
 LPFUN ::= LPFUN coma VALFUN
                         | VALFUN
-                        | ;
+                        | {::};
 
-EXP ::= EXP suma EXP
-             | EXP resta EXP
-             | EXP mult EXP             
-             | EXP div EXP             
-             | EXP mod EXP
-             | EXP sqrt EXP
-             | EXP pot EXP             
-             | resta EXP
-             | parentesisa EXP parentesisc
-             | CALCULAR
+EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,op1,op2);:}
+             | EXP:op1 resta EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1,op2);:}
+             | EXP:op1 mult EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.mult,op1,op2);:}             
+             | EXP:op1 div EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.div,op1,op2);:}             
+             | EXP:op1 mod EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.mod,op1,op2);:}
+             | EXP:op1 sqrt EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.sqrt,op1,op2);:}
+             | EXP:op1 pot EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.pot,op1,op2);:}             
+             | resta EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1);:}             
+             | parentesisa EXP:exp parentesisc {:RESULT=exp;:}
+             | CALCULAR:calc{:RESULT = calc;:}
              | SUCC
              | DECC
              | MIN
@@ -158,27 +163,33 @@ EXP ::= EXP suma EXP
              | PRODUCT
              | LENGTH
              | LLAMADO             
-             | num
-             | caracter
-             | id:id{:RESULT = Fabrica.crearNodoId(id);:};
+             | num:num {:RESULT = Fabrica.crearNodoHoja(num);:}
+             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:}
+             | id:id{:RESULT = Fabrica.crearNodoHoja(id);:};
 
 SI ::= si COND entonces CUERPO sino CUERPO fin;
-COND ::= REL o REL
-                | REL y REL
-                | REL;
-REL ::= VALFUN OPREL VALFUN  ;
-OPREL ::= mayor
-                    | menor
-                    | mayorigual
-                    | menorigual 
-                    | igualacion
-                    | distinto;
+
+COND ::= REL:op1 o REL:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.o,op1,op2);:}
+                | REL:op1 y REL:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.y,op1,op2);:}
+                | REL:rel {:RESULT=rel;:};
+
+REL ::= VALFUN:op1 OPREL:operador VALFUN:op2  {:RESULT=Fabrica.crearNodoOperacion(operador,op1,op2);:};
+
+OPREL ::= mayor {:RESULT = Constante.mayor;:}
+                    | menor{:RESULT = Constante.menor;:}
+                    | mayorigual{:RESULT = Constante.mayorigual;:}
+                    | menorigual{:RESULT = Constante.menorigual;:}
+                    | igualacion{:RESULT = Constante.igualacion;:}
+                    | distinto{:RESULT = Constante.distinto;:};
 
 CASO ::= caso VALFUN eol LCASOS fin;
-VCASO ::= num
-                    | caracter;
+
+VCASO ::= num:num {:RESULT = Fabrica.crearNodoHoja(num);:}
+                    | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:};
+
 LCASOS ::= LCASOS CASOS
                     | CASOS;
+
 CASOS ::= VCASO dospuntos CUERPO puntoycoma eol;
 
 
