@@ -144,7 +144,7 @@
                   <Font name="Monospaced" size="20" style="0"/>
                 </Property>
                 <Property name="rows" type="int" value="5"/>
-                <Property name="text" type="java.lang.String" value="IncrementaSegunN n,Val = &#xa;&#x9;$Calcular 3 * x&apos;pot&apos;5 - x &apos;pot&apos;2 + 7 * x -1$ &#xa;&#x9;$let lista1 = k$&#xa;&#x9;$let lista1 = &quot;asdfadsf&quot;$&#xa;&#x9;$let lista1 = k$&#xa;end&#xa;"/>
+                <Property name="text" type="java.lang.String" value="IncrementaSegunN n,Val = &#xa;&#x9;$Calcular 3 * x&apos;pot&apos;5 - x &apos;pot&apos;2 + 7 * x -1$ &#xa;&#x9;$let lista1 = &quot;k&quot;$&#xa;&#x9;$let lis1 = [$Calcular1$,$Calcular4+2$,$Calcular5$]$&#xa;end&#xa;"/>
               </Properties>
             </Component>
           </SubComponents>

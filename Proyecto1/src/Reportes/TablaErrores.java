@@ -5,6 +5,10 @@
  */
 package Reportes;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 /**
  *
  * @author Jenny
@@ -33,7 +37,6 @@ public class TablaErrores
         tabla = "";
         ret += "</table>\n";
         return ret;
-
     }
 
 

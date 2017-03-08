@@ -95,6 +95,19 @@ public class Fabrica {
         concat.insertarHijo(op2);
         return concat;
     }
+    public static Nodo crearNodoAsigLista(String valor, Nodo asig){
+        Nodo asignacion=new Nodo(Constante.asig,valor);        
+        if(asig!=null){
+            asignacion.insertarHijo(asig);
+        }
+        return asignacion;
+    }
+    public static Nodo insertarAsigLista(Nodo lasig, Nodo asig){
+        if(asig!=null){
+            lasig.insertarHijo(asig);            
+        }
+        return lasig;
+    }
     
     
 }

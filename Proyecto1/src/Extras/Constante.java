@@ -54,6 +54,16 @@ public class Constante {
     public static final String lfunciones="lfunciones";    
     public static final String lpar="lpar";    
     public static final String list="list";    
+    public static final String dim="dim";   
+    public static final String dim1="dim1";   
+    public static final String dim2="dim2";   
+    public static final String asig="asig";   
+    public static final String id="id";   
+    public static final String cadena="cadena";  
+    public static final String llamado="llamado";   
+    public static final String oplisa="oplista";   
+    public static final String concat="concat";   
+    public static final String num="num";   
     public static final int tnumerico=1;
     public static final int tcadena=2;
     public static final int tboolean=3;

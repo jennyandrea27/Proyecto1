@@ -24,7 +24,7 @@ caracter="'"."'"
 enter= \r|\n|\r\n
 eol=\n
 espacio={enter}|[ \t\f]
-cadena=\'(\\.|[^\'])*\'
+cadena=\"(\\.|[^\'])*\"
 //estados
 %%
 
@@ -130,6 +130,8 @@ cadena=\'(\\.|[^\'])*\'
 {return new Symbol (TSHaskell.eol, yycolumn, yyline, yytext());}
 {num}         
 {return new Symbol (TSHaskell.num, yycolumn, yyline, yytext());}
+{cadena}            
+{ return new Symbol(TSHaskell.cadena, yycolumn, yyline, yytext().replace("\"", "")); }
 {id}          
 {return new Symbol (TSHaskell.id, yycolumn, yyline, yytext());}
 {caracter}          
