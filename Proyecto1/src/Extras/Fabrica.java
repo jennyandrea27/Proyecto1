@@ -89,6 +89,12 @@ public class Fabrica {
         }
         return lista;
     }
+    public static Nodo crearNodoConcat(Nodo op1, Nodo op2){
+        Nodo concat=new Nodo(Constante.concatenacion);
+        concat.insertarHijo(op1);
+        concat.insertarHijo(op2);
+        return concat;
+    }
     
     
 }

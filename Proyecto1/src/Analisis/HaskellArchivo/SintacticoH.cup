@@ -51,7 +51,7 @@ S ::=   HASKELL:hk
 HASKELL ::= HASKELL:hk DECFUN:decfun{:RESULT=Fabrica.insertarFuncion(hk,decfun);:}
                         | DECFUN:decfun {:RESULT = Fabrica.crearNodoLFunciones(decfun);:};
 
-VALLISTA ::=   CONCAT
+VALLISTA ::=   CONCAT:concat{:RESULT = concat;:}
                           | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:}
                           | id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
                           | LLAMADO
@@ -96,9 +96,9 @@ ASC ::= dolar asc VALLISTA dolar;
 DESC ::= dolar desc VALLISTA dolar;
 LENGTH ::= dolar length VALLISTA dolar;
 
-CONCAT ::= VALLISTA concatenacion VALLISTA;
+CONCAT ::= VALLISTA:op1 concatenacion VALLISTA:op2{:RESULT = Fabrica.crearNodoConcat(op1,op2);:};
 
-ACCESO ::= VALLISTA acceso EXP;
+ACCESO ::= VALLISTA acceso CALCULAR;
 
 OPLISTA ::= REVERS
                      | IMPR
@@ -123,13 +123,13 @@ PDECFUN ::= PDECFUN:lpar coma id:id
 CUERPO ::= CUERPO:cuerpo SENTENCIAS:sent {:RESULT = Fabrica.insertarSentencia(cuerpo,sent);:}
                      | SENTENCIAS:sent {:RESULT=Fabrica.crearNodoCuerpo(sent);:};
 
-SENTENCIAS ::= LISTA:list {:RESULT = list;System.out.println("lista");:}
+SENTENCIAS ::= LISTA:list {:RESULT = list;:}
                              | CALCULAR:calc{:RESULT = calc;:}
                              | SUCC
                              | DECC
                              | MIN
                              | MAX
-                             | CONCAT
+                             | CONCAT:concat{:RESULT = concat;:}
                              | ACCESO
                              | SUM
                              | PRODUCT
@@ -142,9 +142,9 @@ SENTENCIAS ::= LISTA:list {:RESULT = list;System.out.println("lista");:}
                              | LLAMADO
                              | SI
                              | CASO
-                             | eol{:RESULT = null;System.out.println("eol");:};
+                             | eol{:RESULT = null;:};
 
-LISTA ::=  let id:id igual VALLISTA:val{:RESULT = Fabrica.crearNodoLista(id,val);:};
+LISTA ::=  dolar let id:id igual VALLISTA:val dolar{:RESULT = Fabrica.crearNodoLista(id,val);:};
 
 LLAMADO ::= dolar id llavea LPFUN llavec dolar;
 
@@ -166,7 +166,7 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | DECC
              | MIN
              | MAX
-             | CONCAT
+             | CONCAT:concat{:RESULT = concat;:}
              | ACCESO   
              | SUM
              | PRODUCT

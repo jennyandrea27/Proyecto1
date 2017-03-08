@@ -70,7 +70,7 @@ public class FormInicio extends javax.swing.JFrame {
         tbArchivo.setColumns(20);
         tbArchivo.setFont(new java.awt.Font("Monospaced", 0, 20)); // NOI18N
         tbArchivo.setRows(5);
-        tbArchivo.setText("IncrementaSegunN n,Val = \n\t$Calcular 3 * x'pot'5 - x 'pot'2 + 7 * x -1$ \nlet lista1 = k\nlet lista1 = \"asdfadsf\"\nlet lista1 = k\nend\n");
+        tbArchivo.setText("IncrementaSegunN n,Val = \n\t$Calcular 3 * x'pot'5 - x 'pot'2 + 7 * x -1$ \n\t$let lista1 = k$\n\t$let lista1 = \"asdfadsf\"$\n\t$let lista1 = k$\nend\n");
         jScrollPane2.setViewportView(tbArchivo);
 
         tpPestanas.addTab("tab1", jScrollPane2);
