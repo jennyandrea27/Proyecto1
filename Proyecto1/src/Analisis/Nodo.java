@@ -17,7 +17,7 @@ public class Nodo {
     int fila;
     int columna;
     String valor;
-    LinkedList <Nodo>  hijos=new LinkedList<Nodo>();
+    public LinkedList <Nodo>  hijos=new LinkedList<Nodo>();
 
     public Nodo(String nombre, int tipo, int fila, int columna, String valor) {
         this.nombre = nombre;
@@ -79,7 +79,14 @@ public class Nodo {
     public void setValor(String valor) {
         this.valor = valor;
     }
-    
-    
+    public Nodo getHijo(int indice){
+        return this.hijos.get(indice);
+    }
+    public boolean tieneHijos(){
+        if(this.hijos.size() == 0){
+            return false;
+        }
+        return true;
+    }
     
 }

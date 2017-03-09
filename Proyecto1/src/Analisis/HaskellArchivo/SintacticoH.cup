@@ -30,8 +30,8 @@ action code
 terminal String mod, sqrt, pot, let, calcular, succ, decc, min, max, sum, product, revers, impr, par, asc, desc, length, si, entonces, fin, sino, caso, concatenacion, suma, resta, mult, div,eol,puntoycoma, acceso;
 terminal String o, y, mayor, menor, mayorigual, menorigual, igualacion, distinto, igual, dolar, corchetea, corchetec, llavea, llavec, num, id, coma, cadena,caracter, parentesisa, parentesisc,dospuntos;
 nonterminal Nodo S, HASKELL, LISTA, VALLISTA, EXP, LPARLISTA, PARLISTA, CALCULAR, SUCC, DECC, MIN, MAX, CONCAT, OTRA;
-nonterminal Nodo LVOTRA, VOTRA, VALOTRA, ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, DECFUN, PDECFUN,CUERPO;
-nonterminal Nodo LLAMADO, LPFUN, SI, COND, REL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, LENGTH;
+nonterminal Nodo LVOTRA, VOTRA, ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, DECFUN, PDECFUN,CUERPO, OPLENGUAJE;
+nonterminal Nodo LLAMADO, LPFUN, SI, COND, REL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, VALCASE, LENGTH, OPLISTAEXP;
 nonterminal String OPREL;
 
 precedence left o;
@@ -67,17 +67,16 @@ VALLISTA ::=   CONCAT:concat{:RESULT = Fabrica.crearNodoAsigLista(Constante.conc
                                 RESULT = Fabrica.crearNodoAsigLista(Constante.id,identificador);
                             :}
                           | OPLISTA:oplista{:RESULT = oplista;:}
-                          | corchetea LPARLISTA:lparlista corchetec{:RESULT = lparlista;:};
+                          | corchetea LPARLISTA:lparlista corchetec{:RESULT = lparlista;:}
+                          | LLAMADO:llamado{:RESULT = llamado;:};
 
 LPARLISTA ::= LPARLISTA:lparlista coma PARLISTA:parlista{:RESULT = Fabrica.insertarAsigLista(lparlista,parlista);:}
                           | PARLISTA:parlista{:RESULT = Fabrica.crearNodoAsigLista(parlista.getValor(),parlista);:};
 PARLISTA ::= CALCULAR:calc{:RESULT = calc;RESULT.setValor(Constante.dim1);:}
                          | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);RESULT.setValor(Constante.dim1);:}
                          | OTRA:otra{:RESULT = otra;RESULT.setValor(Constante.dim2);:};
-OTRA::= corchetea VALOTRA:valotra corchetec{:RESULT = valotra;:};
+OTRA::= corchetea LVOTRA:valotra corchetec{:RESULT = valotra;:};
 
-VALOTRA ::= cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:} 
-                        | LVOTRA:lvotra{:RESULT = lvotra;:};
 
 LVOTRA ::= LVOTRA:lvotra coma VOTRA:votra{:RESULT = Fabrica.insertarAsigLista(lvotra,votra);:}
                     | VOTRA:votra{:RESULT = Fabrica.crearNodoAsigLista(Constante.dim,votra);:};
@@ -86,36 +85,44 @@ VOTRA ::= CALCULAR:calc{:RESULT = calc;:}
 
 CALCULAR ::= dolar calcular EXP:exp dolar{:RESULT=Fabrica.crearNodoEXP(exp);:};
 
-SUCC ::=    dolar succ VALFUN dolar;
+SUCC ::=    dolar succ VALFUN:valfun dolar{:RESULT = Fabrica.crearNodoFunHK(Constante.succ,valfun);:};
 
-DECC ::=    dolar decc VALFUN dolar;
+DECC ::=    dolar decc VALFUN:valfun dolar{:RESULT = Fabrica.crearNodoFunHK(Constante.decc,valfun);:};
 
-MIN ::=     dolar min VALLISTA dolar;
+MIN ::=     dolar min VALLISTA:valfun dolar{:RESULT = Fabrica.crearNodoFunHK(Constante.min,valfun);:}
+;
 
-MAX ::=    dolar max VALLISTA dolar;
+MAX ::=    dolar max VALLISTA:valfun dolar{:RESULT = Fabrica.crearNodoFunHK(Constante.max,valfun);:};
 
-VALFUN ::= id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
-                    | CALCULAR:calc{:RESULT = calc;:}
-                    | LLAMADO;
+VALFUN ::= CALCULAR:calc{:RESULT = calc;:}
+                    | ACCESO:acceso{:RESULT = acceso;:}
+                    | OPLISTAEXP:oplistaexp{:RESULT = oplistaexp; :}
+                    | CONCAT:concat{:RESULT = concat;:}
+                    | cadena:cadena {:RESULT=Fabrica.crearNodoHoja(cadena);:}
+                    | id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
+                    | OPLISTA:oplista{:RESULT = oplista;:}
+                    | corchetea LPARLISTA:lparlista corchetec{:RESULT = lparlista;:}
+                    | LLAMADO:llamado{:RESULT = llamado;:}
+                    | OPLENGUAJE:oplenguaje{:RESULT = oplenguaje;:};
 
-SUM ::= dolar sum VALLISTA dolar;
-PRODUCT ::= dolar product VALLISTA dolar;
-REVERS ::= dolar revers VALLISTA dolar;
-IMPR::= dolar impr VALLISTA dolar;
-PAR ::= dolar par VALLISTA dolar;
-ASC ::= dolar asc VALLISTA dolar;
-DESC ::= dolar desc VALLISTA dolar;
-LENGTH ::= dolar length VALLISTA dolar;
+SUM ::= dolar sum VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.sum,vallista);:};
+PRODUCT ::= dolar product VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.product,vallista);:};
+REVERS ::= dolar revers VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.revers,vallista);:};
+IMPR::= dolar impr VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.impr,vallista);:};
+PAR ::= dolar par VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.par,vallista);:};
+ASC ::= dolar asc VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.asc,vallista);:};
+DESC ::= dolar desc VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.desc,vallista);:};
+LENGTH ::= dolar length VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLista(Constante.length,vallista);:};
 
 CONCAT ::= VALLISTA:op1 concatenacion VALLISTA:op2{:RESULT = Fabrica.crearNodoConcat(op1,op2);:};
 
-ACCESO ::= VALLISTA acceso CALCULAR;
+ACCESO ::= VALLISTA:vallista acceso CALCULAR:calcular{:RESULT = Fabrica.crearNodoAcceso(vallista,calcular);:};
 
-OPLISTA ::= REVERS
-                     | IMPR
-                     | PAR
-                     | ASC
-                     | DESC;
+OPLISTA ::= REVERS:revers{:RESULT = revers;:}
+                     | IMPR:impr{:RESULT = impr;:}
+                     | PAR:par{:RESULT = par;:}
+                     | ASC:asc{:RESULT = asc;:}
+                     | DESC:desc{:RESULT = desc;:};
 
 DECFUN ::= id:id PDECFUN:lpar igual CUERPO:cuerpo fin {:RESULT = Fabrica.crearNodoFuncion(id,lpar,cuerpo);:}
                        | eol{:RESULT=null;:};
@@ -136,30 +143,30 @@ CUERPO ::= CUERPO:cuerpo SENTENCIAS:sent {:RESULT = Fabrica.insertarSentencia(cu
 
 SENTENCIAS ::= LISTA:list {:RESULT = list;:}
                              | CALCULAR:calc{:RESULT = calc;:}
-                             | SUCC
-                             | DECC
-                             | MIN
-                             | MAX
+                             | SUCC:succ{:RESULT = succ;:}
+                             | DECC:decc{:RESULT = decc;:}
+                             | MIN:min{:RESULT = min;:}
+                             | MAX:max{:RESULT = max;:}
                              | CONCAT:concat{:RESULT = concat;:}
-                             | ACCESO
-                             | SUM
-                             | PRODUCT
-                             | REVERS
-                             | IMPR
-                             | PAR
-                             | ASC  
-                             | DESC
-                             | LENGTH
-                             | LLAMADO
-                             | SI
-                             | CASO
+                             | ACCESO:acceso{:RESULT = acceso;:}
+                             | SUM:sum{:RESULT = sum;:}
+                             | PRODUCT:product{:RESULT = product;:}
+                             | REVERS:revers{:RESULT = revers;:}
+                             | IMPR:impr{:RESULT = impr;:}
+                             | PAR:par{:RESULT = par;:}
+                             | ASC:asc{:RESULT = asc;:}
+                             | DESC:desc{:RESULT = desc;:}
+                             | LENGTH:length{:RESULT = length;:}
+                             | LLAMADO:llamado{:RESULT = llamado;:}
+                             | SI:si{:RESULT = si;:}
+                             | CASO:caso{:RESULT = caso;:}
                              | eol{:RESULT = null;:};
 
-LLAMADO ::= dolar id llavea LPFUN llavec dolar;
+LLAMADO ::= dolar id:id llavea LPFUN:lparfun llavec dolar{:RESULT=Fabrica.crearNodoLlamado(id,lparfun);:};
 
-LPFUN ::= LPFUN coma VALFUN
-                        | VALFUN
-                        | {::};
+LPFUN ::= LPFUN:lpar coma VALFUN:par{:RESULT=Fabrica.insertarPar(lpar,par);:}
+                        | VALFUN:valfun {:RESULT=Fabrica.crearNodoLPAR(valfun);:}
+                        | {:RESULT=Fabrica.crearNodoLPAR(null);:};
 
 EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,op1,op2);:}
              | EXP:op1 resta EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1,op2);:}
@@ -171,21 +178,21 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | resta EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1);:}             
              | parentesisa EXP:exp parentesisc {:RESULT=exp;:}
              | CALCULAR:calc{:RESULT = calc;:}
-             | SUCC
-             | DECC
-             | MIN
-             | MAX
+             | SUCC:succ{:RESULT = succ;:}
+             | DECC:decc{:RESULT = decc;:}
+             | MIN:min{:RESULT = min;:}
+             | MAX:max{:RESULT = max;:}
              | CONCAT:concat{:RESULT = concat;:}
-             | ACCESO   
-             | SUM
-             | PRODUCT
-             | LENGTH
-             | LLAMADO             
+             | ACCESO:acceso{:RESULT = acceso;:}   
+             | SUM:sum{:RESULT = sum;:}
+             | PRODUCT:product{:RESULT = product;:}
+             | LENGTH:length{:RESULT = length;:}
+             | LLAMADO:llamado{:RESULT = llamado;:}
              | num:num {:RESULT = Fabrica.crearNodoHoja(num);:}
              | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:}
              | id:id{:RESULT = Fabrica.crearNodoHoja(id);:};
 
-SI ::= si COND entonces CUERPO sino CUERPO fin;
+SI ::= si COND:cond entonces CUERPO:lv sino CUERPO:lf fin{:RESULT = Fabrica.crearNodoSi(cond,lv,lf);:};
 
 COND ::= REL:op1 o REL:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.o,op1,op2);:}
                 | REL:op1 y REL:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.y,op1,op2);:}
@@ -200,15 +207,31 @@ OPREL ::= mayor {:RESULT = Constante.mayor;:}
                     | igualacion{:RESULT = Constante.igualacion;:}
                     | distinto{:RESULT = Constante.distinto;:};
 
-CASO ::= caso VALFUN eol LCASOS fin;
+CASO ::= caso VALCASE:valcase eol LCASOS:lcasos fin{:RESULT = Fabrica.crearNodoSentCaso(valcase,lcasos);:};
+
+VALCASE ::= LLAMADO:llamado{:RESULT = llamado;:}
+                        | id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
+                        | ACCESO:acceso{:RESULT = acceso;:}
+                        | CALCULAR:calcular{:RESULT = calcular;:}
+                        | OPLISTAEXP:oplistaexp{:RESULT = oplistaexp;:}
+                        | OPLENGUAJE:oplenguaje{:RESULT = oplenguaje;:};
+
+OPLISTAEXP ::= SUM:sum{:RESULT = sum;:}
+                              | PRODUCT:product{:RESULT = product;:}
+                              | LENGTH:length{:RESULT = length;:};
+
+OPLENGUAJE ::= SUCC:succ{:RESULT = succ;:}
+                               | DECC:decc{:RESULT = decc;:}
+                               | MIN:min{:RESULT = min;:}
+                               | MAX:max{:RESULT = max;:};
 
 VCASO ::= num:num {:RESULT = Fabrica.crearNodoHoja(num);:}
                     | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:};
 
-LCASOS ::= LCASOS CASOS
-                    | CASOS;
+LCASOS ::= LCASOS:lcasos CASOS:caso{:RESULT = Fabrica.insertarCaso(lcasos,caso);:}
+                    | CASOS:caso{:RESULT = Fabrica.crearNodoLCasos(caso);:};
 
-CASOS ::= VCASO dospuntos CUERPO puntoycoma eol;
+CASOS ::= VCASO:vcaso dospuntos CUERPO:cuerpo puntoycoma eol{:RESULT = Fabrica.crearNodoCaso(vcaso,cuerpo);:};
 
 
 
