@@ -26,4 +26,19 @@ public class GenerarSintactico {
             System.out.println(e.getMessage());
         }
     }
+    public static void generarGraphik(){
+        String [] opciones=new String[7];
+        opciones[0]="-destdir";
+        opciones[1]="src/Analisis/Graphik";
+        opciones[2]="-symbols";
+        opciones[3]="TSGraphik";
+        opciones[4]="-parser";
+        opciones[5]="SintacticoG";
+        opciones[6]="src/Analisis/Graphik/SintacticoG.cup";
+        try{
+            java_cup.Main.main(opciones);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
 }
