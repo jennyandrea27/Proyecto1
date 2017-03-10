@@ -18,13 +18,13 @@ StringBuffer string=new StringBuffer();
 %unicode
 
 //expresiones regulares
-num = [0-9]+
+num = [0-9]+("."[0-9]+)?
 id=[a-zA-Z]([a-zA-Z] | [0-9] | "_")*
 caracter="'"."'"
 enter= \r|\n|\r\n
 eol=\n
 espacio={enter}|[ \t\f]
-cadena=\"(\\.|[^\'])*\"
+cadena=\"(\\.|[^\"])*\"
 //estados
 %%
 
