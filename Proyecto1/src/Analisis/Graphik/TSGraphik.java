@@ -8,115 +8,155 @@ package Analisis.Graphik;
 /** CUP generated class containing symbol constants. */
 public class TSGraphik {
   /* terminals */
-  public static final int decc = 8;
-  public static final int distinto = 39;
-  public static final int resta = 26;
-  public static final int suma = 25;
-  public static final int mod = 2;
-  public static final int par = 15;
-  public static final int coma = 48;
-  public static final int asc = 16;
-  public static final int igual = 40;
-  public static final int entonces = 20;
-  public static final int acceso = 31;
-  public static final int calcular = 6;
-  public static final int caracter = 50;
-  public static final int succ = 7;
-  public static final int let = 5;
-  public static final int llavec = 45;
-  public static final int llavea = 44;
-  public static final int sum = 11;
-  public static final int si = 19;
-  public static final int length = 18;
-  public static final int igualacion = 38;
-  public static final int puntoycoma = 30;
-  public static final int max = 10;
-  public static final int menor = 35;
+  public static final int menor = 48;
+  public static final int parentesisc = 46;
+  public static final int mult = 42;
+  public static final int parentesisa = 45;
+  public static final int graphikar_funcion = 27;
+  public static final int tentero = 3;
+  public static final int punto = 55;
+  public static final int importar = 9;
+  public static final int suma = 40;
+  public static final int div = 43;
+  public static final int resta = 41;
+  public static final int cadena = 60;
+  public static final int dospuntos = 34;
+  public static final int menorigual = 64;
+  public static final int mientras = 23;
+  public static final int llamarhk = 67;
+  public static final int hereda = 12;
+  public static final int llamar = 15;
+  public static final int privado = 72;
+  public static final int sino = 69;
+  public static final int procesar = 30;
+  public static final int decimal = 58;
+  public static final int terminar = 26;
+  public static final int caso = 20;
+  public static final int igualacion = 49;
+  public static final int y = 52;
+  public static final int dondetodo = 65;
+  public static final int incluirhk = 17;
+  public static final int caracter = 62;
+  public static final int llavec = 37;
+  public static final int o = 51;
+  public static final int mayorigual = 63;
+  public static final int nuevo = 13;
+  public static final int llavea = 36;
+  public static final int datos = 28;
+  public static final int id = 61;
+  public static final int dondecada = 31;
+  public static final int tdecimal = 5;
+  public static final int pregc = 33;
+  public static final int menosmenos = 39;
+  public static final int tcadena = 4;
+  public static final int seleccion = 19;
+  public static final int protegido = 71;
+  public static final int hk = 18;
+  public static final int columna = 29;
+  public static final int retornar = 14;
+  public static final int mayor = 47;
+  public static final int xor = 53;
+  public static final int imprimirk = 32;
+  public static final int tbool = 8;
   public static final int EOF = 0;
-  public static final int parentesisc = 52;
-  public static final int revers = 13;
-  public static final int parentesisa = 51;
+  public static final int inicio = 16;
+  public static final int tvacio = 7;
+  public static final int tcaracter = 6;
+  public static final int publico = 70;
+  public static final int potencia = 44;
+  public static final int gk = 10;
   public static final int error = 1;
-  public static final int mayor = 34;
-  public static final int menorigual = 37;
-  public static final int pot = 4;
-  public static final int dospuntos = 53;
-  public static final int id = 47;
-  public static final int product = 12;
-  public static final int sqrt = 3;
-  public static final int caso = 23;
-  public static final int y = 33;
-  public static final int mult = 27;
-  public static final int impr = 14;
-  public static final int mayorigual = 36;
-  public static final int concatenacion = 24;
-  public static final int fin = 21;
-  public static final int desc = 17;
-  public static final int corchetec = 43;
-  public static final int o = 32;
-  public static final int corchetea = 42;
-  public static final int dolar = 41;
-  public static final int div = 28;
-  public static final int num = 46;
-  public static final int eol = 29;
-  public static final int min = 9;
-  public static final int cadena = 49;
-  public static final int sino = 22;
+  public static final int corchetec = 57;
+  public static final int corchetea = 56;
+  public static final int continuar = 25;
+  public static final int si = 68;
+  public static final int als = 11;
+  public static final int hacer = 24;
+  public static final int defecto = 21;
+  public static final int donde = 66;
+  public static final int distinto = 50;
+  public static final int para = 22;
+  public static final int coma = 73;
+  public static final int not = 54;
+  public static final int igual = 35;
+  public static final int var = 2;
+  public static final int masmas = 38;
+  public static final int num = 59;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
-  "mod",
-  "sqrt",
-  "pot",
-  "let",
-  "calcular",
-  "succ",
-  "decc",
-  "min",
-  "max",
-  "sum",
-  "product",
-  "revers",
-  "impr",
-  "par",
-  "asc",
-  "desc",
-  "length",
-  "si",
-  "entonces",
-  "fin",
-  "sino",
+  "var",
+  "tentero",
+  "tcadena",
+  "tdecimal",
+  "tcaracter",
+  "tvacio",
+  "tbool",
+  "importar",
+  "gk",
+  "als",
+  "hereda",
+  "nuevo",
+  "retornar",
+  "llamar",
+  "inicio",
+  "incluirhk",
+  "hk",
+  "seleccion",
   "caso",
-  "concatenacion",
+  "defecto",
+  "para",
+  "mientras",
+  "hacer",
+  "continuar",
+  "terminar",
+  "graphikar_funcion",
+  "datos",
+  "columna",
+  "procesar",
+  "dondecada",
+  "imprimirk",
+  "pregc",
+  "dospuntos",
+  "igual",
+  "llavea",
+  "llavec",
+  "masmas",
+  "menosmenos",
   "suma",
   "resta",
   "mult",
   "div",
-  "eol",
-  "puntoycoma",
-  "acceso",
-  "o",
-  "y",
-  "mayor",
-  "menor",
-  "mayorigual",
-  "menorigual",
-  "igualacion",
-  "distinto",
-  "igual",
-  "dolar",
-  "corchetea",
-  "corchetec",
-  "llavea",
-  "llavec",
-  "num",
-  "id",
-  "coma",
-  "cadena",
-  "caracter",
+  "potencia",
   "parentesisa",
   "parentesisc",
-  "dospuntos"
+  "mayor",
+  "menor",
+  "igualacion",
+  "distinto",
+  "o",
+  "y",
+  "xor",
+  "not",
+  "punto",
+  "corchetea",
+  "corchetec",
+  "decimal",
+  "num",
+  "cadena",
+  "id",
+  "caracter",
+  "mayorigual",
+  "menorigual",
+  "dondetodo",
+  "donde",
+  "llamarhk",
+  "si",
+  "sino",
+  "publico",
+  "protegido",
+  "privado",
+  "coma"
   };
 }
 

@@ -64,24 +64,54 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.hereda, yycolumn, yyline, yytext());}
 "nuevo"                    
 {return new Symbol (TSGraphik.nuevo, yycolumn, yyline, yytext());}
-
-"asc"                    
-{return new Symbol (TSGraphik.asc, yycolumn, yyline, yytext());}
-"desc"                  
-{return new Symbol (TSGraphik.desc, yycolumn, yyline, yytext());}
-"length"                
-{return new Symbol (TSGraphik.length, yycolumn, yyline, yytext());}
-"if"                       
+"retornoar"                    
+{return new Symbol (TSGraphik.retornar, yycolumn, yyline, yytext());}
+"llamar"                  
+{return new Symbol (TSGraphik.llamar, yycolumn, yyline, yytext());}
+"inicio"                
+{return new Symbol (TSGraphik.inicio, yycolumn, yyline, yytext());}
+"incluir_hk"                       
+{return new Symbol (TSGraphik.incluirhk, yycolumn, yyline, yytext());}
+".hk"                   
+{return new Symbol (TSGraphik.hk, yycolumn, yyline, yytext());}
+"llamarhk"                    
+{return new Symbol (TSGraphik.llamarhk, yycolumn, yyline, yytext());}
+"si"                    
 {return new Symbol (TSGraphik.si, yycolumn, yyline, yytext());}
-"then"                   
-{return new Symbol (TSGraphik.entonces, yycolumn, yyline, yytext());}
-"end"                    
-{return new Symbol (TSGraphik.fin, yycolumn, yyline, yytext());}
-"else"                   
+"sino"                   
 {return new Symbol (TSGraphik.sino, yycolumn, yyline, yytext());}
-"case"                  
+"seleccion"                  
+{return new Symbol (TSGraphik.seleccion, yycolumn, yyline, yytext());}
+"caso"                    
 {return new Symbol (TSGraphik.caso, yycolumn, yyline, yytext());}
-
+"defecto"                    
+{return new Symbol (TSGraphik.defecto, yycolumn, yyline, yytext());}
+"para"                    
+{return new Symbol (TSGraphik.para, yycolumn, yyline, yytext());}
+"mientras"                    
+{return new Symbol (TSGraphik.mientras, yycolumn, yyline, yytext());}
+"hacer"                    
+{return new Symbol (TSGraphik.hacer, yycolumn, yyline, yytext());}
+"continuar"                    
+{return new Symbol (TSGraphik.continuar, yycolumn, yyline, yytext());}
+"terminar"                    
+{return new Symbol (TSGraphik.terminar, yycolumn, yyline, yytext());}
+"graphikar_funcion"                    
+{return new Symbol (TSGraphik.graphikar_funcion, yycolumn, yyline, yytext());}
+"datos"                    
+{return new Symbol (TSGraphik.datos, yycolumn, yyline, yytext());}
+"columna"                    
+{return new Symbol (TSGraphik.columna, yycolumn, yyline, yytext());}
+"procesar"                    
+{return new Symbol (TSGraphik.procesar, yycolumn, yyline, yytext());}
+"dondecada"                    
+{return new Symbol (TSGraphik.dondecada, yycolumn, yyline, yytext());}
+"dondetodo"                    
+{return new Symbol (TSGraphik.dondetodo, yycolumn, yyline, yytext());}
+"donde"                    
+{return new Symbol (TSGraphik.donde, yycolumn, yyline, yytext());}
+"imprimirk"                    
+{return new Symbol (TSGraphik.imprimirk, yycolumn, yyline, yytext());}
 "?"                 
 {return new Symbol (TSGraphik.pregc, yycolumn, yyline, yytext());}
 ":"          
@@ -132,19 +162,14 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.not, yycolumn, yyline, yytext());}
 "."               
 {return new Symbol (TSGraphik.punto, yycolumn, yyline, yytext());}
-
 "["         
 {return new Symbol (TSGraphik.corchetea, yycolumn, yyline, yytext());}
 "]"         
 {return new Symbol (TSGraphik.corchetec, yycolumn, yyline, yytext());}
-","          
-{return new Symbol (TSGraphik.coma, yycolumn, yyline, yytext());}
-";"          
-{return new Symbol (TSGraphik.puntoycoma, yycolumn, yyline, yytext());}
-"!!"          
-{return new Symbol (TSGraphik.acceso, yycolumn, yyline, yytext());}
-{eol}
-{return new Symbol (TSGraphik.eol, yycolumn, yyline, yytext());}
+","         
+{return new Symbol (TSGraphik.coma, yycolumn, yyline, yytext());} 
+{dec}         
+{return new Symbol (TSGraphik.decimal, yycolumn, yyline, yytext());}
 {num}         
 {return new Symbol (TSGraphik.num, yycolumn, yyline, yytext());}
 {cadena}            
@@ -163,7 +188,3 @@ comentario_linea=#(\\.|[^\n])*\n
 
     
 [^]             {/*errores lexicos*/}
-
-
-
-
