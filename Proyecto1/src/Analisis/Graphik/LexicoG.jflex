@@ -97,7 +97,7 @@ comentario_linea=#(\\.|[^\n])*\n
 "terminar"                    
 {return new Symbol (TSGraphik.terminar, yycolumn, yyline, yytext());}
 "graphikar_funcion"                    
-{return new Symbol (TSGraphik.graphikar_funcion, yycolumn, yyline, yytext());}
+{return new Symbol (TSGraphik.graphikar, yycolumn, yyline, yytext());}
 "datos"                    
 {return new Symbol (TSGraphik.datos, yycolumn, yyline, yytext());}
 "columna"                    
@@ -112,6 +112,10 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.donde, yycolumn, yyline, yytext());}
 "imprimirk"                    
 {return new Symbol (TSGraphik.imprimirk, yycolumn, yyline, yytext());}
+"falso"                    
+{return new Symbol (TSGraphik.falso, yycolumn, yyline, yytext());}
+"verdadero"                    
+{return new Symbol (TSGraphik.verdadero, yycolumn, yyline, yytext());}
 "?"                 
 {return new Symbol (TSGraphik.pregc, yycolumn, yyline, yytext());}
 ":"          

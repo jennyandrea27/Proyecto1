@@ -28,13 +28,17 @@ action code
 :}
     
 terminal String var, tentero, tcadena, tdecimal, tcaracter, tvacio, tbool, importar, gk, als, hereda, nuevo, retornar, llamar, inicio, incluirhk, hk;                
-terminal String seleccion, caso, defecto, para, mientras, hacer, continuar, terminar, graphikar_funcion, datos, columna, procesar, dondecada;               
+terminal String seleccion, caso, defecto, para, mientras, hacer, continuar, terminar, graphikar, datos, columna, procesar, dondecada;               
 terminal String imprimirk, pregc, dospuntos, igual, llavea, llavec, masmas, menosmenos, suma, resta, mult, div, potencia, parentesisa, parentesisc;
 terminal String mayor, menor, igualacion, distinto, o, y, xor, not, punto, corchetea, corchetec,  decimal, num, cadena, id,caracter;
-terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, publico, protegido, privado,coma;
+terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, publico, protegido, privado,coma,verdadero, falso;
 
-nonterminal Nodo S;
+nonterminal Nodo S,LIMPORTAR, LALS, VISIBILIDAD, TVISIBILIDAD, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
+nonterminal Nodo DECLARACION, TVAR, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, TFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
+nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO;
+nonterminal Nodo PARA, VARPARA, OPPARA, MIENTRAS,HACERMIENTRAS, DIM, LVAL,LINCLUIR, LLLAVE,LLAVE,VALCASO;
 
+nonterminal String OPREL;
 precedence left o;
 precedence left xor;
 precedence left y;
@@ -48,8 +52,135 @@ precedence right masmas, menosmenos;
 
 start with S;
 
-S ::=   
+S ::=   LIMPORTAR LINCLUIR LALS
     {:
         System.out.println("Archivo finalizado");
         
     :};
+
+VISIBILIDAD ::= dospuntos TVISIBILIDAD
+                            |;
+TVISIBILIDAD ::= privado
+                                | protegido
+                                | publico
+                                |;
+ASIGNACION ::= id igual EXP pregc;
+LIMPORTAR ::= LIMPORTAR IMPORTAR
+                            |IMPORTAR;
+IMPORTAR ::= importar id gk pregc;
+LALS ::= LALS ALS
+             | ALS;
+ALS ::= als id HEREDA VISIBILIDAD llavea CUERPOALS llavec;
+CUERPOALS ::= CUERPOALS SENTALS
+                         | SENTALS;
+SENTALS ::= DECFUN
+                        | ASIGNACION
+                        | DECLARACION                        
+                        | INICIO;
+HEREDA ::= hereda id
+                     | ;
+DECLARACION ::= var TVAR id VISIBILIDAD DEC2 pregc;
+DEC2 ::= IDL
+                | ASIG 
+                |;
+IDL ::= IDL coma id VISIBILIDAD
+            | coma id VISIBILIDAD;
+ASIG ::= igual VALASIG
+              | ARR ASIGARR;              
+ASIGARR ::= igual LLLAVE
+                      | ;
+LLLAVE ::= LLLAVE coma llavea LLAVE llavec
+                     | llavea LLAVE llavec;                     
+LLAVE ::= LLLAVE
+                    | LPFUN;
+LVAL ::= LVAL coma EXP
+                | EXP;
+VALASIG ::= EXP
+                       | nuevo id parentesisa parentesisc ;
+LID ::= LID punto id
+                |  id  ;
+DECFUN ::= TFUN id parentesisa PDECFUN parentesisc VISIBILIDAD llavea CUERPO llavec;
+TVAR ::= tentero
+                | tdecimal  
+                | tcaracter
+                | tcadena
+                | tbool
+                | id;
+TFUN ::= TVAR
+               | tvacio;
+PDECFUN ::= PDECFUN coma TVAR id
+                        | TVAR id;
+RETORNAR ::= retornar EXP;
+LLAMADO ::= llamar id parentesisa LPFUN parentesisc
+                         | llamarhk id parentesisa LPFUN parentesisc;
+LPFUN ::= LPFUN coma EXP
+                 | EXP;
+INICIO ::= tvacio inicio parentesisa parentesisc llavea CUERPO llavec;
+LINCLUIR ::= LINCLUIR INCLUIR
+                       | INCLUIR;
+INCLUIR ::= incluirhk id hk pregc;
+SI ::= si parentesisa EXP parentesisc llavea CUERPO llavec SINO;
+SINO ::= sino llavea CUERPO llavec
+             | ;
+SELECCION ::= seleccion parentesisa LID parentesisc llavea LCASO DEFECTO llavec;
+LCASO ::= LCASO CASO
+                 | CASO;
+CASO ::= caso VALCASO dospuntos CUERPO;
+DEFECTO ::= defecto dospuntos CUERPO
+                        |;
+PARA ::= para parentesisa VARPARA dospuntos EXP dospuntos POSTERIOR parentesisc llavea CUERPO llavec;
+VARPARA::= DECLARACION  
+                     | LID igual EXP;
+POSTERIOR ::= LID OPPARA;
+OPPARA ::= masmas
+                     | menosmenos
+                     | ASIG;
+MIENTRAS ::= mientras parentesisa EXP parentesisc llavea CUERPO llavec;
+HACERMIENTRAS ::= hacer llavea CUERPO llavec mientras parentesisa EXP parentesisc;
+ARR ::= ARR DIM
+             | DIM;
+DIM ::= corchetea LVAL corchetec;
+EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,op1,op2);:}
+             | EXP:op1 resta EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1,op2);:}
+             | EXP:op1 mult EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.mult,op1,op2);:}             
+             | EXP:op1 div EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.div,op1,op2);:}                          
+             | EXP:op1 potencia EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.pot,op1,op2);:}             
+             | EXP:op1 o EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.o,op1,op2);:}   
+             | EXP:op1 y EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.y,op1,op2);:}   
+             | EXP:op1 xor EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.xor,op1,op2);:}   
+             | EXP:op1 OPREL:oprel EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(oprel,op1,op2);:}   
+             | not EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.not,op1);:}             
+             | resta EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1);:}             
+             | parentesisa EXP:exp parentesisc {:RESULT=exp;:}            
+             | LLAMADO:llamado{:RESULT = llamado;:}
+             | num:num {:RESULT = Fabrica.crearNodoHoja(num);:}
+             | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:}
+             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:}
+             | id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
+             | decimal:dec{:RESULT = Fabrica.crearNodoHoja(dec);:}
+             | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(verdadero);:}
+             | falso:falso {:RESULT = Fabrica.crearNodoHoja(falso);:};
+
+OPREL ::= mayor {:RESULT = Constante.mayor;:}
+                    | menor{:RESULT = Constante.menor;:}
+                    | mayorigual{:RESULT = Constante.mayorigual;:}
+                    | menorigual{:RESULT = Constante.menorigual;:}
+                    | igualacion{:RESULT = Constante.igualacion;:}
+                    | distinto{:RESULT = Constante.distinto;:};
+
+CUERPO ::= CUERPO SENTENCIA
+                    | SENTENCIA;
+
+SENTENCIA ::= ASIGNACION
+                          | DECLARACION
+                          | RETORNAR
+                          | LLAMADO
+                          | SI
+                          | SELECCION
+                          | PARA
+                          | MIENTRAS
+                          | HACERMIENTRAS
+                          | continuar pregc
+                          | terminar pregc;
+
+

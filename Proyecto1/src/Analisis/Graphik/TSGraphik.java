@@ -12,7 +12,7 @@ public class TSGraphik {
   public static final int parentesisc = 46;
   public static final int mult = 42;
   public static final int parentesisa = 45;
-  public static final int graphikar_funcion = 27;
+  public static final int graphikar = 27;
   public static final int tentero = 3;
   public static final int punto = 55;
   public static final int importar = 9;
@@ -61,10 +61,12 @@ public class TSGraphik {
   public static final int EOF = 0;
   public static final int inicio = 16;
   public static final int tvacio = 7;
+  public static final int falso = 75;
   public static final int tcaracter = 6;
   public static final int publico = 70;
   public static final int potencia = 44;
   public static final int gk = 10;
+  public static final int verdadero = 74;
   public static final int error = 1;
   public static final int corchetec = 57;
   public static final int corchetea = 56;
@@ -110,7 +112,7 @@ public class TSGraphik {
   "hacer",
   "continuar",
   "terminar",
-  "graphikar_funcion",
+  "graphikar",
   "datos",
   "columna",
   "procesar",
@@ -156,7 +158,9 @@ public class TSGraphik {
   "publico",
   "protegido",
   "privado",
-  "coma"
+  "coma",
+  "verdadero",
+  "falso"
   };
 }
 
