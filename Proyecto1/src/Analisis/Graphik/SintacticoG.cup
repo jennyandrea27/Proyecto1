@@ -27,18 +27,17 @@ action code
       
 :}
     
-terminal String var, tentero, tcadena, tdecimal, tcaracter, tvacio, tbool, importar, gk, als, hereda, nuevo, retornar, llamar, inicio, incluirhk, hk;                
+terminal String var, tentero, tcadena, tdecimal, tcaracter, tvacio, tbool, importar, gk, als, hereda, nuevo, retornar, llamar, inicio, incluirhk;                
 terminal String seleccion, caso, defecto, para, mientras, hacer, continuar, terminar, graphikar, datos, columna, procesar, dondecada;               
-terminal String imprimirk, pregc, dospuntos, igual, llavea, llavec, masmas, menosmenos, suma, resta, mult, div, potencia, parentesisa, parentesisc;
+terminal String imprimir, pregc, dospuntos, igual, llavea, llavec, masmas, menosmenos, suma, resta, mult, div, potencia, parentesisa, parentesisc;
 terminal String mayor, menor, igualacion, distinto, o, y, xor, not, punto, corchetea, corchetec,  decimal, num, cadena, id,caracter;
 terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, publico, protegido, privado,coma,verdadero, falso;
 
-nonterminal Nodo S,LIMPORTAR, LALS, VISIBILIDAD, TVISIBILIDAD, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
+nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
 nonterminal Nodo DECLARACION, TVAR, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, TFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
-nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO;
-nonterminal Nodo PARA, VARPARA, OPPARA, MIENTRAS,HACERMIENTRAS, DIM, LVAL,LINCLUIR, LLLAVE,LLAVE,VALCASO;
-
-nonterminal String OPREL;
+nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
+nonterminal Nodo PARA, VARPARA, OPPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO;
+nonterminal String OPREL,VISIBILIDAD,TVISIBILIDAD;
 precedence left o;
 precedence left xor;
 precedence left y;
@@ -52,21 +51,25 @@ precedence right masmas, menosmenos;
 
 start with S;
 
-S ::=   LIMPORTAR LINCLUIR LALS
+S ::=   ENC LALS
     {:
         System.out.println("Archivo finalizado");
         
     :};
 
-VISIBILIDAD ::= dospuntos TVISIBILIDAD
-                            |;
-TVISIBILIDAD ::= privado
-                                | protegido
-                                | publico
-                                |;
-ASIGNACION ::= id igual EXP pregc;
-LIMPORTAR ::= LIMPORTAR IMPORTAR
-                            |IMPORTAR;
+TVISIBILIDAD::= privado
+                             | publico
+                             | protegido;
+VISIBILIDAD ::=  dospuntos TVISIBILIDAD
+                              |;
+ASIGNACION ::= LID igual EXP
+                               | LID ARR igual EXP;
+ENC ::= LENCABEZADO
+            |;
+LENCABEZADO ::= LENCABEZADO ENCABEZADO
+                            |ENCABEZADO;
+ENCABEZADO ::= IMPORTAR
+                                | INCLUIR;
 IMPORTAR ::= importar id gk pregc;
 LALS ::= LALS ALS
              | ALS;
@@ -74,12 +77,11 @@ ALS ::= als id HEREDA VISIBILIDAD llavea CUERPOALS llavec;
 CUERPOALS ::= CUERPOALS SENTALS
                          | SENTALS;
 SENTALS ::= DECFUN
-                        | ASIGNACION
-                        | DECLARACION                        
+                        | DECLARACION  pregc                      
                         | INICIO;
 HEREDA ::= hereda id
-                     | ;
-DECLARACION ::= var TVAR id VISIBILIDAD DEC2 pregc;
+                     |;
+DECLARACION ::= var TVAR id VISIBILIDAD DEC2;
 DEC2 ::= IDL
                 | ASIG 
                 |;
@@ -93,8 +95,6 @@ LLLAVE ::= LLLAVE coma llavea LLAVE llavec
                      | llavea LLAVE llavec;                     
 LLAVE ::= LLLAVE
                     | LPFUN;
-LVAL ::= LVAL coma EXP
-                | EXP;
 VALASIG ::= EXP
                        | nuevo id parentesisa parentesisc ;
 LID ::= LID punto id
@@ -109,37 +109,37 @@ TVAR ::= tentero
 TFUN ::= TVAR
                | tvacio;
 PDECFUN ::= PDECFUN coma TVAR id
-                        | TVAR id;
+                        | TVAR id
+                        |;
 RETORNAR ::= retornar EXP;
-LLAMADO ::= llamar id parentesisa LPFUN parentesisc
+LLAMADO ::= llamar LID parentesisa LPFUN parentesisc
                          | llamarhk id parentesisa LPFUN parentesisc;
 LPFUN ::= LPFUN coma EXP
-                 | EXP;
+                 | EXP
+                 |;
 INICIO ::= tvacio inicio parentesisa parentesisc llavea CUERPO llavec;
-LINCLUIR ::= LINCLUIR INCLUIR
-                       | INCLUIR;
-INCLUIR ::= incluirhk id hk pregc;
+INCLUIR ::= incluirhk id pregc;
 SI ::= si parentesisa EXP parentesisc llavea CUERPO llavec SINO;
 SINO ::= sino llavea CUERPO llavec
              | ;
 SELECCION ::= seleccion parentesisa LID parentesisc llavea LCASO DEFECTO llavec;
 LCASO ::= LCASO CASO
                  | CASO;
-CASO ::= caso VALCASO dospuntos CUERPO;
+CASO ::= caso EXP dospuntos CUERPO;
 DEFECTO ::= defecto dospuntos CUERPO
                         |;
 PARA ::= para parentesisa VARPARA dospuntos EXP dospuntos POSTERIOR parentesisc llavea CUERPO llavec;
-VARPARA::= DECLARACION  
+VARPARA::= var TVAR id igual EXP  
                      | LID igual EXP;
-POSTERIOR ::= LID OPPARA;
+POSTERIOR ::= LID OPPARA
+                           |ASIGNACION;
 OPPARA ::= masmas
-                     | menosmenos
-                     | ASIG;
+                     | menosmenos;
 MIENTRAS ::= mientras parentesisa EXP parentesisc llavea CUERPO llavec;
 HACERMIENTRAS ::= hacer llavea CUERPO llavec mientras parentesisa EXP parentesisc;
 ARR ::= ARR DIM
              | DIM;
-DIM ::= corchetea LVAL corchetec;
+DIM ::= corchetea EXP corchetec;
 EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,op1,op2);:}
              | EXP:op1 resta EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1,op2);:}
              | EXP:op1 mult EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.mult,op1,op2);:}             
@@ -156,7 +156,8 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | num:num {:RESULT = Fabrica.crearNodoHoja(num);:}
              | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:}
              | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:}
-             | id:id{:RESULT = Fabrica.crearNodoHoja(id);:}
+             | LID:lid{:RESULT = lid;:}
+             | LID ARR
              | decimal:dec{:RESULT = Fabrica.crearNodoHoja(dec);:}
              | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(verdadero);:}
              | falso:falso {:RESULT = Fabrica.crearNodoHoja(falso);:};
@@ -171,16 +172,21 @@ OPREL ::= mayor {:RESULT = Constante.mayor;:}
 CUERPO ::= CUERPO SENTENCIA
                     | SENTENCIA;
 
-SENTENCIA ::= ASIGNACION
-                          | DECLARACION
-                          | RETORNAR
-                          | LLAMADO
+SENTENCIA ::= ASIGNACION pregc
+                          | DECLARACION pregc
+                          | RETORNAR pregc
+                          | LLAMADO pregc
                           | SI
                           | SELECCION
                           | PARA
                           | MIENTRAS
                           | HACERMIENTRAS
+                          | IMPRIMIR
+                          | GRAPHIKAR
                           | continuar pregc
-                          | terminar pregc;
+                          | terminar pregc
+                          | error pregc;
 
+IMPRIMIR ::= imprimir parentesisa EXP parentesisc pregc;
 
+GRAPHIKAR ::= graphikar parentesisa LID coma LID parentesisc pregc;

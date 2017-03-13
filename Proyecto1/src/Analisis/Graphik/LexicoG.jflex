@@ -64,18 +64,16 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.hereda, yycolumn, yyline, yytext());}
 "nuevo"                    
 {return new Symbol (TSGraphik.nuevo, yycolumn, yyline, yytext());}
-"retornoar"                    
+"retornar"                    
 {return new Symbol (TSGraphik.retornar, yycolumn, yyline, yytext());}
+"llamarhk"                    
+{return new Symbol (TSGraphik.llamarhk, yycolumn, yyline, yytext());}
 "llamar"                  
 {return new Symbol (TSGraphik.llamar, yycolumn, yyline, yytext());}
 "inicio"                
 {return new Symbol (TSGraphik.inicio, yycolumn, yyline, yytext());}
 "incluir_hk"                       
 {return new Symbol (TSGraphik.incluirhk, yycolumn, yyline, yytext());}
-".hk"                   
-{return new Symbol (TSGraphik.hk, yycolumn, yyline, yytext());}
-"llamarhk"                    
-{return new Symbol (TSGraphik.llamarhk, yycolumn, yyline, yytext());}
 "si"                    
 {return new Symbol (TSGraphik.si, yycolumn, yyline, yytext());}
 "sino"                   
@@ -110,8 +108,8 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.dondetodo, yycolumn, yyline, yytext());}
 "donde"                    
 {return new Symbol (TSGraphik.donde, yycolumn, yyline, yytext());}
-"imprimirk"                    
-{return new Symbol (TSGraphik.imprimirk, yycolumn, yyline, yytext());}
+"imprimir"                    
+{return new Symbol (TSGraphik.imprimir, yycolumn, yyline, yytext());}
 "falso"                    
 {return new Symbol (TSGraphik.falso, yycolumn, yyline, yytext());}
 "verdadero"                    
@@ -120,8 +118,6 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.pregc, yycolumn, yyline, yytext());}
 ":"          
 {return new Symbol (TSGraphik.dospuntos, yycolumn, yyline, yytext());}
-"="             
-{return new Symbol (TSGraphik.igual, yycolumn, yyline, yytext());}
 "{"                
 {return new Symbol (TSGraphik.llavea, yycolumn, yyline, yytext());}
 "}"            
@@ -154,6 +150,8 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.menor, yycolumn, yyline, yytext());}
 "=="    
 {return new Symbol (TSGraphik.igualacion, yycolumn, yyline, yytext());}
+"="             
+{return new Symbol (TSGraphik.igual, yycolumn, yyline, yytext());}
 "!="          
 {return new Symbol (TSGraphik.distinto, yycolumn, yyline, yytext());}
 "||"                
@@ -178,10 +176,10 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.num, yycolumn, yyline, yytext());}
 {cadena}            
 { return new Symbol(TSGraphik.cadena, yycolumn, yyline, yytext().replace("\"", "")); }
-{id}          
-{return new Symbol (TSGraphik.id, yycolumn, yyline, yytext());}
 {caracter}          
 {return new Symbol (TSGraphik.caracter, yycolumn, yyline, yytext());}
+{id}          
+{return new Symbol (TSGraphik.id, yycolumn, yyline, yytext());}
 {comentario_parrafo}          
 {/*se ignora*/}
 {comentario_linea}          

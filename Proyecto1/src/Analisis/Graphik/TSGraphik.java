@@ -8,82 +8,81 @@ package Analisis.Graphik;
 /** CUP generated class containing symbol constants. */
 public class TSGraphik {
   /* terminals */
-  public static final int menor = 48;
-  public static final int parentesisc = 46;
-  public static final int mult = 42;
-  public static final int parentesisa = 45;
-  public static final int graphikar = 27;
+  public static final int menor = 47;
+  public static final int parentesisc = 45;
+  public static final int mult = 41;
+  public static final int parentesisa = 44;
+  public static final int graphikar = 26;
   public static final int tentero = 3;
-  public static final int punto = 55;
+  public static final int punto = 54;
   public static final int importar = 9;
-  public static final int suma = 40;
-  public static final int div = 43;
-  public static final int resta = 41;
-  public static final int cadena = 60;
-  public static final int dospuntos = 34;
-  public static final int menorigual = 64;
-  public static final int mientras = 23;
-  public static final int llamarhk = 67;
+  public static final int suma = 39;
+  public static final int div = 42;
+  public static final int resta = 40;
+  public static final int cadena = 59;
+  public static final int dospuntos = 33;
+  public static final int menorigual = 63;
+  public static final int mientras = 22;
+  public static final int llamarhk = 66;
   public static final int hereda = 12;
+  public static final int imprimir = 31;
   public static final int llamar = 15;
-  public static final int privado = 72;
-  public static final int sino = 69;
-  public static final int procesar = 30;
-  public static final int decimal = 58;
-  public static final int terminar = 26;
-  public static final int caso = 20;
-  public static final int igualacion = 49;
-  public static final int y = 52;
-  public static final int dondetodo = 65;
+  public static final int privado = 71;
+  public static final int sino = 68;
+  public static final int procesar = 29;
+  public static final int decimal = 57;
+  public static final int terminar = 25;
+  public static final int caso = 19;
+  public static final int igualacion = 48;
+  public static final int y = 51;
+  public static final int dondetodo = 64;
   public static final int incluirhk = 17;
-  public static final int caracter = 62;
-  public static final int llavec = 37;
-  public static final int o = 51;
-  public static final int mayorigual = 63;
+  public static final int caracter = 61;
+  public static final int llavec = 36;
+  public static final int o = 50;
+  public static final int mayorigual = 62;
   public static final int nuevo = 13;
-  public static final int llavea = 36;
-  public static final int datos = 28;
-  public static final int id = 61;
-  public static final int dondecada = 31;
+  public static final int llavea = 35;
+  public static final int datos = 27;
+  public static final int id = 60;
+  public static final int dondecada = 30;
   public static final int tdecimal = 5;
-  public static final int pregc = 33;
-  public static final int menosmenos = 39;
+  public static final int pregc = 32;
+  public static final int menosmenos = 38;
   public static final int tcadena = 4;
-  public static final int seleccion = 19;
-  public static final int protegido = 71;
-  public static final int hk = 18;
-  public static final int columna = 29;
+  public static final int seleccion = 18;
+  public static final int protegido = 70;
+  public static final int columna = 28;
   public static final int retornar = 14;
-  public static final int mayor = 47;
-  public static final int xor = 53;
-  public static final int imprimirk = 32;
+  public static final int mayor = 46;
+  public static final int xor = 52;
   public static final int tbool = 8;
   public static final int EOF = 0;
   public static final int inicio = 16;
   public static final int tvacio = 7;
-  public static final int falso = 75;
+  public static final int falso = 74;
   public static final int tcaracter = 6;
-  public static final int publico = 70;
-  public static final int potencia = 44;
+  public static final int publico = 69;
+  public static final int potencia = 43;
   public static final int gk = 10;
-  public static final int verdadero = 74;
+  public static final int verdadero = 73;
   public static final int error = 1;
-  public static final int corchetec = 57;
-  public static final int corchetea = 56;
-  public static final int continuar = 25;
-  public static final int si = 68;
+  public static final int corchetec = 56;
+  public static final int corchetea = 55;
+  public static final int continuar = 24;
+  public static final int si = 67;
   public static final int als = 11;
-  public static final int hacer = 24;
-  public static final int defecto = 21;
-  public static final int donde = 66;
-  public static final int distinto = 50;
-  public static final int para = 22;
-  public static final int coma = 73;
-  public static final int not = 54;
-  public static final int igual = 35;
+  public static final int hacer = 23;
+  public static final int defecto = 20;
+  public static final int donde = 65;
+  public static final int distinto = 49;
+  public static final int para = 21;
+  public static final int coma = 72;
+  public static final int not = 53;
+  public static final int igual = 34;
   public static final int var = 2;
-  public static final int masmas = 38;
-  public static final int num = 59;
+  public static final int masmas = 37;
+  public static final int num = 58;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -103,7 +102,6 @@ public class TSGraphik {
   "llamar",
   "inicio",
   "incluirhk",
-  "hk",
   "seleccion",
   "caso",
   "defecto",
@@ -117,7 +115,7 @@ public class TSGraphik {
   "columna",
   "procesar",
   "dondecada",
-  "imprimirk",
+  "imprimir",
   "pregc",
   "dospuntos",
   "igual",

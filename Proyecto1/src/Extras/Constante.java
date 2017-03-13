@@ -48,6 +48,8 @@ public class Constante {
     public static final String dolar="$";
     public static final String porcentaje="%";
     public static final String concatenacion="++";    
+    public static final String xor="&|";  
+    public static final String not="!";  
     public static final String cuerpo="cuerpo";    
     public static final String funcion="funcion";    
     public static final String exp="exp";    

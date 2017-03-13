@@ -5,6 +5,8 @@
  */
 package proyecto1;
 
+import Analisis.Graphik.LexicoG;
+import Analisis.Graphik.SintacticoG;
 import Analisis.HaskellArchivo.LexicoH;
 import Analisis.HaskellArchivo.SintacticoH;
 import java.awt.event.KeyEvent;
@@ -46,7 +48,8 @@ public class FormInicio extends javax.swing.JFrame {
         bIniciarSesion = new javax.swing.JButton();
         bPublicar = new javax.swing.JButton();
         bImportar = new javax.swing.JButton();
-        bCargar = new javax.swing.JButton();
+        bCargarHK = new javax.swing.JButton();
+        bCargarGK = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -70,7 +73,7 @@ public class FormInicio extends javax.swing.JFrame {
         tbArchivo.setColumns(20);
         tbArchivo.setFont(new java.awt.Font("Monospaced", 0, 20)); // NOI18N
         tbArchivo.setRows(5);
-        tbArchivo.setText("IncrementaSegunN n,Val = \n\t$Calcular 3 * x'pot'5 - x 'pot'2 + 7 * x -1$ \n\t$let lista1 = \"k\"$\n\t$let lis1 = [$Calcular 1$,$Calcular 4+2$,$Calcular 5$]$\n\t$let lis1 = $revers[$Calcular 1$,$Calcular 4+2$,$Calcular 5$]$$\n\t$let lis1 = $impr[$Calcular 1$,$Calcular 4+2$,$Calcular 5$]$$\n\t$let lis1 = $par[$Calcular 1$,$Calcular 4+2$,$Calcular 5$]$$\n\t$let lis1 = $desc[$Calcular 1$,$Calcular 4+2$,$Calcular 5$]$$\n\t$let lis1 = $asc[$Calcular 1$,$Calcular 4+2$,$Calcular 5 $]$$\nend\n");
+        tbArchivo.setText("importar Nodo.gk?\nincluir_HK FormCuadraticaPositiva?\nincluir_HK FormCuadraticaNegativa?\nincluir_HK Permutacion?\nincluir_HK FuncionPolinomial1?\n\nALS obj1 : publico {\nvar entero a:publico?\n\tvacio inicio(){\n\ta = 4?\n\timprimir(llamar FormCuadraticaPositiva())?\n\timprimir(llamar FormCuadraticaNegativa())?\n\timprimir(\"permutación: \" + llamar Permutacion_gk((10*2 - 14), a))?\n\ta = 3?\n\tvar decimal x = ((18/2)^2) - (15 - a)?\n\tllamar FuncionPolinomial1(x)?\n\tllamar creacion_nodos()?\n\t}\n\n\tcadena FormCuadraticaPositiva(){\n\ta = (5*2)^2 - 4?\n\tvar entero b = 3?\n\tvar entero c = 8?\n\timprimir(llamarHK FormCuadraticaPositiva(a, b, c))?\n\tretornar \"Primer función ejecutada con éxito\"?\n\t}\n\n\tcadena FormCuadraticaNegativa():privado{\n\tvar decimal arreglo[3] = {96, 3, 8}?\n\timprimir(llamarHK FormCuadraticaNegativa(arreglo[0], arreglo[1],\n\tarreglo[2]))?\n\tretornar \"Segunda función ejecutada con éxito\"?\n\t}\n\n\tvacio FuncionPolinomial1(entero valor_entrada){\n\tvar entero arreglo[5]?\n\tvar int i?\n\tPara(i=0: i<5: i++){\n\tarreglo[i] = llamarHK FuncionPolinomial1(valor_entrada * i)?\n\timprimir(\"polinomial: \" + arreglo[i])?\n\t}\n\t}\n\n\tentero Permutacion_gk(entero n, entero r){\n\tMientras(r>0){\n\timprimir(\"Factorial: \" + llamarHK Permuctacion(n,r))?\n\tr=r - 1?\n\t}\n\t}\n\n\tvacio creacion_nodos(){\n\tvar Nodo nod1 = nuevo Nodo()?\n\tnod1.nombre = \"primero\"?\n\tnod1.numero = 1?\n\tllamar nod1.cambiar_bandera()?\n\tvar Nodo nod2 = nuevo Nodo()?\n\tnod2.nombre = \"segundo\"?\n\tnod2.numero = 2?\n\tSi(nod1.bandera == nod2.bandera){\n\timprimir(\"las banderas son iguales para los nodos \" + nod1.nombre\n\t+ \" \" + nod2.nombre)?\n\t}Sino{\n\timprimir(\"las banderas son diferentes para los nodos \" +\n\tnod1.nombre + \" \" + nod2.nombre)?\n\t}\n\timprimir(\"Se creó un nodo con éxito\")?\n\t}\n}\nALS Nodo : publico{\n\tvar cadena nombre : publico = \"\"?\n\tvar entero numero :publico = 0?\n\tvar bool bandera : publico = verdadero?\n\tvacio cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\t}\n}");
         jScrollPane2.setViewportView(tbArchivo);
 
         tpPestanas.addTab("tab1", jScrollPane2);
@@ -125,18 +128,32 @@ public class FormInicio extends javax.swing.JFrame {
         getContentPane().add(bImportar);
         bImportar.setBounds(952, 190, 139, 31);
 
-        bCargar.setBackground(new java.awt.Color(0, 204, 204));
-        bCargar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        bCargar.setText("Cargar");
-        bCargar.setContentAreaFilled(false);
-        bCargar.setOpaque(true);
-        bCargar.addActionListener(new java.awt.event.ActionListener() {
+        bCargarHK.setBackground(new java.awt.Color(0, 204, 204));
+        bCargarHK.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        bCargarHK.setText("Cargar HK");
+        bCargarHK.setContentAreaFilled(false);
+        bCargarHK.setOpaque(true);
+        bCargarHK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bCargarActionPerformed(evt);
+                bCargarHKActionPerformed(evt);
             }
         });
-        getContentPane().add(bCargar);
-        bCargar.setBounds(952, 351, 139, 31);
+        getContentPane().add(bCargarHK);
+        bCargarHK.setBounds(952, 351, 139, 31);
+
+        bCargarGK.setBackground(new java.awt.Color(0, 204, 204));
+        bCargarGK.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        bCargarGK.setText("Cargar GK");
+        bCargarGK.setToolTipText("");
+        bCargarGK.setContentAreaFilled(false);
+        bCargarGK.setOpaque(true);
+        bCargarGK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCargarGKActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bCargarGK);
+        bCargarGK.setBounds(950, 410, 140, 31);
 
         jLabel2.setBackground(new java.awt.Color(204, 255, 204));
         jLabel2.setOpaque(true);
@@ -210,7 +227,7 @@ public class FormInicio extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tbEntradaKeyPressed
 
-    private void bCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarActionPerformed
+    private void bCargarHKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarHKActionPerformed
         // TODO add your handling code here:
         String entrada=tbArchivo.getText();            
             if(entrada.equals("")){
@@ -224,7 +241,23 @@ public class FormInicio extends javax.swing.JFrame {
                     System.out.println("Error "+ex.getMessage());
                 }
             }
-    }//GEN-LAST:event_bCargarActionPerformed
+    }//GEN-LAST:event_bCargarHKActionPerformed
+
+    private void bCargarGKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarGKActionPerformed
+        // TODO add your handling code here:
+        String entrada=tbArchivo.getText();            
+            if(entrada.equals("")){
+                JOptionPane.showMessageDialog(null, "Entrada incorrecta");
+            }else{                
+                try {
+                    LexicoG lexico = new LexicoG(new BufferedReader( new StringReader(entrada)));
+                    SintacticoG sintactico= new SintacticoG(lexico);
+                    sintactico.parse();
+                } catch (Exception ex) {
+                    System.out.println("Error "+ex.getMessage());
+                }
+            }
+    }//GEN-LAST:event_bCargarGKActionPerformed
 
     /**
      * @param args the command line arguments
@@ -262,7 +295,8 @@ public class FormInicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bCargar;
+    private javax.swing.JButton bCargarGK;
+    private javax.swing.JButton bCargarHK;
     private javax.swing.JButton bImportar;
     private javax.swing.JButton bIniciarSesion;
     private javax.swing.JButton bPublicar;
