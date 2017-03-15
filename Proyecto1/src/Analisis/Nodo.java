@@ -17,6 +17,7 @@ public class Nodo {
     int fila;
     int columna;
     String valor;
+    int visibilidad;
     public LinkedList <Nodo>  hijos=new LinkedList<Nodo>();
 
     public Nodo(String nombre, int tipo, int fila, int columna, String valor) {
@@ -29,11 +30,22 @@ public class Nodo {
 
     public Nodo(String nombre) {
         this.nombre = nombre;
+        this.valor = "";
+        this.tipo=-1;
+        this.visibilidad=-1;
     }
 
     public Nodo(String nombre, String valor) {
         this.nombre = nombre;
         this.valor = valor;
+        this.tipo=-1;
+        this.visibilidad=-1;
+    }
+    public Nodo(String nombre, String valor, int tipo) {
+        this.nombre = nombre;
+        this.valor = valor;
+        this.tipo = tipo;        
+        this.visibilidad=-1;
     }
 
     public void insertarHijo(Nodo hijo){
@@ -78,6 +90,13 @@ public class Nodo {
 
     public void setValor(String valor) {
         this.valor = valor;
+    }
+    public int getVisibilidad() {
+        return visibilidad;
+    }
+
+    public void setVisibilidad(int visibilidad) {
+        this.visibilidad = visibilidad;
     }
     public Nodo getHijo(int indice){
         return this.hijos.get(indice);

@@ -34,10 +34,11 @@ terminal String mayor, menor, igualacion, distinto, o, y, xor, not, punto, corch
 terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, publico, protegido, privado,coma,verdadero, falso;
 
 nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
-nonterminal Nodo DECLARACION, TVAR, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, TFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
+nonterminal Nodo DECLARACION, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
 nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
 nonterminal Nodo PARA, VARPARA, OPPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO;
-nonterminal String OPREL,VISIBILIDAD,TVISIBILIDAD;
+nonterminal String OPREL;
+nonterminal Integer VISIBILIDAD,TVISIBILIDAD,TVAR,TFUN;
 precedence left o;
 precedence left xor;
 precedence left y;
@@ -51,74 +52,110 @@ precedence right masmas, menosmenos;
 
 start with S;
 
-S ::=   ENC LALS
+S ::=   ENC:enc LALS:lals
     {:
         System.out.println("Archivo finalizado");
-        
+        SemanticoGraphik.raiz=Fabrica.crearNodoGraphik(enc,lals);
+        SemanticoGraphik.graficar();
     :};
 
-TVISIBILIDAD::= privado
-                             | publico
-                             | protegido;
-VISIBILIDAD ::=  dospuntos TVISIBILIDAD
-                              |;
-ASIGNACION ::= LID igual EXP
-                               | LID ARR igual EXP;
-ENC ::= LENCABEZADO
-            |;
-LENCABEZADO ::= LENCABEZADO ENCABEZADO
-                            |ENCABEZADO;
-ENCABEZADO ::= IMPORTAR
-                                | INCLUIR;
-IMPORTAR ::= importar id gk pregc;
-LALS ::= LALS ALS
-             | ALS;
-ALS ::= als id HEREDA VISIBILIDAD llavea CUERPOALS llavec;
-CUERPOALS ::= CUERPOALS SENTALS
-                         | SENTALS;
-SENTALS ::= DECFUN
-                        | DECLARACION  pregc                      
-                        | INICIO;
-HEREDA ::= hereda id
-                     |;
-DECLARACION ::= var TVAR id VISIBILIDAD DEC2;
-DEC2 ::= IDL
-                | ASIG 
-                |;
-IDL ::= IDL coma id VISIBILIDAD
-            | coma id VISIBILIDAD;
-ASIG ::= igual VALASIG
-              | ARR ASIGARR;              
+TVISIBILIDAD::= privado:privado{:RESULT = Constante.privado;:}
+                             | publico:publico{:RESULT = Constante.publico;:}
+                             | protegido:protegido{:RESULT = Constante.protegido;:};
+VISIBILIDAD ::=  dospuntos TVISIBILIDAD:tvisibilidad{:RESULT = tvisibilidad;:}
+                              |{:RESULT = Constante.publico;:};
+ASIGNACION ::= LID:lid igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);:}
+                               | LID:lid ARR:arr igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,arr);:};
+ENC ::= LENCABEZADO:encabezado{:RESULT = encabezado;:}
+            |{:RESULT=Fabrica.crearNodoEnc(null);:};
+LENCABEZADO ::= LENCABEZADO:encabezado ENCABEZADO:enc{:RESULT = Fabrica.insertarEnc(encabezado,enc);:}
+                            |ENCABEZADO:enc{:RESULT = Fabrica.crearNodoEnc(enc);:};
+ENCABEZADO ::= IMPORTAR:importar{:RESULT = importar;:}
+                                | INCLUIR:incluir {:RESULT = incluir;:};
+IMPORTAR ::= importar id:id gk pregc
+                         {:
+                            Nodo id_imp = Fabrica.crearNodoHoja(Constante.id,id);
+                            RESULT = Fabrica.crearNodoImportar(id_imp);
+                         :};
+LALS ::= LALS:lals ALS:als{:RESULT = Fabrica.insertarALS(lals,als);:}
+             | ALS:als{:RESULT = Fabrica.crearNodoLALS(als);:};
+ALS ::= als id HEREDA:hereda VISIBILIDAD:visibilidad llavea CUERPOALS:cuerpo llavec{:RESULT = Fabrica.crearNodoALS(hereda,visibilidad,cuerpo);:};
+CUERPOALS ::= CUERPOALS:cuerpo SENTALS:sent{:RESULT = Fabrica.insertarSentencia(cuerpo,sent);:}
+                         | SENTALS:sent{:RESULT = Fabrica.crearNodoCuerpo(sent);:};
+SENTALS ::= DECFUN:decfun{:RESULT = decfun;:}
+                        | DECLARACION:dec  pregc{:RESULT = dec;:}
+                        | INICIO:inicio{:RESULT = inicio;:};
+HEREDA ::= hereda id:id{:RESULT = Fabrica.crearNodoHereda(id);:}
+                     |{:RESULT = Fabrica.crearNodoHereda("");:};
+DECLARACION ::= var TVAR:tvar id:id VISIBILIDAD:visibilidad DEC2:dec2{:RESULT = Fabrica.crearNodoDeclaracion(tvar,id,visibilidad,dec2);:};
+DEC2 ::= IDL:idl{:RESULT=idl;:}
+                | ASIG:asig {:RESULT = asig;:}
+                |{:RESULT = null;:};
+IDL ::= IDL:idl coma id:id VISIBILIDAD:visibilidad
+                {:
+                Nodo id1=Fabrica.crearNodoHoja(Constante.id,id); 
+                id1.setVisibilidad(visibilidad);
+                RESULT = Fabrica.insertarIDL(idl,id1);
+                :}
+            | coma id:id VISIBILIDAD:visibilidad
+                {:
+                Nodo id1=Fabrica.crearNodoHoja(Constante.id,id);
+                id1.setVisibilidad(visibilidad);
+                RESULT = Fabrica.crearNodoIDL(id1);
+                :};
+ASIG ::= igual VALASIG:valasig{:RESULT = valasig;:}
+              | ARR ASIGARR{:RESULT = null;:}; //->>>>>>>>>>>>>>>>>>>>>>>>>>> ASIGNACION DE ARREGLO
 ASIGARR ::= igual LLLAVE
                       | ;
 LLLAVE ::= LLLAVE coma llavea LLAVE llavec
                      | llavea LLAVE llavec;                     
 LLAVE ::= LLLAVE
                     | LPFUN;
-VALASIG ::= EXP
-                       | nuevo id parentesisa parentesisc ;
-LID ::= LID punto id
-                |  id  ;
-DECFUN ::= TFUN id parentesisa PDECFUN parentesisc VISIBILIDAD llavea CUERPO llavec;
-TVAR ::= tentero
-                | tdecimal  
-                | tcaracter
-                | tcadena
-                | tbool
-                | id;
-TFUN ::= TVAR
-               | tvacio;
-PDECFUN ::= PDECFUN coma TVAR id
-                        | TVAR id
-                        |;
+VALASIG ::= EXP:exp{:RESULT = exp;:}
+                       | nuevo id:id parentesisa parentesisc {:RESULT = Fabrica.crearNodoNuevo(id);:};
+LID ::= LID:lid punto id:id
+                {:
+                    Nodo id1=Fabrica.crearNodoHoja(Constante.id,id);
+                    RESULT = Fabrica.insertarIDL(lid,id1);
+                 :}
+                |  id:id  
+                {:
+                    Nodo id1=Fabrica.crearNodoHoja(Constante.id,id);
+                    RESULT = Fabrica.crearNodoIDL(id1);
+                 :};
+DECFUN ::= TFUN:tfun id:id parentesisa PDECFUN:pdecfun parentesisc VISIBILIDAD:visibilidad llavea CUERPO:cuerpo llavec
+                    {:RESULT = Fabrica.crearNodoDecFun(tfun,id,pdecfun,visibilidad,cuerpo);:};
+TVAR ::= tentero{:RESULT = Constante.tnum;:}
+                | tdecimal  {:RESULT = Constante.tdecimal;:}
+                | tcaracter{:RESULT = Constante.tcaracter;:}
+                | tcadena{:RESULT = Constante.tcadena;:}
+                | tbool{:RESULT = Constante.tbool;:}
+                | id{:RESULT = Constante.tid;:};
+TFUN ::= TVAR:tvar{:RESULT = tvar;:}
+               | tvacio{:RESULT = Constante.tvacio;:};
+PDECFUN ::= PDECFUN:pdecfun coma TVAR:tvar id:id
+                        {:
+                        Nodo par=Fabrica.crearNodoHoja(Constante.id,id,tvar);
+                        RESULT= Fabrica.insertarPar(pdecfun,par);
+                        :}
+                        | TVAR:tvar id:id
+                        {:
+                        Nodo par=Fabrica.crearNodoHoja(Constante.id,id,tvar);
+                        RESULT= Fabrica.crearNodoLPAR(par);
+                        :}
+                        |{:RESULT= Fabrica.crearNodoLPAR(null);:};
 RETORNAR ::= retornar EXP;
 LLAMADO ::= llamar LID parentesisa LPFUN parentesisc
                          | llamarhk id parentesisa LPFUN parentesisc;
 LPFUN ::= LPFUN coma EXP
                  | EXP
                  |;
-INICIO ::= tvacio inicio parentesisa parentesisc llavea CUERPO llavec;
-INCLUIR ::= incluirhk id pregc;
+INICIO ::= tvacio inicio parentesisa parentesisc llavea CUERPO:cuerpo llavec{:RESULT = Fabrica.crearNodoInicio(cuerpo);:};
+INCLUIR ::= incluirhk id:id pregc
+                    {:
+                        Nodo id_inc = Fabrica.crearNodoHoja(Constante.id, id);
+                        RESULT = Fabrica.crearNodoIncluir(id_inc);
+                    :};
 SI ::= si parentesisa EXP parentesisc llavea CUERPO llavec SINO;
 SINO ::= sino llavea CUERPO llavec
              | ;
@@ -153,14 +190,14 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | resta EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1);:}             
              | parentesisa EXP:exp parentesisc {:RESULT=exp;:}            
              | LLAMADO:llamado{:RESULT = llamado;:}
-             | num:num {:RESULT = Fabrica.crearNodoHoja(num);:}
-             | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(cadena);:}
-             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(caracter);:}
+             | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum);:}
+             | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena);:}
+             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);:}
              | LID:lid{:RESULT = lid;:}
              | LID ARR
-             | decimal:dec{:RESULT = Fabrica.crearNodoHoja(dec);:}
-             | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(verdadero);:}
-             | falso:falso {:RESULT = Fabrica.crearNodoHoja(falso);:};
+             | decimal:dec{:RESULT = Fabrica.crearNodoHoja(Constante.decimal,dec,Constante.tdecimal);:}
+             | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.verdadero,Constante.tbool);:}
+             | falso:falso {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.falso,Constante.tbool);:};
 
 OPREL ::= mayor {:RESULT = Constante.mayor;:}
                     | menor{:RESULT = Constante.menor;:}
@@ -169,24 +206,23 @@ OPREL ::= mayor {:RESULT = Constante.mayor;:}
                     | igualacion{:RESULT = Constante.igualacion;:}
                     | distinto{:RESULT = Constante.distinto;:};
 
-CUERPO ::= CUERPO SENTENCIA
-                    | SENTENCIA;
+CUERPO ::= CUERPO:cuerpo SENTENCIA:sent {:RESULT = Fabrica.insertarSentencia(cuerpo,sent);:}
+                     | SENTENCIA:sent {:RESULT=Fabrica.crearNodoCuerpo(sent);:};
 
-SENTENCIA ::= ASIGNACION pregc
-                          | DECLARACION pregc
-                          | RETORNAR pregc
-                          | LLAMADO pregc
-                          | SI
-                          | SELECCION
-                          | PARA
-                          | MIENTRAS
-                          | HACERMIENTRAS
-                          | IMPRIMIR
-                          | GRAPHIKAR
+SENTENCIA ::= ASIGNACION:asignacion pregc {:RESULT = asignacion;:}
+                          | DECLARACION:declaracion pregc{:RESULT = declaracion;:}
+                          | RETORNAR:retornar pregc{:RESULT = retornar;:}
+                          | LLAMADO:llamado pregc{:RESULT = llamado;:}
+                          | SI:si {:RESULT = si;:}
+                          | SELECCION:seleccion{:RESULT = seleccion;:}
+                          | PARA:para{:RESULT = para;:}
+                          | MIENTRAS:mientras {:RESULT = mientras;:}
+                          | HACERMIENTRAS:hacermientras{:RESULT = hacermientras;:}
+                          | IMPRIMIR:imprimir{:RESULT = imprimir;:}
+                          | GRAPHIKAR:graphikar {:RESULT = graphikar;:}
                           | continuar pregc
-                          | terminar pregc
-                          | error pregc;
+                          | terminar pregc;
 
-IMPRIMIR ::= imprimir parentesisa EXP parentesisc pregc;
+IMPRIMIR ::= imprimir parentesisa EXP parentesisc pregc{:RESULT = null;:};
 
-GRAPHIKAR ::= graphikar parentesisa LID coma LID parentesisc pregc;
+GRAPHIKAR ::= graphikar parentesisa LID coma LID parentesisc pregc{:RESULT = null;:};

@@ -170,10 +170,10 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.corchetec, yycolumn, yyline, yytext());}
 ","         
 {return new Symbol (TSGraphik.coma, yycolumn, yyline, yytext());} 
-{dec}         
-{return new Symbol (TSGraphik.decimal, yycolumn, yyline, yytext());}
 {num}         
 {return new Symbol (TSGraphik.num, yycolumn, yyline, yytext());}
+{dec}         
+{return new Symbol (TSGraphik.decimal, yycolumn, yyline, yytext());}
 {cadena}            
 { return new Symbol(TSGraphik.cadena, yycolumn, yyline, yytext().replace("\"", "")); }
 {caracter}          

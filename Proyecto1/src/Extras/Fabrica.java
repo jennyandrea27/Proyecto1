@@ -5,6 +5,7 @@
  */
 package Extras;
 import Analisis.*;
+import com.sun.corba.se.impl.orbutil.closure.Constant;
 
 /**
  *
@@ -14,8 +15,11 @@ public class Fabrica {
     public static Nodo crearNodoOp(String op){
         return new Nodo(op);
     }
-    public static Nodo crearNodoHoja(String nombre){
-        return new Nodo(nombre);
+    public static Nodo crearNodoHoja(String nombre,String valor, int tipo){        
+        return new Nodo(nombre+" "+tipo+" "+valor, valor, tipo);        
+    }
+    public static Nodo crearNodoHoja(String nombre,String valor){        
+        return new Nodo(nombre+" "+valor, valor);        
     }
     public static Nodo crearNodoOperacion(String operador, Nodo operando1,Nodo operando2){
         Nodo op =new Nodo(operador);
@@ -40,13 +44,7 @@ public class Fabrica {
             cuerpo.insertarHijo(sent);
         }
         return cuerpo;
-    }
-    public static Nodo crearNodoFuncion(String id, Nodo lpar, Nodo cuerpo){
-        Nodo funcion=new Nodo(Constante.funcion,id);
-        funcion.insertarHijo(lpar);
-        funcion.insertarHijo(cuerpo);
-        return funcion;
-    }
+    }    
     public static Nodo crearNodoLPAR(Nodo par){
         Nodo lpar=new Nodo(Constante.lpar);
         if(par!=null){
@@ -183,4 +181,118 @@ public class Fabrica {
         }
         return sent_caso;
     }
+    public static Nodo crearNodoGraphik(Nodo encabezado, Nodo lals){
+        Nodo graphik=new Nodo(Constante.graphik);
+        if(encabezado!=null){
+            graphik.insertarHijo(encabezado);
+        }
+        if(lals!=null){
+            graphik.insertarHijo(lals);
+        }
+        return graphik;
+    }
+    public static Nodo crearNodoImportar(Nodo id){
+        Nodo importar=new Nodo(Constante.importar);
+        if(id!=null){
+            importar.insertarHijo(id);
+        }
+        return importar;
+    }
+    public static Nodo crearNodoIncluir(Nodo id){
+        Nodo incluir=new Nodo(Constante.incluir);
+        if(id!=null){
+            incluir.insertarHijo(id);
+        }
+        return incluir;
+    }
+    public static Nodo crearNodoEnc(Nodo enc1){
+        Nodo encabezado=new Nodo(Constante.encabezado);
+        if(enc1!=null){               
+            encabezado.insertarHijo(enc1);
+        }
+        return encabezado;
+    }
+    public static Nodo insertarEnc(Nodo encabezado, Nodo enc){
+        if(enc!=null){            
+            encabezado.insertarHijo(enc);
+        }
+        return encabezado;
+    }
+    public static Nodo crearNodoLALS(Nodo als1){
+        Nodo lals=new Nodo(Constante.als);
+        if(als1!=null){               
+            lals.insertarHijo(als1);
+        }
+        return lals;
+    }
+    public static Nodo insertarALS(Nodo lals, Nodo als){
+        if(als!=null){            
+            lals.insertarHijo(als);
+        }
+        return lals;
+    }
+    public static Nodo crearNodoHereda(String valor){
+        Nodo hereda=new Nodo(Constante.hereda);
+        hereda.setValor(valor);
+        return hereda;
+    }
+    public static Nodo crearNodoALS(Nodo hereda,Integer visibilidad, Nodo cuerpo){
+        Nodo als=new Nodo(Constante.als);
+        als.insertarHijo(hereda);
+        als.setVisibilidad(visibilidad);
+        als.insertarHijo(cuerpo);
+        return als;
+    }
+    public static Nodo crearNodoInicio(Nodo cuerpo){
+        Nodo inicio=new Nodo(Constante.incio,"",Constante.tvacio);
+        inicio.insertarHijo(cuerpo);
+        return inicio;
+    }
+    public static Nodo crearNodoAsignacion(Nodo lid,Nodo valor,Nodo arr){
+        Nodo asig = new Nodo(Constante.asig);
+        if(lid!=null){
+            asig.insertarHijo(lid);
+        }
+        if(valor!=null){
+            asig.insertarHijo(valor);
+        }
+        if(arr!=null){
+            asig.insertarHijo(arr);
+        }
+        return asig;
+    }
+    public static Nodo crearNodoDecFun(Integer tfun,String valor, Nodo pdecfun, Integer visibilidad, Nodo cuerpo){
+        Nodo decfun=new Nodo(Constante.decfun,valor,tfun);
+        decfun.setVisibilidad(visibilidad);
+        decfun.insertarHijo(pdecfun);
+        decfun.insertarHijo(cuerpo);       
+        return decfun;
+    }
+
+    public static Nodo crearNodoNuevo(String valor){      
+        return new Nodo(Constante.nuevo,valor);
+    }
+    public static Nodo crearNodoIDL(Nodo id1){
+        Nodo idl=new Nodo(Constante.id);
+        if(idl!=null){               
+            idl.insertarHijo(id1);
+        }
+        return idl;
+    }
+    public static Nodo insertarIDL(Nodo idl, Nodo id){
+        if(id!=null){            
+            idl.insertarHijo(id);
+        }
+        return idl;
+    }
+    public static Nodo crearNodoDeclaracion(Integer tvar, String valor, Integer visibilidad, Nodo dec){        
+        Nodo id=crearNodoHoja(Constante.id,valor,tvar);
+        id.setVisibilidad(visibilidad);
+        Nodo declaracion=new Nodo(Constante.dec);
+        declaracion.insertarHijo(id);
+        if(dec!=null){
+            declaracion.insertarHijo(dec);
+        }
+        return declaracion;
+    }    
 }

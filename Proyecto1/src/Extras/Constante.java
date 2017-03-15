@@ -65,12 +65,52 @@ public class Constante {
     public static final String llamado="llamado";   
     public static final String oplisa="oplista";   
     public static final String concat="concat";   
-    public static final String num="num";   
+    public static final String num="num";  
+    public static final String decimal="decimal"; 
+    public static final String caracter="caracter"; 
+    public static final String bool="bool"; 
+    public static final String falso="falso"; 
+    public static final String verdadero="verdadero"; 
     public static final String acceso="acceso"; 
     public static final String lcasos="lcasos"; 
-    public static final int tnumerico=1;
-    public static final int tcadena=2;
-    public static final int tboolean=3;
+    public static final String encabezado="encabezado"; 
+    public static final int publico=0; 
+    public static final int protegido=1; 
+    public static final int  privado=2; 
+    public static final int tnum=1;
+    public static final int tcadena=3;
+    public static final int tbool=7;
+    public static final int tdecimal=10;
+    public static final int tcaracter=15;
+    public static final int tvacio=16;
+    public static final int tid=17;
+    //GRAPHIK
+    public static final String var ="var"; 
+    public static final String importar="importar"; 
+    public static final String als="als"; 
+    public static final String hereda="hereda"; 
+    public static final String nuevo="nuevo"; 
+    public static final String retornar="retornar"; 
+    public static final String llamar="llamar"; 
+    public static final String incio="inicio"; 
+    public static final String incluir="incluir"; 
+    public static final String defecto="defecto"; 
+    public static final String para="para"; 
+    public static final String mientras="mientras"; 
+    public static final String hacer="hacer"; 
+    public static final String decfun="decfun"; 
+    public static final String dec="dec"; 
+    public static final String continuar="continuar"; 
+    public static final String terminar="terminar"; 
+    public static final String graphikar="graphikar"; 
+    public static final String graphik="graphik"; 
+    public static final String datos="datos"; 
+    public static final String columna="columna"; 
+    public static final String procesar="procesar"; 
+    public static final String dondecada="dondecada"; 
+    public static final String dondetodo="dondetodo"; 
+    public static final String donde="donde"; 
+    public static final String imprimir="imprimir"; 
     
 }
 
