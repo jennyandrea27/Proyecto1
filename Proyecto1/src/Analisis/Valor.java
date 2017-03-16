@@ -13,6 +13,11 @@ public class Valor {
     int tipo;
     String valor;
 
+    public Valor() {
+        this.tipo = -1;
+        this.valor = "";
+    }
+    
     public Valor(int tipo, String valor) {
         this.tipo = tipo;
         this.valor = valor;

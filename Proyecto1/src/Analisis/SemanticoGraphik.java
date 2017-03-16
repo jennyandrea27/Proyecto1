@@ -16,16 +16,17 @@ import java.io.PrintWriter;
  */
 public class SemanticoGraphik {
     public static Valor evaluarEXP(Nodo op){
+        Valor res=new Valor();
         switch(op.getNombre()){
             case Constante.suma:
                 Valor op1=evaluarEXP(op.getHijo(0));
                 Valor op2=evaluarEXP(op.getHijo(1));
-                Casteo.suma(op1,op2);
+                res=Casteo.suma(op1,op2);
                 break;
             default:
                 return new Valor(op.getTipo(),op.getValor());
         }
-        return null;
+        return res;
     }
     public static void asignacionVar(Nodo asig){
         //obtener id
@@ -33,6 +34,7 @@ public class SemanticoGraphik {
         //obtener el valor almacenado en hijos(1)
         Valor res;
         Valor valor = evaluarEXP(asig.hijos.get(1));
+        System.out.println("Valor: "+valor.getValor()+" Tipo: "+Casteo.valTipo(valor.getTipo()));
         //asignar valor en TS
         
     }

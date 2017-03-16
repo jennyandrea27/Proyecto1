@@ -72,6 +72,8 @@ public class Constante {
     public static final String bool="bool"; 
     public static final String falso="falso"; 
     public static final String verdadero="verdadero"; 
+    public static final String error="error"; 
+    public static final String vacio="vacio"; 
     public static final String acceso="acceso"; 
     public static final String lcasos="lcasos"; 
     public static final String encabezado="encabezado"; 
@@ -85,6 +87,7 @@ public class Constante {
     public static final int tcaracter=15;
     public static final int tvacio=16;
     public static final int tid=17;
+    public static final int terror=19;
     //GRAPHIK
     public static final String var ="var"; 
     public static final String importar="importar"; 
