@@ -64,28 +64,28 @@ public class LexicoG implements java_cup.runtime.Scanner {
     "\1\22\1\23\1\24\2\4\1\25\1\26\1\27\7\0"+
     "\1\30\3\0\13\3\2\0\2\3\1\0\7\3\1\0"+
     "\1\31\1\3\1\31\3\3\1\32\1\33\1\34\1\35"+
-    "\1\36\1\37\1\40\1\41\1\42\1\1\1\43\1\44"+
-    "\3\0\1\30\1\5\2\0\1\45\2\3\2\46\4\3"+
+    "\1\36\1\37\1\40\1\41\1\42\1\43\1\44\1\45"+
+    "\3\0\1\30\1\5\2\0\1\46\2\3\2\47\4\3"+
     "\1\0\6\3\3\0\3\3\1\0\5\3\1\0\3\3"+
-    "\2\0\5\3\7\0\1\5\1\0\6\3\2\47\5\3"+
-    "\4\0\4\3\1\0\2\3\1\50\1\51\2\3\1\0"+
-    "\3\3\1\0\1\52\1\3\1\52\2\3\1\0\1\3"+
-    "\4\0\2\53\2\3\1\54\1\0\2\3\1\0\2\3"+
-    "\2\55\1\3\1\56\4\0\4\3\1\0\4\3\1\0"+
-    "\1\3\1\0\2\3\1\0\1\3\1\57\1\3\2\60"+
-    "\3\0\2\3\1\0\2\3\1\0\5\3\1\0\1\61"+
-    "\2\0\1\3\1\61\2\3\1\0\1\3\1\62\1\3"+
+    "\2\0\5\3\7\0\1\5\1\0\6\3\2\50\5\3"+
+    "\4\0\4\3\1\0\2\3\1\51\1\52\2\3\1\0"+
+    "\3\3\1\0\1\53\1\3\1\53\2\3\1\0\1\3"+
+    "\4\0\2\54\2\3\1\55\1\0\2\3\1\0\2\3"+
+    "\2\56\1\3\1\57\4\0\4\3\1\0\4\3\1\0"+
+    "\1\3\1\0\2\3\1\0\1\3\1\60\1\3\2\61"+
+    "\3\0\2\3\1\0\2\3\1\0\5\3\1\0\1\62"+
+    "\2\0\1\3\1\62\2\3\1\0\1\3\1\63\1\3"+
     "\1\0\1\3\1\0\1\3\1\0\1\3\1\0\1\3"+
-    "\1\0\1\3\1\63\3\0\2\3\1\0\2\3\1\0"+
-    "\1\3\1\64\1\65\2\3\3\0\3\3\1\0\2\3"+
-    "\1\0\1\3\1\0\1\3\2\66\2\67\1\0\1\3"+
-    "\1\0\1\3\1\70\1\71\1\0\1\3\1\72\2\73"+
-    "\1\74\1\0\3\3\1\0\1\75\1\76\1\3\1\75"+
-    "\1\76\2\77\2\100\1\0\1\3\2\101\1\0\1\3"+
-    "\1\0\1\3\1\102\1\103\2\104\1\105\1\106\1\0"+
-    "\1\3\2\107\1\0\1\3\2\110\2\111\1\0\1\3"+
+    "\1\0\1\3\1\64\3\0\2\3\1\0\2\3\1\0"+
+    "\1\3\1\65\1\66\2\3\3\0\3\3\1\0\2\3"+
+    "\1\0\1\3\1\0\1\3\2\67\2\70\1\0\1\3"+
+    "\1\0\1\3\1\71\1\72\1\0\1\3\1\73\2\74"+
+    "\1\75\1\0\3\3\1\0\1\76\1\77\1\3\1\76"+
+    "\1\77\2\100\2\101\1\0\1\3\2\102\1\0\1\3"+
+    "\1\0\1\3\1\103\1\104\2\105\1\106\1\107\1\0"+
+    "\1\3\2\110\1\0\1\3\2\111\2\112\1\0\1\3"+
     "\1\0\1\3\1\0\1\3\1\0\1\3\1\0\1\3"+
-    "\1\0\1\3\1\0\1\3\2\112";
+    "\1\0\1\3\1\0\1\3\2\113";
 
   private static int [] zzUnpackAction() {
     int [] result = new int[373];
@@ -1038,301 +1038,305 @@ StringBuffer string=new StringBuffer();
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { return new Symbol (TSGraphik.decimal, yycolumn, yyline, yytext());
+            { return new Symbol (TSGraphik.num, yycolumn, yyline, yytext());
             }
-          case 75: break;
+          case 76: break;
           case 2: 
             { return new Symbol (TSGraphik.punto, yycolumn, yyline, yytext());
             }
-          case 76: break;
+          case 77: break;
           case 3: 
             { return new Symbol (TSGraphik.id, yycolumn, yyline, yytext());
             }
-          case 77: break;
+          case 78: break;
           case 4: 
             { /*errores lexicos*/
             }
-          case 78: break;
+          case 79: break;
           case 5: 
             { /*se ignora*/
             }
-          case 79: break;
+          case 80: break;
           case 6: 
             { return new Symbol (TSGraphik.div, yycolumn, yyline, yytext());
             }
-          case 80: break;
+          case 81: break;
           case 7: 
             { return new Symbol (TSGraphik.pregc, yycolumn, yyline, yytext());
             }
-          case 81: break;
+          case 82: break;
           case 8: 
             { return new Symbol (TSGraphik.dospuntos, yycolumn, yyline, yytext());
             }
-          case 82: break;
+          case 83: break;
           case 9: 
             { return new Symbol (TSGraphik.llavea, yycolumn, yyline, yytext());
             }
-          case 83: break;
+          case 84: break;
           case 10: 
             { return new Symbol (TSGraphik.llavec, yycolumn, yyline, yytext());
             }
-          case 84: break;
+          case 85: break;
           case 11: 
             { return new Symbol (TSGraphik.suma, yycolumn, yyline, yytext());
             }
-          case 85: break;
+          case 86: break;
           case 12: 
             { return new Symbol (TSGraphik.resta, yycolumn, yyline, yytext());
             }
-          case 86: break;
+          case 87: break;
           case 13: 
             { return new Symbol (TSGraphik.mult, yycolumn, yyline, yytext());
             }
-          case 87: break;
+          case 88: break;
           case 14: 
             { return new Symbol (TSGraphik.potencia, yycolumn, yyline, yytext());
             }
-          case 88: break;
+          case 89: break;
           case 15: 
             { return new Symbol (TSGraphik.parentesisa, yycolumn, yyline, yytext());
             }
-          case 89: break;
+          case 90: break;
           case 16: 
             { return new Symbol (TSGraphik.parentesisc, yycolumn, yyline, yytext());
             }
-          case 90: break;
+          case 91: break;
           case 17: 
             { return new Symbol (TSGraphik.mayor, yycolumn, yyline, yytext());
             }
-          case 91: break;
+          case 92: break;
           case 18: 
             { return new Symbol (TSGraphik.igual, yycolumn, yyline, yytext());
             }
-          case 92: break;
+          case 93: break;
           case 19: 
             { return new Symbol (TSGraphik.menor, yycolumn, yyline, yytext());
             }
-          case 93: break;
+          case 94: break;
           case 20: 
             { return new Symbol (TSGraphik.not, yycolumn, yyline, yytext());
             }
-          case 94: break;
+          case 95: break;
           case 21: 
             { return new Symbol (TSGraphik.corchetea, yycolumn, yyline, yytext());
             }
-          case 95: break;
+          case 96: break;
           case 22: 
             { return new Symbol (TSGraphik.corchetec, yycolumn, yyline, yytext());
             }
-          case 96: break;
+          case 97: break;
           case 23: 
             { return new Symbol (TSGraphik.coma, yycolumn, yyline, yytext());
             }
-          case 97: break;
+          case 98: break;
           case 24: 
             { return new Symbol(TSGraphik.cadena, yycolumn, yyline, yytext().replace("\"", ""));
             }
-          case 98: break;
+          case 99: break;
           case 25: 
             { return new Symbol (TSGraphik.si, yycolumn, yyline, yytext());
             }
-          case 99: break;
+          case 100: break;
           case 26: 
             { return new Symbol (TSGraphik.masmas, yycolumn, yyline, yytext());
             }
-          case 100: break;
+          case 101: break;
           case 27: 
             { return new Symbol (TSGraphik.menosmenos, yycolumn, yyline, yytext());
             }
-          case 101: break;
+          case 102: break;
           case 28: 
             { return new Symbol (TSGraphik.mayorigual, yycolumn, yyline, yytext());
             }
-          case 102: break;
+          case 103: break;
           case 29: 
             { return new Symbol (TSGraphik.igualacion, yycolumn, yyline, yytext());
             }
-          case 103: break;
+          case 104: break;
           case 30: 
             { return new Symbol (TSGraphik.menorigual, yycolumn, yyline, yytext());
             }
-          case 104: break;
+          case 105: break;
           case 31: 
             { return new Symbol (TSGraphik.distinto, yycolumn, yyline, yytext());
             }
-          case 105: break;
+          case 106: break;
           case 32: 
             { return new Symbol (TSGraphik.o, yycolumn, yyline, yytext());
             }
-          case 106: break;
+          case 107: break;
           case 33: 
             { return new Symbol (TSGraphik.xor, yycolumn, yyline, yytext());
             }
-          case 107: break;
+          case 108: break;
           case 34: 
             { return new Symbol (TSGraphik.y, yycolumn, yyline, yytext());
             }
-          case 108: break;
-          case 35: 
-            { return new Symbol (TSGraphik.gk, yycolumn, yyline, yytext());
-            }
           case 109: break;
-          case 36: 
-            { return new Symbol (TSGraphik.caracter, yycolumn, yyline, yytext());
+          case 35: 
+            { return new Symbol (TSGraphik.decimal, yycolumn, yyline, yytext());
             }
           case 110: break;
-          case 37: 
-            { return new Symbol (TSGraphik.var, yycolumn, yyline, yytext());
+          case 36: 
+            { return new Symbol (TSGraphik.gk, yycolumn, yyline, yytext());
             }
           case 111: break;
-          case 38: 
-            { return new Symbol (TSGraphik.als, yycolumn, yyline, yytext());
+          case 37: 
+            { return new Symbol (TSGraphik.caracter, yycolumn, yyline, yytext());
             }
           case 112: break;
-          case 39: 
-            { return new Symbol (TSGraphik.caso, yycolumn, yyline, yytext());
+          case 38: 
+            { return new Symbol (TSGraphik.var, yycolumn, yyline, yytext());
             }
           case 113: break;
-          case 40: 
-            { return new Symbol (TSGraphik.tbool, yycolumn, yyline, yytext());
+          case 39: 
+            { return new Symbol (TSGraphik.als, yycolumn, yyline, yytext());
             }
           case 114: break;
-          case 41: 
-            { return new Symbol (TSGraphik.para, yycolumn, yyline, yytext());
+          case 40: 
+            { return new Symbol (TSGraphik.caso, yycolumn, yyline, yytext());
             }
           case 115: break;
-          case 42: 
-            { return new Symbol (TSGraphik.sino, yycolumn, yyline, yytext());
+          case 41: 
+            { return new Symbol (TSGraphik.tbool, yycolumn, yyline, yytext());
             }
           case 116: break;
-          case 43: 
-            { return new Symbol (TSGraphik.tvacio, yycolumn, yyline, yytext());
+          case 42: 
+            { return new Symbol (TSGraphik.para, yycolumn, yyline, yytext());
             }
           case 117: break;
-          case 44: 
-            { return new Symbol (TSGraphik.nuevo, yycolumn, yyline, yytext());
+          case 43: 
+            { return new Symbol (TSGraphik.sino, yycolumn, yyline, yytext());
             }
           case 118: break;
-          case 45: 
-            { return new Symbol (TSGraphik.datos, yycolumn, yyline, yytext());
+          case 44: 
+            { return new Symbol (TSGraphik.tvacio, yycolumn, yyline, yytext());
             }
           case 119: break;
-          case 46: 
-            { return new Symbol (TSGraphik.donde, yycolumn, yyline, yytext());
+          case 45: 
+            { return new Symbol (TSGraphik.nuevo, yycolumn, yyline, yytext());
             }
           case 120: break;
-          case 47: 
-            { return new Symbol (TSGraphik.hacer, yycolumn, yyline, yytext());
+          case 46: 
+            { return new Symbol (TSGraphik.datos, yycolumn, yyline, yytext());
             }
           case 121: break;
-          case 48: 
-            { return new Symbol (TSGraphik.falso, yycolumn, yyline, yytext());
+          case 47: 
+            { return new Symbol (TSGraphik.donde, yycolumn, yyline, yytext());
             }
           case 122: break;
-          case 49: 
-            { return new Symbol (TSGraphik.inicio, yycolumn, yyline, yytext());
+          case 48: 
+            { return new Symbol (TSGraphik.hacer, yycolumn, yyline, yytext());
             }
           case 123: break;
-          case 50: 
-            { return new Symbol (TSGraphik.llamar, yycolumn, yyline, yytext());
+          case 49: 
+            { return new Symbol (TSGraphik.falso, yycolumn, yyline, yytext());
             }
           case 124: break;
-          case 51: 
-            { return new Symbol (TSGraphik.hereda, yycolumn, yyline, yytext());
+          case 50: 
+            { return new Symbol (TSGraphik.inicio, yycolumn, yyline, yytext());
             }
           case 125: break;
-          case 52: 
-            { return new Symbol (TSGraphik.columna, yycolumn, yyline, yytext());
+          case 51: 
+            { return new Symbol (TSGraphik.llamar, yycolumn, yyline, yytext());
             }
           case 126: break;
-          case 53: 
-            { return new Symbol (TSGraphik.defecto, yycolumn, yyline, yytext());
+          case 52: 
+            { return new Symbol (TSGraphik.hereda, yycolumn, yyline, yytext());
             }
           case 127: break;
-          case 54: 
-            { return new Symbol (TSGraphik.privado, yycolumn, yyline, yytext());
+          case 53: 
+            { return new Symbol (TSGraphik.columna, yycolumn, yyline, yytext());
             }
           case 128: break;
-          case 55: 
-            { return new Symbol (TSGraphik.publico, yycolumn, yyline, yytext());
+          case 54: 
+            { return new Symbol (TSGraphik.defecto, yycolumn, yyline, yytext());
             }
           case 129: break;
-          case 56: 
-            { return new Symbol (TSGraphik.tentero, yycolumn, yyline, yytext());
+          case 55: 
+            { return new Symbol (TSGraphik.privado, yycolumn, yyline, yytext());
             }
           case 130: break;
-          case 57: 
-            { return new Symbol (TSGraphik.tcadena, yycolumn, yyline, yytext());
+          case 56: 
+            { return new Symbol (TSGraphik.publico, yycolumn, yyline, yytext());
             }
           case 131: break;
-          case 58: 
-            { return new Symbol (TSGraphik.retornar, yycolumn, yyline, yytext());
+          case 57: 
+            { return new Symbol (TSGraphik.tentero, yycolumn, yyline, yytext());
             }
           case 132: break;
-          case 59: 
-            { return new Symbol (TSGraphik.terminar, yycolumn, yyline, yytext());
+          case 58: 
+            { return new Symbol (TSGraphik.tcadena, yycolumn, yyline, yytext());
             }
           case 133: break;
-          case 60: 
-            { return new Symbol (TSGraphik.tcaracter, yycolumn, yyline, yytext());
+          case 59: 
+            { return new Symbol (TSGraphik.retornar, yycolumn, yyline, yytext());
             }
           case 134: break;
-          case 61: 
-            { return new Symbol (TSGraphik.imprimir, yycolumn, yyline, yytext());
+          case 60: 
+            { return new Symbol (TSGraphik.terminar, yycolumn, yyline, yytext());
             }
           case 135: break;
-          case 62: 
-            { return new Symbol (TSGraphik.importar, yycolumn, yyline, yytext());
+          case 61: 
+            { return new Symbol (TSGraphik.tcaracter, yycolumn, yyline, yytext());
             }
           case 136: break;
-          case 63: 
-            { return new Symbol (TSGraphik.mientras, yycolumn, yyline, yytext());
+          case 62: 
+            { return new Symbol (TSGraphik.imprimir, yycolumn, yyline, yytext());
             }
           case 137: break;
-          case 64: 
-            { return new Symbol (TSGraphik.llamarhk, yycolumn, yyline, yytext());
+          case 63: 
+            { return new Symbol (TSGraphik.importar, yycolumn, yyline, yytext());
             }
           case 138: break;
-          case 65: 
-            { return new Symbol (TSGraphik.procesar, yycolumn, yyline, yytext());
+          case 64: 
+            { return new Symbol (TSGraphik.mientras, yycolumn, yyline, yytext());
             }
           case 139: break;
-          case 66: 
-            { return new Symbol (TSGraphik.tdecimal, yycolumn, yyline, yytext());
+          case 65: 
+            { return new Symbol (TSGraphik.llamarhk, yycolumn, yyline, yytext());
             }
           case 140: break;
-          case 67: 
-            { return new Symbol (TSGraphik.verdadero, yycolumn, yyline, yytext());
+          case 66: 
+            { return new Symbol (TSGraphik.procesar, yycolumn, yyline, yytext());
             }
           case 141: break;
-          case 68: 
-            { return new Symbol (TSGraphik.continuar, yycolumn, yyline, yytext());
+          case 67: 
+            { return new Symbol (TSGraphik.tdecimal, yycolumn, yyline, yytext());
             }
           case 142: break;
-          case 69: 
-            { return new Symbol (TSGraphik.dondetodo, yycolumn, yyline, yytext());
+          case 68: 
+            { return new Symbol (TSGraphik.verdadero, yycolumn, yyline, yytext());
             }
           case 143: break;
-          case 70: 
-            { return new Symbol (TSGraphik.dondecada, yycolumn, yyline, yytext());
+          case 69: 
+            { return new Symbol (TSGraphik.continuar, yycolumn, yyline, yytext());
             }
           case 144: break;
-          case 71: 
-            { return new Symbol (TSGraphik.protegido, yycolumn, yyline, yytext());
+          case 70: 
+            { return new Symbol (TSGraphik.dondetodo, yycolumn, yyline, yytext());
             }
           case 145: break;
-          case 72: 
-            { return new Symbol (TSGraphik.seleccion, yycolumn, yyline, yytext());
+          case 71: 
+            { return new Symbol (TSGraphik.dondecada, yycolumn, yyline, yytext());
             }
           case 146: break;
-          case 73: 
-            { return new Symbol (TSGraphik.incluirhk, yycolumn, yyline, yytext());
+          case 72: 
+            { return new Symbol (TSGraphik.protegido, yycolumn, yyline, yytext());
             }
           case 147: break;
-          case 74: 
-            { return new Symbol (TSGraphik.graphikar, yycolumn, yyline, yytext());
+          case 73: 
+            { return new Symbol (TSGraphik.seleccion, yycolumn, yyline, yytext());
             }
           case 148: break;
+          case 74: 
+            { return new Symbol (TSGraphik.incluirhk, yycolumn, yyline, yytext());
+            }
+          case 149: break;
+          case 75: 
+            { return new Symbol (TSGraphik.graphikar, yycolumn, yyline, yytext());
+            }
+          case 150: break;
           default:
             zzScanError(ZZ_NO_MATCH);
         }

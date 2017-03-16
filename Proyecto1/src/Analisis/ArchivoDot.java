@@ -5,6 +5,9 @@
  */
 package Analisis;
 import Analisis.Nodo;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  *
@@ -33,7 +36,27 @@ public class ArchivoDot {
             grafo += padre + "->" + nombre_hijo + ";\n";
             contador++;
             recorrerAST(nombre_hijo, hijo);
+        }        
+    }
+    public static void graficar(Nodo raiz,String nombre) throws IOException{
+        String dot=ArchivoDot.getGrafo(raiz);
+        //System.out.println(dot);
+        try
+        {
+            FileWriter fw = new FileWriter("C:\\Users\\Jenny\\Desktop\\"+nombre+".dot");
+            PrintWriter pw = new PrintWriter(fw);
+            pw.print(dot);
+            fw.close();
+
+            String dirImagen = "C:\\Users\\Jenny\\Desktop\\"+nombre+".png";
+            String dirDot = "C:\\Users\\Jenny\\Desktop\\"+nombre+".dot";
+            ProcessBuilder pbuilder;
+            pbuilder = new ProcessBuilder( "dot", "-Tpng", "-o", dirImagen, dirDot );
+            pbuilder.redirectErrorStream( true );
+            //Ejecuta el proceso
+            pbuilder.start();
+        } catch (Exception e) {
+            e.printStackTrace(); 
         }
-        
     }
 }

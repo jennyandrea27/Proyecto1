@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package LexicoG;
+package Analisis;
 
 /**
  *
  * @author Jenny
  */
-public class jflex {
-    
+public class Casteo {
+    public static Valor suma(Valor op1, Valor op2){
+        return null;
+    }
 }

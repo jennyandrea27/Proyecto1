@@ -675,6 +675,7 @@ public class SintacticoH extends java_cup.runtime.lr_parser {
 
 //Codigo visible
 
+    public static Nodo raiz=new Nodo("raiz");
     public void syntax_error(Symbol s){
         TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
         System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
@@ -740,8 +741,7 @@ class CUP$SintacticoH$actions {
 		Nodo hk = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
 		
         System.out.println("Archivo finalizado");
-        SemanticoHaskell.raiz=hk;
-        SemanticoHaskell.graficar();
+        raiz=hk;        
     
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("S",0, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }

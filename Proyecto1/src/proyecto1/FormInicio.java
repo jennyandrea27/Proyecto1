@@ -5,10 +5,13 @@
  */
 package proyecto1;
 
+import Analisis.ArchivoDot;
 import Analisis.Graphik.LexicoG;
 import Analisis.Graphik.SintacticoG;
 import Analisis.HaskellArchivo.LexicoH;
 import Analisis.HaskellArchivo.SintacticoH;
+import Analisis.Recorrido;
+import Analisis.SemanticoGraphik;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -237,6 +240,7 @@ public class FormInicio extends javax.swing.JFrame {
                     LexicoH lexico = new LexicoH(new BufferedReader( new StringReader(entrada)));
                     SintacticoH sintactico= new SintacticoH(lexico);
                     sintactico.parse();
+                    ArchivoDot.graficar(sintactico.raiz, "ASTHaskell");
                 } catch (Exception ex) {
                     System.out.println("Error "+ex.getMessage());
                 }
@@ -253,6 +257,8 @@ public class FormInicio extends javax.swing.JFrame {
                     LexicoG lexico = new LexicoG(new BufferedReader( new StringReader(entrada)));
                     SintacticoG sintactico= new SintacticoG(lexico);
                     sintactico.parse();
+                    ArchivoDot.graficar(sintactico.raiz, "ASTGraphik");
+                    Recorrido.recorrerArbol(sintactico.raiz);
                 } catch (Exception ex) {
                     System.out.println("Error "+ex.getMessage());
                 }

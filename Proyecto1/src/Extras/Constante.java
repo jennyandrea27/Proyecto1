@@ -60,6 +60,7 @@ public class Constante {
     public static final String dim1="dim1";   
     public static final String dim2="dim2";   
     public static final String asig="asig";   
+    public static final String lid="lid";   
     public static final String id="id";   
     public static final String cadena="cadena";  
     public static final String llamado="llamado";   
@@ -92,12 +93,12 @@ public class Constante {
     public static final String nuevo="nuevo"; 
     public static final String retornar="retornar"; 
     public static final String llamar="llamar"; 
-    public static final String incio="inicio"; 
+    public static final String inicio="inicio"; 
     public static final String incluir="incluir"; 
     public static final String defecto="defecto"; 
     public static final String para="para"; 
     public static final String mientras="mientras"; 
-    public static final String hacer="hacer"; 
+    public static final String hacermientras="hacermientras"; 
     public static final String decfun="decfun"; 
     public static final String dec="dec"; 
     public static final String continuar="continuar"; 
@@ -110,7 +111,7 @@ public class Constante {
     public static final String dondecada="dondecada"; 
     public static final String dondetodo="dondetodo"; 
     public static final String donde="donde"; 
-    public static final String imprimir="imprimir"; 
+    public static final String imprimir="imprimir";     
     
 }
 

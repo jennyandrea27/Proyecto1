@@ -16,10 +16,10 @@ public class Fabrica {
         return new Nodo(op);
     }
     public static Nodo crearNodoHoja(String nombre,String valor, int tipo){        
-        return new Nodo(nombre+" "+tipo+" "+valor, valor, tipo);        
+        return new Nodo(nombre, valor, tipo);        
     }
     public static Nodo crearNodoHoja(String nombre,String valor){        
-        return new Nodo(nombre+" "+valor, valor);        
+        return new Nodo(nombre, valor);        
     }
     public static Nodo crearNodoOperacion(String operador, Nodo operando1,Nodo operando2){
         Nodo op =new Nodo(operador);
@@ -121,6 +121,16 @@ public class Fabrica {
     }
     public static Nodo crearNodoLlamado(String nombre,Nodo lpar){
         Nodo llamado=new Nodo(Constante.llamado,nombre);
+        if(lpar!=null){
+            llamado.insertarHijo(lpar);
+        }
+        return llamado;
+    }
+    public static Nodo crearNodoLlamado(Nodo lid,Nodo lpar){
+        Nodo llamado=new Nodo(Constante.llamar);
+        if(lid!=null){
+            llamado.insertarHijo(lid);
+        }
         if(lpar!=null){
             llamado.insertarHijo(lpar);
         }
@@ -244,7 +254,7 @@ public class Fabrica {
         return als;
     }
     public static Nodo crearNodoInicio(Nodo cuerpo){
-        Nodo inicio=new Nodo(Constante.incio,"",Constante.tvacio);
+        Nodo inicio=new Nodo(Constante.inicio,"",Constante.tvacio);
         inicio.insertarHijo(cuerpo);
         return inicio;
     }
@@ -268,12 +278,11 @@ public class Fabrica {
         decfun.insertarHijo(cuerpo);       
         return decfun;
     }
-
     public static Nodo crearNodoNuevo(String valor){      
         return new Nodo(Constante.nuevo,valor);
     }
     public static Nodo crearNodoIDL(Nodo id1){
-        Nodo idl=new Nodo(Constante.id);
+        Nodo idl=new Nodo(Constante.lid);
         if(idl!=null){               
             idl.insertarHijo(id1);
         }
@@ -295,4 +304,23 @@ public class Fabrica {
         }
         return declaracion;
     }    
+    public static Nodo crearNodoMientras(String tipo_ciclo, Nodo cond, Nodo cuerpo){
+        Nodo mientras=new Nodo(tipo_ciclo);
+        mientras.insertarHijo(cond);
+        mientras.insertarHijo(cuerpo);
+        return mientras;
+    }
+    public static Nodo crearNodoPara(Nodo varpara,Nodo cond,Nodo posterior){
+        Nodo para=new Nodo(Constante.para);
+        if(varpara!=null){
+            para.insertarHijo(varpara);
+        }
+        if(cond!=null){
+            para.insertarHijo(cond);
+        }
+        if(posterior!=null){
+            para.insertarHijo(posterior);
+        }
+        return para;
+    }
 }

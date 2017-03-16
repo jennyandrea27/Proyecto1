@@ -8,6 +8,7 @@ import Reportes.*;
 parser code
 {://Codigo visible
 
+    public static Nodo raiz=new Nodo("raiz");
     public void syntax_error(Symbol s){
         TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
         System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
@@ -36,8 +37,8 @@ terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, pu
 nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
 nonterminal Nodo DECLARACION, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
 nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
-nonterminal Nodo PARA, VARPARA, OPPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO;
-nonterminal String OPREL;
+nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO;
+nonterminal String OPREL,OPPARA;
 nonterminal Integer VISIBILIDAD,TVISIBILIDAD,TVAR,TFUN;
 precedence left o;
 precedence left xor;
@@ -55,8 +56,7 @@ start with S;
 S ::=   ENC:enc LALS:lals
     {:
         System.out.println("Archivo finalizado");
-        SemanticoGraphik.raiz=Fabrica.crearNodoGraphik(enc,lals);
-        SemanticoGraphik.graficar();
+        raiz=Fabrica.crearNodoGraphik(enc,lals);        
     :};
 
 TVISIBILIDAD::= privado:privado{:RESULT = Constante.privado;:}
@@ -144,36 +144,48 @@ PDECFUN ::= PDECFUN:pdecfun coma TVAR:tvar id:id
                         RESULT= Fabrica.crearNodoLPAR(par);
                         :}
                         |{:RESULT= Fabrica.crearNodoLPAR(null);:};
-RETORNAR ::= retornar EXP;
-LLAMADO ::= llamar LID parentesisa LPFUN parentesisc
-                         | llamarhk id parentesisa LPFUN parentesisc;
-LPFUN ::= LPFUN coma EXP
-                 | EXP
-                 |;
+RETORNAR ::= retornar EXP:exp{:RESULT = new Nodo(Constante.retornar); RESULT.insertarHijo(exp);:};
+LLAMADO ::= llamar LID:lid parentesisa LPFUN:lpfun parentesisc{:RESULT = Fabrica.crearNodoLlamado(lid,lpfun);:}
+                         | llamarhk id:id parentesisa LPFUN:lpfun parentesisc{:RESULT = Fabrica.crearNodoLlamado(id,lpfun);:};
+LPFUN ::= LPFUN:lpar coma EXP:exp{:RESULT=Fabrica.insertarPar(lpar,exp);:}
+                 | EXP:exp{:RESULT=Fabrica.crearNodoLPAR(exp);:}
+                 |{:RESULT=Fabrica.crearNodoLPAR(null);:};
 INICIO ::= tvacio inicio parentesisa parentesisc llavea CUERPO:cuerpo llavec{:RESULT = Fabrica.crearNodoInicio(cuerpo);:};
 INCLUIR ::= incluirhk id:id pregc
                     {:
                         Nodo id_inc = Fabrica.crearNodoHoja(Constante.id, id);
                         RESULT = Fabrica.crearNodoIncluir(id_inc);
                     :};
-SI ::= si parentesisa EXP parentesisc llavea CUERPO llavec SINO;
-SINO ::= sino llavea CUERPO llavec
-             | ;
-SELECCION ::= seleccion parentesisa LID parentesisc llavea LCASO DEFECTO llavec;
-LCASO ::= LCASO CASO
-                 | CASO;
-CASO ::= caso EXP dospuntos CUERPO;
-DEFECTO ::= defecto dospuntos CUERPO
-                        |;
-PARA ::= para parentesisa VARPARA dospuntos EXP dospuntos POSTERIOR parentesisc llavea CUERPO llavec;
-VARPARA::= var TVAR id igual EXP  
-                     | LID igual EXP;
-POSTERIOR ::= LID OPPARA
-                           |ASIGNACION;
-OPPARA ::= masmas
-                     | menosmenos;
-MIENTRAS ::= mientras parentesisa EXP parentesisc llavea CUERPO llavec;
-HACERMIENTRAS ::= hacer llavea CUERPO llavec mientras parentesisa EXP parentesisc;
+SI ::= si parentesisa EXP:exp parentesisc llavea CUERPO:cuerpo llavec SINO:sino{:RESULT = Fabrica.crearNodoSi(exp,cuerpo,sino);:};
+SINO ::= sino llavea CUERPO:cuerpo llavec{:RESULT = cuerpo;:}
+             | {:RESULT = null;:};
+SELECCION ::= seleccion parentesisa LID:lid parentesisc llavea LCASO:lcaso DEFECTO:defecto llavec
+                {:                    
+                    if(defecto!=null){
+                        lcaso.insertarHijo(defecto);
+                    }
+                    RESULT = Fabrica.crearNodoSentCaso(lid,lcaso);
+                :};
+LCASO ::= LCASO:lcasos CASO:caso{:RESULT = Fabrica.insertarCaso(lcasos,caso);:}
+                    | CASO:caso{:RESULT = Fabrica.crearNodoLCasos(caso);:};
+CASO ::= caso EXP:exp dospuntos CUERPO:cuerpo{:RESULT = Fabrica.crearNodoCaso(exp,cuerpo);:};
+DEFECTO ::= defecto dospuntos CUERPO:cuerpo{:RESULT = new Nodo(Constante.defecto); RESULT.insertarHijo(cuerpo);:}
+                        |{:RESULT = null;:};
+PARA ::= para parentesisa VARPARA:varpara dospuntos EXP:exp dospuntos POSTERIOR:posterior parentesisc llavea CUERPO llavec
+                {:RESULT = Fabrica.crearNodoPara(varpara,exp,posterior);:};
+
+VARPARA::= var TVAR:tvar id:id igual EXP:exp{:RESULT = Fabrica.crearNodoDeclaracion(tvar,id,-1,exp);:}  
+                     | LID:lid igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);:};
+POSTERIOR ::= LID:lid OPPARA:op
+                            {:
+                                Nodo op2=Fabrica.crearNodoHoja(Constante.num,"1",Constante.tnum);
+                                RESULT = Fabrica.crearNodoOperacion(op,lid,op2);
+                            :}
+                           |ASIGNACION:asignacion{:RESULT = asignacion;:};
+OPPARA ::= masmas{:RESULT = Constante.suma;:}
+                     | menosmenos{:RESULT = Constante.resta;:};
+MIENTRAS ::= mientras parentesisa EXP:exp parentesisc llavea CUERPO:cuerpo llavec{:RESULT = Fabrica.crearNodoMientras(Constante.mientras,exp,cuerpo);:};
+HACERMIENTRAS ::= hacer llavea CUERPO:cuerpo llavec mientras parentesisa EXP:exp parentesisc{:RESULT = Fabrica.crearNodoMientras(Constante.hacermientras,exp,cuerpo);:};
 ARR ::= ARR DIM
              | DIM;
 DIM ::= corchetea EXP corchetec;
@@ -220,9 +232,14 @@ SENTENCIA ::= ASIGNACION:asignacion pregc {:RESULT = asignacion;:}
                           | HACERMIENTRAS:hacermientras{:RESULT = hacermientras;:}
                           | IMPRIMIR:imprimir{:RESULT = imprimir;:}
                           | GRAPHIKAR:graphikar {:RESULT = graphikar;:}
-                          | continuar pregc
-                          | terminar pregc;
+                          | continuar pregc{:RESULT = new Nodo(Constante.continuar);:}
+                          | terminar pregc{:RESULT = new Nodo(Constante.terminar);:};
 
-IMPRIMIR ::= imprimir parentesisa EXP parentesisc pregc{:RESULT = null;:};
+IMPRIMIR ::= imprimir parentesisa EXP:exp parentesisc pregc{:RESULT = new Nodo(Constante.imprimir); RESULT.insertarHijo(exp);:};
 
-GRAPHIKAR ::= graphikar parentesisa LID coma LID parentesisc pregc{:RESULT = null;:};
+GRAPHIKAR ::= graphikar parentesisa LID:lid1 coma LID:lid2 parentesisc pregc
+                            {:
+                                RESULT = new Nodo(Constante.graphikar);
+                                RESULT.insertarHijo(lid1);
+                                RESULT.insertarHijo(lid2);
+                            :};

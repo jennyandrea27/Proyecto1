@@ -5,6 +5,7 @@
  */
 package Analisis;
 
+import Extras.Constante;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,27 +15,27 @@ import java.io.PrintWriter;
  * @author Jenny
  */
 public class SemanticoGraphik {
-    public static Nodo raiz;
-    
-    public static void graficar() throws IOException{
-        String dot=ArchivoDot.getGrafo(raiz);
-        //System.out.println(dot);
-        try
-        {
-            FileWriter fw = new FileWriter("C:\\Users\\Jenny\\Desktop\\Graphik.dot");
-            PrintWriter pw = new PrintWriter(fw);
-            pw.print(dot);
-            fw.close();
-
-            String dirImagen = "C:\\Users\\Jenny\\Desktop\\ASTGraphik.png";
-            String dirDot = "C:\\Users\\Jenny\\Desktop\\Graphik.dot";
-            ProcessBuilder pbuilder;
-            pbuilder = new ProcessBuilder( "dot", "-Tpng", "-o", dirImagen, dirDot );
-            pbuilder.redirectErrorStream( true );
-            //Ejecuta el proceso
-            pbuilder.start();
-        } catch (Exception e) {
-            e.printStackTrace(); 
+    public static Valor evaluarEXP(Nodo op){
+        switch(op.getNombre()){
+            case Constante.suma:
+                Valor op1=evaluarEXP(op.getHijo(0));
+                Valor op2=evaluarEXP(op.getHijo(1));
+                Casteo.suma(op1,op2);
+                break;
+            default:
+                return new Valor(op.getTipo(),op.getValor());
         }
+        return null;
     }
+    public static void asignacionVar(Nodo asig){
+        //obtener id
+        //buscar variable en el ambito actual
+        //obtener el valor almacenado en hijos(1)
+        Valor res;
+        Valor valor = evaluarEXP(asig.hijos.get(1));
+        //asignar valor en TS
+        
+    }
+    
+    
 }
