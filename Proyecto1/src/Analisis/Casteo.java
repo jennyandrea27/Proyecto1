@@ -13,7 +13,7 @@ import Extras.Constante;
  */
 public class Casteo {
     //aritmeticas
-    public static Valor suma(Valor op1, Valor op2){
+   public static Valor suma(Valor op1, Valor op2){
         Valor res=new Valor();
         switch(op1.getTipo()+op2.getTipo()){
             case 2://numero con numero
@@ -67,7 +67,7 @@ public class Casteo {
         }
         return res;
     }
-    public static Valor resta(Valor op1, Valor op2){
+   public static Valor resta(Valor op1, Valor op2){
         Valor res=new Valor();
         switch(op1.getTipo()+op2.getTipo()){
             case 2://numero con numero
@@ -114,7 +114,7 @@ public class Casteo {
         }
         return res;
     }
-    public static Valor mult(Valor op1, Valor op2){
+   public static Valor mult(Valor op1, Valor op2){
         Valor res=new Valor();
         switch(op1.getTipo()+op2.getTipo()){
             case 2://numero con numero
@@ -166,7 +166,7 @@ public class Casteo {
         }
         return res;
     }    
-    public static Valor division(Valor op1, Valor op2){
+   public static Valor division(Valor op1, Valor op2){
         Valor res=new Valor();
         switch(op1.getTipo()+op2.getTipo()){
             case 2://numero con numero
@@ -259,7 +259,26 @@ public class Casteo {
                 break;                                
         }
         return res;
-    }    
+    }   
+   public static Valor restaUnaria(Valor op1){
+        Valor res=new Valor();
+        switch(op1.getTipo()){
+            case Constante.tnum:
+                res = new Valor(Constante.tnum,Integer.parseInt(op1.getValor())*-1+"");
+                break;
+            case Constante.tdecimal:
+                res = new Valor(Constante.tdecimal,Double.parseDouble(op1.getValor())*-1+"");
+                break;
+            case Constante.tbool:
+            case Constante.tcadena:
+            case Constante.tcaracter:
+            case Constante.tid:
+            case Constante.tvacio:            
+                res=new Valor(Constante.terror,"Error semantico, no se puede realizar resta unaria a valor tipo : "+valTipo(op1.getTipo()));
+                break;                                
+        }
+        return res;
+    }
    //relacionales
    public static Valor mayor(Valor op1, Valor op2){       
        if(op1.getTipo() == Constante.tbool){
@@ -519,7 +538,100 @@ public class Casteo {
        }
        return res;
    }   
-    private static String valBool(String val)
+   //logicos
+   public static Valor or(Valor op1, Valor op2){       
+       Valor res=new Valor(Constante.tbool, Constante.falso);
+       switch(op1.tipo + op2.tipo){
+           case 14: //bool con bool
+               if(op1.getValor().equals(Constante.verdadero) || op2.getValor().equals(Constante.verdadero))
+                   res.setValor(Constante.verdadero);
+               break;
+           case 2://numero con numero
+           case 8: //numero con bool
+           case 11: // numero con decimal
+           case 17: //decimal con bool
+           case 20: //decimal con decimal
+           case 16: //numero con caracter           
+           case 25:  //decimal con caracter
+           case 6: //cadena con cadena
+           case 18: // cadena con caracter
+           case 30: //caracter con caracter           
+           case 4://numero con cadena
+           case 10://cadena con bool
+           case 22://boolean con caracter
+           case 13: //decimal con cadena
+               res=new Valor(Constante.terror,"Error semantico, no se puede realizar operacion OR entre: "+valTipo(op1.getTipo())+" y "+valTipo(op2.getTipo()));
+                break;
+       }
+       return res;
+   }
+   public static Valor and(Valor op1, Valor op2){       
+       Valor res=new Valor(Constante.tbool, Constante.falso);
+       switch(op1.tipo + op2.tipo){
+           case 14: //bool con bool
+               if(op1.getValor().equals(Constante.verdadero) && op2.getValor().equals(Constante.verdadero))
+                   res.setValor(Constante.verdadero);
+           case 2://numero con numero
+           case 8: //numero con bool
+           case 11: // numero con decimal
+           case 17: //decimal con bool
+           case 20: //decimal con decimal
+           case 16: //numero con caracter           
+           case 25:  //decimal con caracter
+           case 6: //cadena con cadena
+           case 18: // cadena con caracter
+           case 30: //caracter con caracter           
+           case 4://numero con cadena
+           case 10://cadena con bool
+           case 22://boolean con caracter
+           case 13: //decimal con cadena
+               res=new Valor(Constante.terror,"Error semantico, no se puede realizar operacion AND entre: "+valTipo(op1.getTipo())+" y "+valTipo(op2.getTipo()));
+                break;
+       }
+       return res;
+   }
+   public static Valor xor(Valor op1, Valor op2){       
+       Valor res=new Valor(Constante.tbool, Constante.falso);
+       switch(op1.tipo + op2.tipo){
+           case 14: //bool con bool
+               if(op1.getValor().equals(Constante.verdadero) && op2.getValor().equals(Constante.falso))
+                   res.setValor(Constante.verdadero);
+               if(op1.getValor().equals(Constante.falso) && op2.getValor().equals(Constante.verdadero))
+                   res.setValor(Constante.verdadero);
+               break;
+           case 2://numero con numero
+           case 8: //numero con bool
+           case 11: // numero con decimal
+           case 17: //decimal con bool
+           case 20: //decimal con decimal
+           case 16: //numero con caracter           
+           case 25:  //decimal con caracter
+           case 6: //cadena con cadena
+           case 18: // cadena con caracter
+           case 30: //caracter con caracter           
+           case 4://numero con cadena
+           case 10://cadena con bool
+           case 22://boolean con caracter
+           case 13: //decimal con cadena
+               res=new Valor(Constante.terror,"Error semantico, no se puede realizar operacion XOR entre: "+valTipo(op1.getTipo())+" y "+valTipo(op2.getTipo()));
+                break;
+       }
+       return res;
+   }
+   public static Valor not(Valor op1){       
+       Valor res=new Valor(Constante.tbool, Constante.falso);
+       switch(op1.tipo){
+           case Constante.tbool: //bool con bool
+               if(op1.getValor().equals(Constante.falso))
+                   res.setValor(Constante.verdadero);
+               break;
+           default:
+               res=new Valor(Constante.terror,"Error semantico, no se puede realizar operacion Not a valor tipo: "+valTipo(op1.getTipo()));
+                break;
+       }
+       return res;
+   }
+   private static String valBool(String val)
         {
             if (val.equals(Constante.verdadero))
             {

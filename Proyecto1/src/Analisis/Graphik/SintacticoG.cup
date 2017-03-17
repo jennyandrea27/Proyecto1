@@ -37,9 +37,10 @@ terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, pu
 nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
 nonterminal Nodo DECLARACION, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
 nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
-nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO;
+nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO,EXP2,EXP3;
 nonterminal String OPREL,OPPARA;
 nonterminal Integer VISIBILIDAD,TVISIBILIDAD,TVAR,TFUN;
+
 precedence left o;
 precedence left xor;
 precedence left y;
@@ -189,17 +190,19 @@ HACERMIENTRAS ::= hacer llavea CUERPO:cuerpo llavec mientras parentesisa EXP:exp
 ARR ::= ARR DIM
              | DIM;
 DIM ::= corchetea EXP corchetec;
-EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,op1,op2);:}
-             | EXP:op1 resta EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1,op2);:}
-             | EXP:op1 mult EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.mult,op1,op2);:}             
-             | EXP:op1 div EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.div,op1,op2);:}                          
-             | EXP:op1 potencia EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.pot,op1,op2);:}             
-             | EXP:op1 o EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.o,op1,op2);:}   
+EXP ::= EXP:op1 o EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.o,op1,op2);:}   
              | EXP:op1 y EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.y,op1,op2);:}   
-             | EXP:op1 xor EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.xor,op1,op2);:}   
-             | EXP:op1 OPREL:oprel EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(oprel,op1,op2);:}   
-             | not EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.not,op1);:}             
-             | resta EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1);:}             
+             | EXP:op1 xor EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.xor,op1,op2);:}                
+             | not EXP:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.not,op1);:}
+             | EXP2:exp2{:RESULT = exp2;:};            
+EXP2::= EXP3:op1 OPREL:oprel EXP3:op2 {:RESULT=Fabrica.crearNodoOperacion(oprel,op1,op2);:}   
+                | EXP3:exp3{:RESULT = exp3;:};
+EXP3::=EXP3:op1 suma EXP3:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,op1,op2);:}
+             | EXP3:op1 resta EXP3:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1,op2);:}
+             | EXP3:op1 mult EXP3:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.mult,op1,op2);:}             
+             | EXP3:op1 div EXP3:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.div,op1,op2);:}                          
+             | EXP3:op1 potencia EXP3:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.pot,op1,op2);:}             
+             | resta EXP3:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1);:}             
              | parentesisa EXP:exp parentesisc {:RESULT=exp;:}            
              | LLAMADO:llamado{:RESULT = llamado;:}
              | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum);:}
@@ -210,7 +213,6 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | decimal:dec{:RESULT = Fabrica.crearNodoHoja(Constante.decimal,dec,Constante.tdecimal);:}
              | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.verdadero,Constante.tbool);:}
              | falso:falso {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.falso,Constante.tbool);:};
-
 OPREL ::= mayor {:RESULT = Constante.mayor;:}
                     | menor{:RESULT = Constante.menor;:}
                     | mayorigual{:RESULT = Constante.mayorigual;:}

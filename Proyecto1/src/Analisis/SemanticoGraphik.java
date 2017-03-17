@@ -6,6 +6,7 @@
 package Analisis;
 
 import Extras.Constante;
+import Reportes.TablaErrores;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,7 +29,8 @@ public class SemanticoGraphik {
             case Constante.resta:
                 //verificar si es resta unaria
                 if(op.hijos.size()==1){
-                    
+                    op1=evaluarEXP(op.getHijo(0));
+                    res=Casteo.restaUnaria(op1);
                 }else{
                     op1=evaluarEXP(op.getHijo(0));
                     op2=evaluarEXP(op.getHijo(1));
@@ -79,6 +81,25 @@ public class SemanticoGraphik {
                     op2=evaluarEXP(op.getHijo(1));
                     res=Casteo.distinto(op1,op2);                
                 break;
+            case Constante.o:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.or(op1,op2);                
+                break;
+           case Constante.y:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.and(op1,op2);                
+                break;
+           case Constante.not:               
+                    op1=evaluarEXP(op.getHijo(0));
+                    res=Casteo.not(op1);                                                  
+                break;
+           case Constante.xor:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.xor(op1,op2);   
+                 break;
             default:
                 return new Valor(op.getTipo(),op.getValor());
         }

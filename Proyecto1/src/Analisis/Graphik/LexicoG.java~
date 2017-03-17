@@ -1182,7 +1182,7 @@ StringBuffer string=new StringBuffer();
             }
           case 111: break;
           case 37: 
-            { return new Symbol (TSGraphik.caracter, yycolumn, yyline, yytext());
+            { return new Symbol (TSGraphik.caracter, yycolumn, yyline, yytext().replace("\'", ""));
             }
           case 112: break;
           case 38: 
