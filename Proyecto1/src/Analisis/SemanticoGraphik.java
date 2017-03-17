@@ -17,11 +17,67 @@ import java.io.PrintWriter;
 public class SemanticoGraphik {
     public static Valor evaluarEXP(Nodo op){
         Valor res=new Valor();
+        Valor op1=new Valor();
+        Valor op2=new Valor();
         switch(op.getNombre()){
             case Constante.suma:
-                Valor op1=evaluarEXP(op.getHijo(0));
-                Valor op2=evaluarEXP(op.getHijo(1));
+                op1=evaluarEXP(op.getHijo(0));
+                op2=evaluarEXP(op.getHijo(1));
                 res=Casteo.suma(op1,op2);
+                break;
+            case Constante.resta:
+                //verificar si es resta unaria
+                if(op.hijos.size()==1){
+                    
+                }else{
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.resta(op1,op2);
+                }
+                break;
+            case Constante.mult:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.mult(op1,op2);
+                    break;
+            case Constante.div:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.division(op1,op2);
+                break;
+            case Constante.pot:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.potencia(op1,op2);
+            case Constante.mayor:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.mayor(op1,op2);                
+                break;
+            case Constante.menor:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.menor(op1,op2);                
+                break;
+           case Constante.mayorigual:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.mayorigual(op1,op2);                
+                break;
+           case Constante.menorigual:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.menorigual(op1,op2);                
+                break;
+           case Constante.igualacion:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.igualacion(op1,op2);                
+                break;
+            case Constante.distinto:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.distinto(op1,op2);                
                 break;
             default:
                 return new Valor(op.getTipo(),op.getValor());
@@ -37,6 +93,9 @@ public class SemanticoGraphik {
         System.out.println("Valor: "+valor.getValor()+" Tipo: "+Casteo.valTipo(valor.getTipo()));
         //asignar valor en TS
         
+    }
+    public static void declararVar(Nodo dec){
+        //dec en su primer hijo tiene nombre y tipo de variable a asignar
     }
     
     
