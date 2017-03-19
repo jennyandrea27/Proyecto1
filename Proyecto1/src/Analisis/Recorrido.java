@@ -7,6 +7,7 @@ package Analisis;
 
 import Extras.Constante;
 import Reportes.TablaErrores;
+import TablaSimbolos.TS;
 
 /**
  *
@@ -39,12 +40,12 @@ public class Recorrido {
             }
             return null;
         }
-        public static Nodo buscarInicio(Nodo lals){
+        public static Nodo buscarClaseDeInicio(Nodo lals){
             for(Nodo als : lals.hijos){
                 Nodo cuerpo=als.hijos.get(1);
                 for(Nodo sent : cuerpo.hijos){
                     if(sent.getNombre().equals(Constante.inicio)){
-                        return sent;
+                        return als;
                     }                   
                 }
             }
@@ -53,22 +54,36 @@ public class Recorrido {
         public static void recorrerInicio(Nodo raiz){
             //buscar lista de als
             Nodo lals=buscarNodo(raiz,Constante.als);
-            //buscar metodo inicio
-            Nodo inicio=buscarInicio(lals);
-            if(inicio!=null){
+            //buscar clase con metodo inicio
+            Nodo clase_inicio=buscarClaseDeInicio(lals);
+            if(clase_inicio!=null){
+                //metodo hereda 
+                
+                //crear ambito de clase que contiene el metodo inicio e inicializar sus varibales
+                TS.AmbitoGlobal(clase_inicio);
+                //obtener nodo de metodo inicio
+                Nodo inicio=buscarNodo(clase_inicio.hijos.get(1), Constante.inicio);
                 Nodo cuerpo_inicio=inicio.getHijo(0);
                 //recorrer las sentencias del cuerpo de inicio
-                for(Nodo sent : cuerpo_inicio.hijos){
-                    switch(sent.getNombre()){
-                        case Constante.asig:
-                            SemanticoGraphik.asignacionVar(sent);
-                            break;
-                    }
-                }
+                recorrerSent(cuerpo_inicio);
             }else{
                 //error metodo inicio no existe
                 TablaErrores.insertarError("Error semantico, metodo Inicio no fue declarado.", 1, 1);
             }
             
         }
+        public static Valor recorrerSent(Nodo cuerpo){
+            Valor res=new Valor();
+            for(Nodo sent : cuerpo.hijos){
+                    switch(sent.getNombre()){
+                        case Constante.asig:
+                            SemanticoGraphik.asignacionVar(sent);
+                            break;
+                        case Constante.dec:
+                            //TS.declararVar(sent);
+                            break;
+                    }
+                }
+            return res;
+        }        
 }

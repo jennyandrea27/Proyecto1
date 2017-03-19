@@ -28,12 +28,12 @@ public class HTML {
         html += "</html>\n";            
         //generar archivo HTML
         try{            
-            FileWriter fw = new FileWriter("C:\\Users\\Jenny\\Desktop\\ErroresHaskell.html");
+            FileWriter fw = new FileWriter("C:\\Users\\Jenny\\Desktop\\Errores.html");
             PrintWriter pw = new PrintWriter(fw);
             pw.print(html);
             fw.close();            
         }catch(Exception e){
-            System.out.println("No se pudo generar ErroresHaskell.html");
+            System.out.println("No se pudo generar Errores.html");
         }
     }
 }

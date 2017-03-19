@@ -36,11 +36,11 @@ comentario_linea=#(\\.|[^\n])*\n
 <YYINITIAL> {
 "var"                      
 {return new Symbol (TSGraphik.var, yycolumn, yyline, yytext());}
-"'entero'"                   
+"entero"                   
 {return new Symbol (TSGraphik.tentero, yycolumn, yyline, yytext());}
-"'cadena'"                    
+"cadena"                    
 {return new Symbol (TSGraphik.tcadena, yycolumn, yyline, yytext());}
-"'decimal'"                     
+"decimal"                     
 {return new Symbol (TSGraphik.tdecimal, yycolumn, yyline, yytext());}
 "caracter"             
 {return new Symbol (TSGraphik.tcaracter, yycolumn, yyline, yytext());}

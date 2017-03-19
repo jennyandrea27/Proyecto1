@@ -35,6 +35,7 @@ public class TablaErrores
         ret += "<tr>\n<th>DESCRIPCION</th><th>FILA</th><th>COLUMNA</th>\n</tr>\n";
         ret += tabla;
         tabla = "";
+        error=false;
         ret += "</table>\n";
         return ret;
     }

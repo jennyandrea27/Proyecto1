@@ -12,6 +12,9 @@ import Analisis.HaskellArchivo.LexicoH;
 import Analisis.HaskellArchivo.SintacticoH;
 import Analisis.Recorrido;
 import Analisis.SemanticoGraphik;
+import Reportes.HTML;
+import Reportes.TablaErrores;
+import TablaSimbolos.TS;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -253,14 +256,22 @@ public class FormInicio extends javax.swing.JFrame {
             if(entrada.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");
             }else{                
+                LexicoG lexico = new LexicoG(new BufferedReader( new StringReader(entrada)));
+                SintacticoG sintactico= new SintacticoG(lexico);
                 try {
-                    LexicoG lexico = new LexicoG(new BufferedReader( new StringReader(entrada)));
-                    SintacticoG sintactico= new SintacticoG(lexico);
-                    sintactico.parse();
+                    sintactico.parse();                    
                     ArchivoDot.graficar(sintactico.raiz, "ASTGraphik");
-                    Recorrido.recorrerArbol(sintactico.raiz);
                 } catch (Exception ex) {
                     System.out.println("Error "+ex.getMessage());
+                }
+                if(sintactico.raiz!=null){                    
+                    Recorrido.recorrerArbol(sintactico.raiz);
+                    if(TablaErrores.error){
+                        JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");
+                        HTML.mostrarErrores();
+                    }else{                                                
+                        TS.recorrerListaAmbitos();
+                    }
                 }
             }
     }//GEN-LAST:event_bCargarGKActionPerformed

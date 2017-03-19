@@ -660,4 +660,101 @@ public class Casteo {
             }
             return "-1";
         }
+    public static Valor Asignacion(int tipo1, Valor valor2){        
+        switch (tipo1){
+                case Constante.tnum:
+                    switch (valor2.getTipo()){                        
+                        case Constante.tcadena:
+                        case Constante.tid:
+                        case Constante.tdecimal:
+                            valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Entero.");
+                            valor2.setTipo(Constante.terror);
+                            break;
+                        case Constante.tbool:
+                            valor2.setTipo(Constante.tnum);
+                            valor2.setValor(valBool(valor2.getValor()));
+                            break;
+                        case Constante.tcaracter:
+                            valor2.setTipo(Constante.tnum);
+                            valor2.setValor((int)valor2.getValor().charAt(0)+"");
+                            break;                                                       
+                    }
+                    break;
+                case Constante.tcadena:
+                    switch (valor2.getTipo()){
+                        case Constante.tnum:
+                        case Constante.tcaracter:
+                        case Constante.tdecimal:                            
+                            valor2.setTipo(Constante.tcadena);
+                            break;                        
+                        case Constante.tbool:
+                            valor2.setTipo(Constante.tcadena);
+                            valor2.setValor(valBool(valor2.getValor()));
+                            break;
+                        case Constante.tid:                            
+                            valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Cadena.");
+                            valor2.setTipo(Constante.terror);
+                            break;
+                            
+                    }
+                    break;
+                case Constante.tbool:
+                    switch (valor2.getTipo()){
+                        case Constante.tnum:
+                        case Constante.tcadena:
+                        case Constante.tcaracter:
+                        case Constante.tdecimal:
+                        case Constante.tid:
+                            valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Bool.");
+                            valor2.setTipo(Constante.terror);
+                            break;                            
+                    }
+                    break;
+                case Constante.tcaracter:
+                    switch (valor2.getTipo()){
+                        case Constante.tnum:
+                            valor2.setTipo(Constante.tcaracter);
+                            int v=Integer.parseInt(valor2.getValor());
+                            char c;
+                            if(v>0 && v<256){//es valido para ascci
+                                c=(char)v;
+                                valor2.setValor(c+"");
+                            }else{
+                                valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Caracter.");
+                                valor2.setTipo(Constante.terror);
+                            }
+                        case Constante.tcadena:
+                        case Constante.tcaracter:
+                        case Constante.tdecimal:
+                        case Constante.tid:
+                            valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Caracter.");
+                            valor2.setTipo(Constante.terror);
+                            break;                            
+                    }
+                    break;
+                case Constante.tdecimal:
+                    switch (valor2.getTipo()){                        
+                        case Constante.tcadena:
+                        case Constante.tid:
+                            valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Entero.");
+                            valor2.setTipo(Constante.terror);
+                            break;
+                        case Constante.tnum:
+                            valor2.setTipo(Constante.tdecimal);
+                            valor2.setValor(Double.parseDouble(valor2.getValor())+"");
+                            break;
+                        case Constante.tbool:
+                            valor2.setTipo(Constante.tnum);
+                            valor2.setValor(valBool(valor2.getValor()));
+                            break;
+                        case Constante.tcaracter:
+                            valor2.setTipo(Constante.tnum);
+                            valor2.setValor((int)valor2.getValor().charAt(0)+"");
+                            break;                                                       
+                    }
+                    break;
+            }
+            return valor2; 
+        }        
+    
 }

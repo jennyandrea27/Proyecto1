@@ -114,10 +114,7 @@ public class SemanticoGraphik {
         System.out.println("Valor: "+valor.getValor()+" Tipo: "+Casteo.valTipo(valor.getTipo()));
         //asignar valor en TS
         
-    }
-    public static void declararVar(Nodo dec){
-        //dec en su primer hijo tiene nombre y tipo de variable a asignar
-    }
+    }    
     
     
 }
