@@ -80,7 +80,7 @@ public class Recorrido {
                             SemanticoGraphik.asignacionVar(sent);
                             break;
                         case Constante.dec:
-                            //TS.declararVar(sent);
+                            TS.declararVar(sent);
                             break;
                     }
                 }

@@ -15,15 +15,17 @@ import java.util.LinkedList;
 public class NodoTS {
     private String nombre;
     private Valor valor=new Valor();
-    public LinkedList<NodoTS> atributos=new LinkedList<>();
+    public Ambito ambito=null;
 
     public NodoTS(String nombre) {
         this.nombre = nombre;
+        this.ambito=null;
     }
     public NodoTS(String nombre, int tipo,String valor) {
         this.nombre = nombre;
         this.valor.setTipo(tipo);
         this.valor.setValor(valor);
+        this.ambito=null;
     }
 
     public String getNombre() {

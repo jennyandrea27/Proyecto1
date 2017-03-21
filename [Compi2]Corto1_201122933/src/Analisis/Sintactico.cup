@@ -1,0 +1,120 @@
+
+package Analisis;
+
+import java_cup.runtime.Symbol;
+import C3D.*;
+import Principal.*;
+
+parser code
+{://Codigo visible
+    
+    public void syntax_error(Symbol s){        
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);        
+    }
+
+    public void unrecovered_syntax_error(Symbol s){                
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);        
+    }
+
+:}
+
+action code
+{://Codigo de acciones
+      
+:}
+    
+terminal String arreglo, corchetea, corchetec, ubicar, num, id,puntopunto;
+
+nonterminal Arreglo S, ARR,UBICAR,LDIM,A,LA;
+nonterminal Dim VAL;
+nonterminal NodoC3D LNUM;
+start with S;
+
+S ::=   LA{:Tabla.recorrer();:};
+LA ::= LA A
+            |A;
+A ::=  ARR
+         | UBICAR;        
+ARR ::= arreglo LDIM:arr
+                {:
+                    if(!arr.getError()){
+                        Tabla.insertarArreglo(arr);
+                    }
+                :};
+LDIM ::= LDIM:arr corchetea VAL:val corchetec
+                {:
+                    arr.insertarDim(val);
+                    RESULT = arr;                    
+                :}
+                |id:id corchetea VAL:val corchetec
+                {:
+                    RESULT = new Arreglo(id);
+                    if(val.correcto()){
+                        RESULT.insertarDim(val);
+                    }else{
+                        FInicio.cad_errores+="Error semantico, dimensiones fuera de rango en arreglo "+id+"\n";
+                        RESULT.setError(true);
+                    }
+                :};
+VAL ::= num:num 
+            {:                
+                RESULT=new Dim(0,Integer.parseInt(num));                
+            :}
+             | num:num1 puntopunto num:num2
+            {:              
+                RESULT=new Dim(Integer.parseInt(num1),Integer.parseInt(num2));                
+            :};
+UBICAR ::= ubicar LNUM:lnum
+                    {:
+                        if(!lnum.getId().equals("")){                            
+                            String t1=ControlC3D.generaTemp();
+                            ControlC3D.agregarC3D(t1+"="+lnum.getId()+" ["+lnum.getCad()+" ]\n");
+                            ControlC3D.agregarC3D("//la posicion esta almacenada en "+t1+"\n");
+                        }
+                                                
+                    :};
+LNUM ::= LNUM:lnum num:num
+                {:
+                    if(!lnum.getId().equals("")){
+                            Arreglo arr=Tabla.getArreglo(lnum.getId());
+                            Dim dim=arr.getDim(lnum.getDim());  
+                            String t1=ControlC3D.generaTemp();
+                            if(dim.getPos_inicio() < Integer.parseInt(num) && Integer.parseInt(num) < dim.getPos_fin()){                            
+                                ControlC3D.agregarC3D(t1+"="+num+"-"+dim.getPos_inicio()+"\n");
+                                String t2=ControlC3D.generaTemp();
+                                ControlC3D.agregarC3D(t2+"="+t1+"- 1\n");
+                                int tam=arr.getTamano(lnum.getDim());
+                                String t3=ControlC3D.generaTemp();
+                                ControlC3D.agregarC3D(t3+"="+t2+"*"+tam+"\n");
+                                String t4=ControlC3D.generaTemp();
+                                ControlC3D.agregarC3D(t4+"="+lnum.getCad()+"+"+t3+"\n"); 
+                                lnum.aumentarDim();
+                                RESULT=new NodoC3D(t3,lnum.getId(),lnum.getDim());
+                          }else{
+                            FInicio.cad_errores+="Error semantico, la posicion "+num+" no puede accederse en arrego "+lnum.getId()+"\n";
+                            arr.setContDim();
+                            RESULT=new NodoC3D(t1,lnum.getId(),arr.getContDim());                    
+                        }
+                            
+                    }
+                :}
+                 | id:id num:num
+                 {:
+                    Arreglo arr=Tabla.getArreglo(id);
+                    if(arr == null){
+                        FInicio.cad_errores+="Error semantico, el arreglo "+id+" no ha sido declarado.\n";
+                        RESULT=new NodoC3D("","",-1);                    
+                    }else{
+                        Dim dim=arr.getDim(arr.getContDim());                        
+                        String t=ControlC3D.generaTemp();
+                        if(dim.getPos_inicio() < Integer.parseInt(num) && Integer.parseInt(num) < dim.getPos_fin()){                            
+                            ControlC3D.agregarC3D(t+"="+num+"-"+dim.getPos_inicio()+"\n");
+                            arr.setContDim();
+                            RESULT = new NodoC3D(t,id,arr.getContDim());                        
+                        }else{
+                            FInicio.cad_errores+="Error semantico, la posicion "+num+" no puede accederse en arrego "+id+"\n";
+                            arr.setContDim();
+                            RESULT=new NodoC3D(t,id,arr.getContDim());                    
+                        }
+                    }
+                 :};

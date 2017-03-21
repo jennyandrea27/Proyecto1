@@ -7,6 +7,9 @@ package Analisis;
 
 import Extras.Constante;
 import Reportes.TablaErrores;
+import TablaSimbolos.Ambito;
+import TablaSimbolos.NodoTS;
+import TablaSimbolos.TS;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -51,6 +54,7 @@ public class SemanticoGraphik {
                     op1=evaluarEXP(op.getHijo(0));
                     op2=evaluarEXP(op.getHijo(1));
                     res=Casteo.potencia(op1,op2);
+                    break;
             case Constante.mayor:
                     op1=evaluarEXP(op.getHijo(0));
                     op2=evaluarEXP(op.getHijo(1));
@@ -106,14 +110,23 @@ public class SemanticoGraphik {
         return res;
     }
     public static void asignacionVar(Nodo asig){
-        //obtener id
-        //buscar variable en el ambito actual
         //obtener el valor almacenado en hijos(1)
         Valor res;
         Valor valor = evaluarEXP(asig.hijos.get(1));
         System.out.println("Valor: "+valor.getValor()+" Tipo: "+Casteo.valTipo(valor.getTipo()));
-        //asignar valor en TS
-        
+        //obtener id
+        if(asig.hijos.get(0).hijos.size()==1){//solo tiene un id
+            String nombre=asig.hijos.get(0).hijos.get(0).getValor();
+            NodoTS variable=TS.buscarVar(nombre, TS.cont_ambito);
+            if(variable!=null){
+                Valor valor2 = Casteo.Asignacion(variable.getTipo(), valor);
+                TS.asignarVar(nombre,valor2);
+            }else{
+                TablaErrores.insertarError("La variable "+nombre+" no ha sido declarada.", 0, 0);
+            }
+        }else{//es un acceso id.id.id
+            
+        }        
     }    
     
     
