@@ -58,12 +58,12 @@ LISTA ::=  dolar let id:id igual VALLISTA:val dolar{:RESULT = Fabrica.crearNodoL
 VALLISTA ::=   CONCAT:concat{:RESULT = Fabrica.crearNodoAsigLista(Constante.concat,concat);:}
                           | cadena:cadena 
                             {:                               
-                                Nodo cad= Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena);
+                                Nodo cad= Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena+"");
                                 RESULT=Fabrica.crearNodoAsigLista(Constante.cadena,cad);
                             :}
                           | id:id
                             {:
-                                Nodo identificador= Fabrica.crearNodoHoja(Constante.id,id);
+                                Nodo identificador= Fabrica.crearNodoHoja(Constante.id,id+"");
                                 RESULT = Fabrica.crearNodoAsigLista(Constante.id,identificador);
                             :}
                           | OPLISTA:oplista{:RESULT = oplista;:}
@@ -73,7 +73,7 @@ VALLISTA ::=   CONCAT:concat{:RESULT = Fabrica.crearNodoAsigLista(Constante.conc
 LPARLISTA ::= LPARLISTA:lparlista coma PARLISTA:parlista{:RESULT = Fabrica.insertarAsigLista(lparlista,parlista);:}
                           | PARLISTA:parlista{:RESULT = Fabrica.crearNodoAsigLista(parlista.getValor(),parlista);:};
 PARLISTA ::= CALCULAR:calc{:RESULT = calc;RESULT.setValor(Constante.dim1);:}
-                         | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);RESULT.setValor(Constante.dim1);:}
+                         | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");RESULT.setValor(Constante.dim1);:}
                          | OTRA:otra{:RESULT = otra;RESULT.setValor(Constante.dim2);:};
 OTRA::= corchetea LVOTRA:valotra corchetec{:RESULT = valotra;:};
 
@@ -81,7 +81,7 @@ OTRA::= corchetea LVOTRA:valotra corchetec{:RESULT = valotra;:};
 LVOTRA ::= LVOTRA:lvotra coma VOTRA:votra{:RESULT = Fabrica.insertarAsigLista(lvotra,votra);:}
                     | VOTRA:votra{:RESULT = Fabrica.crearNodoAsigLista(Constante.dim,votra);:};
 VOTRA ::= CALCULAR:calc{:RESULT = calc;:}
-                  | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);:} ;
+                  | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:} ;
 
 CALCULAR ::= dolar calcular EXP:exp dolar{:RESULT=Fabrica.crearNodoEXP(exp);:};
 
@@ -98,7 +98,7 @@ VALFUN ::= CALCULAR:calc{:RESULT = calc;:}
                     | ACCESO:acceso{:RESULT = acceso;:}
                     | OPLISTAEXP:oplistaexp{:RESULT = oplistaexp; :}
                     | CONCAT:concat{:RESULT = concat;:}
-                    | cadena:cadena {:RESULT=Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena);:}
+                    | cadena:cadena {:RESULT=Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena+"");:}
                     | id:id{:RESULT = Fabrica.crearNodoHoja(Constante.id,id);:}
                     | OPLISTA:oplista{:RESULT = oplista;:}
                     | corchetea LPARLISTA:lparlista corchetec{:RESULT = lparlista;:}
@@ -124,7 +124,7 @@ OPLISTA ::= REVERS:revers{:RESULT = revers;:}
                      | ASC:asc{:RESULT = asc;:}
                      | DESC:desc{:RESULT = desc;:};
 
-DECFUN ::= id:id PDECFUN:lpar igual CUERPO:cuerpo fin {:RESULT = Fabrica.crearNodoDecFun(-1,id,lpar,-1,cuerpo);:}
+DECFUN ::= id:id PDECFUN:lpar igual CUERPO:cuerpo fin {:RESULT = Fabrica.crearNodoDecFun(Constante.tvacio+"",id,lpar,-1,cuerpo);:}
                        | eol{:RESULT=null;:};
 
 PDECFUN ::= PDECFUN:lpar coma id:id
@@ -188,8 +188,8 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | PRODUCT:product{:RESULT = product;:}
              | LENGTH:length{:RESULT = length;:}
              | LLAMADO:llamado{:RESULT = llamado;:}
-             | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum);:}
-             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);:}
+             | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");:}
+             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:}
              | id:id{:RESULT = Fabrica.crearNodoHoja(Constante.id,id);:};
 
 SI ::= si COND:cond entonces CUERPO:lv sino CUERPO:lf fin{:RESULT = Fabrica.crearNodoSi(cond,lv,lf);:};
@@ -225,8 +225,8 @@ OPLENGUAJE ::= SUCC:succ{:RESULT = succ;:}
                                | MIN:min{:RESULT = min;:}
                                | MAX:max{:RESULT = max;:};
 
-VCASO ::= num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum);:}
-                    | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);:};
+VCASO ::= num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");:}
+                    | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:};
 
 LCASOS ::= LCASOS:lcasos CASOS:caso{:RESULT = Fabrica.insertarCaso(lcasos,caso);:}
                     | CASOS:caso{:RESULT = Fabrica.crearNodoLCasos(caso);:};

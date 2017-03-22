@@ -38,8 +38,8 @@ nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOA
 nonterminal Nodo DECLARACION, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
 nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
 nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO,EXP2,EXP3;
-nonterminal String OPREL,OPPARA;
-nonterminal Integer VISIBILIDAD,TVISIBILIDAD,TVAR,TFUN;
+nonterminal String OPREL,OPPARA,TVAR,TFUN;
+nonterminal Integer VISIBILIDAD,TVISIBILIDAD;
 
 precedence left o;
 precedence left xor;
@@ -66,7 +66,12 @@ TVISIBILIDAD::= privado:privado{:RESULT = Constante.privado;:}
 VISIBILIDAD ::=  dospuntos TVISIBILIDAD:tvisibilidad{:RESULT = tvisibilidad;:}
                               |{:RESULT = Constante.publico;:};
 ASIGNACION ::= LID:lid igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);:}
-                               | LID:lid ARR:arr igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,arr);:};
+                               | LID:lid ARR:arr igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,arr);:}
+                               | LID:lid igual nuevo id:id parentesisa parentesisc
+                                {:
+                                    Nodo nuevo= Fabrica.crearNodoNuevo(id);
+                                    RESULT = Fabrica.crearNodoAsignacion(lid,nuevo,null);
+                                :};
 ENC ::= LENCABEZADO:encabezado{:RESULT = encabezado;:}
             |{:RESULT=Fabrica.crearNodoEnc(null);:};
 LENCABEZADO ::= LENCABEZADO:encabezado ENCABEZADO:enc{:RESULT = Fabrica.insertarEnc(encabezado,enc);:}
@@ -80,7 +85,7 @@ IMPORTAR ::= importar id:id gk pregc
                          :};
 LALS ::= LALS:lals ALS:als{:RESULT = Fabrica.insertarALS(lals,als);:}
              | ALS:als{:RESULT = Fabrica.crearNodoLALS(als);:};
-ALS ::= als id HEREDA:hereda VISIBILIDAD:visibilidad llavea CUERPOALS:cuerpo llavec{:RESULT = Fabrica.crearNodoALS(hereda,visibilidad,cuerpo);:};
+ALS ::= als id:id HEREDA:hereda VISIBILIDAD:visibilidad llavea CUERPOALS:cuerpo llavec{:RESULT = Fabrica.crearNodoALS(id,hereda,visibilidad,cuerpo);:};
 CUERPOALS ::= CUERPOALS:cuerpo SENTALS:sent{:RESULT = Fabrica.insertarSentencia(cuerpo,sent);:}
                          | SENTALS:sent{:RESULT = Fabrica.crearNodoCuerpo(sent);:};
 SENTALS ::= DECFUN:decfun{:RESULT = decfun;:}
@@ -117,23 +122,23 @@ VALASIG ::= EXP:exp{:RESULT = exp;:}
 LID ::= LID:lid punto id:id
                 {:
                     Nodo id1=Fabrica.crearNodoHoja(Constante.id,id);
-                    RESULT = Fabrica.insertarIDL(lid,id1);
+                    RESULT = Fabrica.insertarLID(lid,id1);
                  :}
                 |  id:id  
                 {:
                     Nodo id1=Fabrica.crearNodoHoja(Constante.id,id);
-                    RESULT = Fabrica.crearNodoIDL(id1);
+                    RESULT = Fabrica.crearNodoLID(id1);
                  :};
 DECFUN ::= TFUN:tfun id:id parentesisa PDECFUN:pdecfun parentesisc VISIBILIDAD:visibilidad llavea CUERPO:cuerpo llavec
                     {:RESULT = Fabrica.crearNodoDecFun(tfun,id,pdecfun,visibilidad,cuerpo);:};
-TVAR ::= tentero{:RESULT = Constante.tnum;:}
-                | tdecimal  {:RESULT = Constante.tdecimal;:}
-                | tcaracter{:RESULT = Constante.tcaracter;:}
-                | tcadena{:RESULT = Constante.tcadena;:}
-                | tbool{:RESULT = Constante.tbool;:}
-                | id{:RESULT = Constante.tid;:};
+TVAR ::= tentero{:RESULT = Constante.tnum+"";:}
+                | tdecimal  {:RESULT = Constante.tdecimal+"";:}
+                | tcaracter{:RESULT = Constante.tcaracter+"";:}
+                | tcadena{:RESULT = Constante.tcadena+"";:}
+                | tbool{:RESULT = Constante.tbool+"";:}
+                | id:id{:RESULT = id;:};
 TFUN ::= TVAR:tvar{:RESULT = tvar;:}
-               | tvacio{:RESULT = Constante.tvacio;:};
+               | tvacio{:RESULT = Constante.tvacio+"";:};
 PDECFUN ::= PDECFUN:pdecfun coma TVAR:tvar id:id
                         {:
                         Nodo par=Fabrica.crearNodoHoja(Constante.id,id,tvar);
@@ -179,7 +184,7 @@ VARPARA::= var TVAR:tvar id:id igual EXP:exp{:RESULT = Fabrica.crearNodoDeclarac
                      | LID:lid igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);:};
 POSTERIOR ::= LID:lid OPPARA:op
                             {:
-                                Nodo op2=Fabrica.crearNodoHoja(Constante.num,"1",Constante.tnum);
+                                Nodo op2=Fabrica.crearNodoHoja(Constante.num,"1",Constante.tnum+"");
                                 RESULT = Fabrica.crearNodoOperacion(op,lid,op2);
                             :}
                            |ASIGNACION:asignacion{:RESULT = asignacion;:};
@@ -205,14 +210,14 @@ EXP3::=EXP3:op1 suma EXP3:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,
              | resta EXP3:op1 {:RESULT=Fabrica.crearNodoOperacion(Constante.resta,op1);:}             
              | parentesisa EXP:exp parentesisc {:RESULT=exp;:}            
              | LLAMADO:llamado{:RESULT = llamado;:}
-             | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum);:}
-             | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena);:}
-             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);:}
+             | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");:}
+             | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena+"");:}
+             | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:}
              | LID:lid{:RESULT = lid;:}
              | LID ARR
-             | decimal:dec{:RESULT = Fabrica.crearNodoHoja(Constante.decimal,dec,Constante.tdecimal);:}
-             | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.verdadero,Constante.tbool);:}
-             | falso:falso {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.falso,Constante.tbool);:};
+             | decimal:dec{:RESULT = Fabrica.crearNodoHoja(Constante.decimal,dec,Constante.tdecimal+"");:}
+             | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.verdadero,Constante.tbool+"");:}
+             | falso:falso {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.falso,Constante.tbool+"");:};
 OPREL ::= mayor {:RESULT = Constante.mayor;:}
                     | menor{:RESULT = Constante.menor;:}
                     | mayorigual{:RESULT = Constante.mayorigual;:}

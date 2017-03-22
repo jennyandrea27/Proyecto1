@@ -753,6 +753,18 @@ public class Casteo {
                             break;                                                       
                     }
                     break;
+                case Constante.tid:
+                    switch (valor2.getTipo()){                        
+                        case Constante.tcadena:
+                        //case Constante.tid:
+                        case Constante.tnum:
+                        case Constante.tbool:
+                        case Constante.tcaracter:                                                                              
+                            valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo ALS.");
+                            valor2.setTipo(Constante.terror);
+                            break;
+                    }
+                    break;
             }
             return valor2; 
         }        

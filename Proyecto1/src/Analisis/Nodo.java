@@ -18,6 +18,7 @@ public class Nodo {
     int columna;
     String valor;
     int visibilidad;
+    String tals;
     public LinkedList <Nodo>  hijos=new LinkedList<Nodo>();
 
     public Nodo(String nombre, int tipo, int fila, int columna, String valor) {
@@ -26,6 +27,7 @@ public class Nodo {
         this.fila = fila;
         this.columna = columna;
         this.valor = valor;
+        this.tals="";
     }
 
     public Nodo(String nombre) {
@@ -33,6 +35,7 @@ public class Nodo {
         this.valor = "";
         this.tipo=-1;
         this.visibilidad=-1;
+        this.tals="";
     }
 
     public Nodo(String nombre, String valor) {
@@ -40,14 +43,31 @@ public class Nodo {
         this.valor = valor;
         this.tipo=-1;
         this.visibilidad=-1;
+        this.tals="";
     }
     public Nodo(String nombre, String valor, int tipo) {
         this.nombre = nombre;
         this.valor = valor;
         this.tipo = tipo;        
         this.visibilidad=-1;
+        this.tals="";
+    }
+    public Nodo(String nombre, String valor, int tipo,String tals) {
+        this.nombre = nombre;
+        this.valor = valor;
+        this.tipo = tipo;        
+        this.visibilidad=-1;
+        this.tals=tals;
     }
 
+    public String getTals() {
+        return tals;
+    }
+
+    public void setTals(String tals) {
+        this.tals = tals;
+    }
+    
     public void insertarHijo(Nodo hijo){
         this.hijos.add(hijo);
     }

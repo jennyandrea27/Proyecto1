@@ -809,7 +809,7 @@ class CUP$SintacticoH$actions {
 		int cadenaright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String cadena = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
 		                               
-                                Nodo cad= Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena);
+                                Nodo cad= Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena+"");
                                 RESULT=Fabrica.crearNodoAsigLista(Constante.cadena,cad);
                             
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("VALLISTA",3, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
@@ -824,7 +824,7 @@ class CUP$SintacticoH$actions {
 		int idright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String id = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
 		
-                                Nodo identificador= Fabrica.crearNodoHoja(Constante.id,id);
+                                Nodo identificador= Fabrica.crearNodoHoja(Constante.id,id+"");
                                 RESULT = Fabrica.crearNodoAsigLista(Constante.id,identificador);
                             
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("VALLISTA",3, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
@@ -913,7 +913,7 @@ class CUP$SintacticoH$actions {
 		int caracterleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int caracterright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String caracter = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);RESULT.setValor(Constante.dim1);
+		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");RESULT.setValor(Constante.dim1);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("PARLISTA",6, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -988,7 +988,7 @@ class CUP$SintacticoH$actions {
 		int caracterleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int caracterright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String caracter = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);
+		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("VOTRA",15, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1108,7 +1108,7 @@ class CUP$SintacticoH$actions {
 		int cadenaleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int cadenaright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String cadena = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT=Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena);
+		RESULT=Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("VALFUN",39, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -1372,7 +1372,7 @@ class CUP$SintacticoH$actions {
 		int cuerpoleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).left;
 		int cuerporight = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).right;
 		Nodo cuerpo = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-1)).value;
-		RESULT = Fabrica.crearNodoDecFun(-1,id,lpar,-1,cuerpo);
+		RESULT = Fabrica.crearNodoDecFun(Constante.tvacio+"",id,lpar,-1,cuerpo);
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("DECFUN",25, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.elementAt(CUP$SintacticoH$top-4)), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -2011,7 +2011,7 @@ class CUP$SintacticoH$actions {
 		int numleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int numright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String num = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum);
+		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("EXP",4, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -2023,7 +2023,7 @@ class CUP$SintacticoH$actions {
 		int caracterleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int caracterright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String caracter = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);
+		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("EXP",4, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -2350,7 +2350,7 @@ class CUP$SintacticoH$actions {
 		int numleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int numright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String num = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum);
+		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("VCASO",35, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -2362,7 +2362,7 @@ class CUP$SintacticoH$actions {
 		int caracterleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int caracterright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String caracter = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter);
+		RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("VCASO",35, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;

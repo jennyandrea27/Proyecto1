@@ -15,8 +15,24 @@ public class Fabrica {
     public static Nodo crearNodoOp(String op){
         return new Nodo(op);
     }
-    public static Nodo crearNodoHoja(String nombre,String valor, int tipo){        
-        return new Nodo(nombre, valor, tipo);        
+    public static Nodo crearNodoHoja(String nombre,String valor, String tipo){    
+        int tipo_var=-1;
+        switch(tipo){
+            case Constante.tnum+"":
+            case Constante.tdecimal+"":
+            case Constante.tbool+"":
+            case Constante.tcadena+"":
+            case Constante.tcaracter+"":
+                tipo_var=Integer.parseInt(tipo);
+            break;
+            default:
+                tipo_var=Constante.tid;
+            break;
+        }
+        return new Nodo(nombre, valor, tipo_var);        
+    }
+    public static Nodo crearNodoHoja(String nombre,String valor, int tipo,String tals){        
+        return new Nodo(nombre, valor, tipo,tals);        
     }
     public static Nodo crearNodoHoja(String nombre,String valor){        
         return new Nodo(nombre, valor);        
@@ -246,8 +262,8 @@ public class Fabrica {
         hereda.setValor(valor);
         return hereda;
     }
-    public static Nodo crearNodoALS(Nodo hereda,Integer visibilidad, Nodo cuerpo){
-        Nodo als=new Nodo(Constante.als);
+    public static Nodo crearNodoALS(String id,Nodo hereda,Integer visibilidad, Nodo cuerpo){
+        Nodo als=new Nodo(Constante.als,id);
         als.insertarHijo(hereda);
         als.setVisibilidad(visibilidad);
         als.insertarHijo(cuerpo);
@@ -271,8 +287,21 @@ public class Fabrica {
         }
         return asig;
     }
-    public static Nodo crearNodoDecFun(Integer tfun,String valor, Nodo pdecfun, Integer visibilidad, Nodo cuerpo){
-        Nodo decfun=new Nodo(Constante.decfun,valor,tfun);
+    public static Nodo crearNodoDecFun(String tfun,String valor, Nodo pdecfun, Integer visibilidad, Nodo cuerpo){
+        int tipo_var=-1;
+        switch(tfun){
+            case Constante.tnum+"":
+            case Constante.tdecimal+"":
+            case Constante.tbool+"":
+            case Constante.tcadena+"":
+            case Constante.tcaracter+"":
+                tipo_var=Integer.parseInt(tfun);
+            break;
+            default:
+                tipo_var=Constante.tid;
+            break;
+        }
+        Nodo decfun=new Nodo(Constante.decfun,valor,tipo_var,tfun);
         decfun.setVisibilidad(visibilidad);
         decfun.insertarHijo(pdecfun);
         decfun.insertarHijo(cuerpo);       
@@ -282,7 +311,7 @@ public class Fabrica {
         return new Nodo(Constante.nuevo,valor);
     }
     public static Nodo crearNodoIDL(Nodo id1){
-        Nodo idl=new Nodo(Constante.lid);
+        Nodo idl=new Nodo(Constante.idl);
         if(idl!=null){               
             idl.insertarHijo(id1);
         }
@@ -294,8 +323,34 @@ public class Fabrica {
         }
         return idl;
     }
-    public static Nodo crearNodoDeclaracion(Integer tvar, String valor, Integer visibilidad, Nodo dec){        
-        Nodo id=crearNodoHoja(Constante.id,valor,tvar);
+    public static Nodo crearNodoLID(Nodo id1){
+        Nodo idl=new Nodo(Constante.lid);
+        if(idl!=null){               
+            idl.insertarHijo(id1);
+        }
+        return idl;
+    }
+    public static Nodo insertarLID(Nodo idl, Nodo id){
+        if(id!=null){            
+            idl.insertarHijo(id);
+        }
+        return idl;
+    }
+    public static Nodo crearNodoDeclaracion(String tvar, String valor, Integer visibilidad, Nodo dec){        
+        int tipo_var=-1;
+        switch(tvar){
+            case Constante.tnum+"":
+            case Constante.tdecimal+"":
+            case Constante.tbool+"":
+            case Constante.tcadena+"":
+            case Constante.tcaracter+"":
+                tipo_var=Integer.parseInt(tvar);
+            break;
+            default:
+                tipo_var=Constante.tid;
+            break;
+        }
+        Nodo id=crearNodoHoja(Constante.id,valor,tipo_var,tvar);
         id.setVisibilidad(visibilidad);
         Nodo declaracion=new Nodo(Constante.dec);
         declaracion.insertarHijo(id);

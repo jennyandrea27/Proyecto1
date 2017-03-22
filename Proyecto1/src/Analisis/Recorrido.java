@@ -40,6 +40,15 @@ public class Recorrido {
             }
             return null;
         }
+        public static Nodo buscarClase(String nombre){
+            for(Nodo hijo : raiz.hijos.get(1).hijos){
+                if (hijo.getValor().equals(nombre))
+                {
+                    return hijo;
+                }
+            }
+            return null;
+        }
         public static Nodo buscarClaseDeInicio(Nodo lals){
             for(Nodo als : lals.hijos){
                 Nodo cuerpo=als.hijos.get(1);

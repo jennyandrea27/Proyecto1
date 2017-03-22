@@ -39,17 +39,18 @@ public class TS {
         public static void declararVar(Nodo dec){//agrega variable al ultimos ambito que se encuentra en lista_ambitos
             //dec en su primer hijo tiene nombre y tipo de variable a asignar
             int tipo=dec.hijos.get(0).getTipo();
+            String tals=dec.hijos.get(0).getTals();
             String nombre=dec.hijos.get(0).getValor();
             //verificar si es una sola variable y no tiene valor
             if(dec.hijos.size()==1){
-                NodoTS variable=new NodoTS(nombre,tipo,null);
+                NodoTS variable=new NodoTS(nombre,tipo,null,tals);
                 Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
                 if (busqueda == null)
                     lista_ambitos.get(cont_ambito).insertarVariable(variable);
-            }else if(dec.hijos.get(1).getNombre().equals(Constante.lid)){
+            }else if(dec.hijos.get(1).getNombre().equals(Constante.idl)){
                 //verificar si es una lista de id's
                 //se inserta la primer variable
-                NodoTS variable=new NodoTS(nombre,tipo,null);
+                NodoTS variable=new NodoTS(nombre,tipo,null,tals);
                 Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
                 if (busqueda == null)
                     lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -57,7 +58,7 @@ public class TS {
                 Nodo lid=dec.hijos.get(1);
                 for(Nodo id:lid.hijos){
                     nombre=id.getValor();
-                    variable=new NodoTS(nombre,tipo,null);
+                    variable=new NodoTS(nombre,tipo,null,tals);
                     busqueda = buscarVarAsig(nombre,cont_ambito);
                     if (busqueda == null)
                         lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -74,27 +75,28 @@ public class TS {
                     TablaErrores.insertarError(val_casteo.getValor(), 1,1);
                     val_casteo = new Valor(tipo, null);
                 }else{                    
-                    NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor());
+                    NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
                     Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
                     if (busqueda == null)
                         lista_ambitos.get(cont_ambito).insertarVariable(variable);
                 }                                                   
             }//no tiene valor inicial
         }
-        public static void declararVar(Nodo dec,Ambito ambito){//agrega variable al ultimos ambito que se encuentra en lista_ambitos
+        public static void declararVar(Nodo dec,Ambito ambito){//agrega variable a un ambito especifico
             //dec en su primer hijo tiene nombre y tipo de variable a asignar
             int tipo=dec.hijos.get(0).getTipo();
+            String tals=dec.hijos.get(0).getTals();
             String nombre=dec.hijos.get(0).getValor();
             //verificar si es una sola variable y no tiene valor
             if(dec.hijos.size()==1){
-                NodoTS variable=new NodoTS(nombre,tipo,null);
+                NodoTS variable=new NodoTS(nombre,tipo,null,tals);
                 NodoTS busqueda = ambito.buscarVariable(nombre);
                 if (busqueda == null)
                     ambito.insertarVariable(variable);
-            }else if(dec.hijos.get(1).getNombre().equals(Constante.lid)){
+            }else if(dec.hijos.get(1).getNombre().equals(Constante.idl)){
                 //verificar si es una lista de id's
                 //se inserta la primer variable
-                NodoTS variable=new NodoTS(nombre,tipo,"");
+                NodoTS variable=new NodoTS(nombre,tipo,null,tals);
                 NodoTS busqueda = ambito.buscarVariable(nombre);
                 if (busqueda == null)
                     ambito.insertarVariable(variable);
@@ -102,28 +104,45 @@ public class TS {
                 Nodo lid=dec.hijos.get(1);
                 for(Nodo id:lid.hijos){
                     nombre=id.getValor();
-                    variable=new NodoTS(nombre,tipo,"");
+                    variable=new NodoTS(nombre,tipo,null,tals);
                     busqueda = ambito.buscarVariable(nombre);
                     if (busqueda == null)
                         ambito.insertarVariable(variable);
                 }
             }else{
                 //si tiene valor inicial
-                Valor val = new Valor(tipo, null);
-                Valor val_casteo= new Valor(tipo, null);
-                Nodo v_inicial=dec.hijos.get(1);                
-                //tiene valor inicial
-                val = SemanticoGraphik.evaluarEXP(v_inicial);
-                val_casteo = Casteo.Asignacion(tipo, val);
-                if (val_casteo.getTipo() == Constante.terror){
-                    TablaErrores.insertarError(val_casteo.getValor(), 1,1);
-                    val_casteo = new Valor(tipo, null);
-                }else{                    
-                    NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor());
-                    NodoTS busqueda = ambito.buscarVariable(nombre);
-                    if (busqueda == null)
+                //verificar si es objeto o variable
+                if(dec.hijos.get(1).getNombre().equals(Constante.nuevo)){
+                    //es un objeto, buscar nodo de la clase que se instancia
+                    String nombre_obj=dec.hijos.get(1).getValor();
+                    Nodo clase=Recorrido.buscarClase(nombre_obj);
+                    if(clase!=null){
+                        NodoTS variable=new NodoTS(nombre,tipo,null,tals);
+                        variable.ambito=new Ambito(-1, cont_ambito);
+                        nuevoALS(clase.hijos.get(1),variable.ambito);
                         ambito.insertarVariable(variable);
-                }                                                   
+                    }else{
+                        //clase no ha sido declarada
+                        TablaErrores.insertarError("ALS "+nombre_obj+" no ha sido declarado.", 1, 1);
+                    }
+                    
+                }else{                    
+                    Valor val = new Valor(tipo, null);
+                    Valor val_casteo= new Valor(tipo, null);
+                    Nodo v_inicial=dec.hijos.get(1);                
+                    //tiene valor inicial
+                    val = SemanticoGraphik.evaluarEXP(v_inicial);
+                    val_casteo = Casteo.Asignacion(tipo, val);
+                    if (val_casteo.getTipo() == Constante.terror){
+                        TablaErrores.insertarError(val_casteo.getValor(), 1,1);
+                        val_casteo = new Valor(tipo, null);
+                    }else{                    
+                        NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
+                        NodoTS busqueda = ambito.buscarVariable(nombre);
+                        if (busqueda == null)
+                            ambito.insertarVariable(variable);
+                    }                                                   
+                }
             }//no tiene valor inicial
         }       
         public static Ambito buscarVarAsig(String nombre, int ambito){
@@ -160,13 +179,39 @@ public class TS {
                 lista_ambitos.get(lugar_var.getAmbito_Padre()).variables.get(lugar_var.getAmbito_Actual()).setValor(valor.getValor());
             }
         }
-    public static void recorrerListaAmbitos(){
+    public static String recorrerListaAmbitos(){
+        String s="";
         for(Ambito a: lista_ambitos){
-            System.out.println("Ambito "+a.getAmbito_Actual()+" Padre: "+a.getAmbito_Padre());
+            s+="Ambito "+a.getAmbito_Actual()+" Padre: "+a.getAmbito_Padre()+"\n";
             for(NodoTS n:a.variables){
-                System.out.println("-----> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo());
+                s+="---> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo()+" Tals: "+n.getTals()+"\n";
+                if(n.ambito!=null){
+                    s+=recorrerListaAmbitos(n.ambito,1);
+                }
             }
         }
-    }        
+        System.out.println(s);
+        return s;
+    }  
+    public static String recorrerListaAmbitos(Ambito ambito,int i){        
+        String s="";
+        String t="";
+        for(int j=0;j<i;j++){
+            t+="-----";
+        }
+        for(NodoTS n:ambito.variables){
+            s+=t+"---> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo()+" Tals: "+n.getTals()+"\n";
+            if(n.ambito!=null){
+                s+=recorrerListaAmbitos(n.ambito,i+1);
+            }
+        }        
+        return s;
+    }
+    public static void insertarAmbito(int ambito_padre)
+        {
+            cont_ambito++;
+            Ambito ambito = new Ambito(ambito_padre, cont_ambito);
+            lista_ambitos.add(ambito);
+        }
 
 }

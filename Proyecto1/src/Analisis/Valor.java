@@ -12,6 +12,7 @@ package Analisis;
 public class Valor {
     int tipo;
     String valor;
+    String tals;
 
     public Valor() {
         this.tipo = -1;
@@ -22,7 +23,20 @@ public class Valor {
         this.tipo = tipo;
         this.valor = valor;
     }
+    public Valor(int tipo, String valor,String tals) {
+        this.tipo = tipo;
+        this.valor = valor;
+        this.tals = tals;
+    }
 
+    public String getTals() {
+        return tals;
+    }
+
+    public void setTals(String tals) {
+        this.tals = tals;
+    }
+    
     public int getTipo() {
         return tipo;
     }

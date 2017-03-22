@@ -61,6 +61,7 @@ public class Constante {
     public static final String dim2="dim2";   
     public static final String asig="asig";   
     public static final String lid="lid";   
+    public static final String idl="idl";
     public static final String id="id";   
     public static final String cadena="cadena";  
     public static final String llamado="llamado";   
