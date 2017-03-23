@@ -75,7 +75,7 @@ public class Recorrido {
                 Nodo inicio=buscarNodo(clase_inicio.hijos.get(1), Constante.inicio);
                 Nodo cuerpo_inicio=inicio.getHijo(0);
                 //recorrer las sentencias del cuerpo de inicio
-                TS.insertarAmbito(cont);
+                TS.insertarAmbito(TS.cont_ambito);
                 recorrerSent(cuerpo_inicio);
                 //TS.eliminarAmbito();
             }else{
@@ -162,13 +162,10 @@ public class Recorrido {
                         case Constante.llamar:
                             res=SemanticoGraphik.llamar(sent);
                             break;
-                        case Constante.retornar:
-                            if(sent.hijos.size()>0){
-                                res=SemanticoGraphik.evaluarEXP(sent.hijos.get(0));
-                            }else{
-                                TablaErrores.insertarError("Errpor semantico, sentencia "+Constante.retornar+" no tiene valor de retorno asociado.", 1, 1);
-                            }
-                            break;
+                        case Constante.retornar:                            
+                            res=SemanticoGraphik.evaluarEXP(sent.hijos.get(0));
+                            
+                            return res;                            
                     }
                 }
             return res;

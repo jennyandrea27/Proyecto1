@@ -17,23 +17,37 @@ public class NodoTS {
     private Valor valor=new Valor();
     public Ambito ambito=null;
     private String tals;
+    private int visibilidad;
 
     public NodoTS(String nombre) {
         this.nombre = nombre;
         this.ambito=null;
+        this.tals="";
+        this.visibilidad=-1;
     }
     public NodoTS(String nombre, int tipo,String valor) {
         this.nombre = nombre;
         this.valor.setTipo(tipo);
         this.valor.setValor(valor);
         this.ambito=null;
+        this.tals="";
+        this.visibilidad=-1;
     }
     public NodoTS(String nombre, int tipo,String valor,String tals) {
         this.nombre = nombre;
         this.valor.setTipo(tipo);
         this.valor.setValor(valor);
         this.ambito=null;
-        this.tals=tals;
+        this.tals=tals;        
+        this.visibilidad=-1;
+    }
+
+    public int getVisibilidad() {
+        return visibilidad;
+    }
+
+    public void setVisibilidad(int visibilidad) {
+        this.visibilidad = visibilidad;
     }
 
     public String getTals() {

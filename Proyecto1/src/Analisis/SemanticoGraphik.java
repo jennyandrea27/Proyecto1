@@ -110,6 +110,10 @@ public class SemanticoGraphik {
                NodoTS lid=accederLID(op);
                if(lid!=null)
                    res=new Valor(lid.getTipo(),lid.getValor());
+               if(lid.getTipo()== Constante.tid){
+                   res.setTals(lid.getTals());
+                   res.ambito=(Ambito)lid.ambito;
+               }
                break;
             default://es valor puntual
                 return new Valor(op.getTipo(),op.getValor());
@@ -135,7 +139,7 @@ public class SemanticoGraphik {
                         acceso.setValor(valor2.getValor());
                 }
             }
-        
+        //asigna a variable 
         if(asig.hijos.get(0).hijos.size()==1){//solo tiene un id
             NodoTS variable=TS.buscarVar(nombre, TS.cont_ambito);
             if(variable!=null){
@@ -212,7 +216,15 @@ public class SemanticoGraphik {
                         Nodo fun=Recorrido.buscarFun(nombre, variable.getTals(),par_llamado);
                             if(fun !=null){
                             //ejecutar funcion
+                            //agregar ambito de la clase que llama a funcion variable.funcion
+                            TS.cont_ambito++;
+                            variable.ambito.setAmbito_Actual(TS.cont_ambito);
+                            TS.lista_ambitos.add(variable.ambito);
+                            //agregar ambito de la funcion
+                            TS.insertarAmbito(variable.ambito.getAmbito_Actual());
                             variable=SemanticoGraphik.ejecutarFun(fun,par_llamado);    
+                            //eliminar ambito de funcion
+                            //TS.eliminarAmbito();
                             }else{
                                 salir=true;
                                 TablaErrores.insertarError("Error semantico, la funcion "+nombre+"_"+p+" no ha sido declarada.", 0, 0);
@@ -271,6 +283,7 @@ public class SemanticoGraphik {
         NodoTS res=null;
         //insertar variable de retorno
         NodoTS retorno=new NodoTS(Constante.retornar,funcion.getTipo(),"");
+        retorno.setTals(funcion.getTals());
         TS.insertarVariable(retorno);
         //recorrer las variables y agregarlas a ambito
         Nodo l_par_fun = funcion.hijos.get(0);
@@ -288,10 +301,13 @@ public class SemanticoGraphik {
         if(retorno.getTipo() == ret.getTipo()){
             //si son tipo objeto verificar que sea el mismo ALS
             if(retorno.getTipo() == Constante.tid){
-                if(retorno.getTals().equals(ret.getTals()))
-                    res=new NodoTS(funcion.getValor(),res.getTipo(),res.getValor());                
-                else
+                if(retorno.getTals().equals(ret.getTals())){
+                    res=new NodoTS(funcion.getValor(),ret.getTipo(),ret.getValor());                
+                    res.setTals(ret.getTals());
+                    res.ambito=(Ambito)ret.ambito;
+                }else{
                     TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+res.getTals(), 0, 0);                
+                }
             }else{
                 res=new NodoTS(funcion.getValor(),ret.getTipo(),ret.getValor());                                
             }

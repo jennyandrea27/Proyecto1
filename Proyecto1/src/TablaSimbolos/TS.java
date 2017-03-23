@@ -44,6 +44,7 @@ public class TS {
             //verificar si es una sola variable y no tiene valor
             if(dec.hijos.size()==1){
                 NodoTS variable=new NodoTS(nombre,tipo,null,tals);
+                variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                 Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
                 if (busqueda == null)
                     lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -51,6 +52,7 @@ public class TS {
                 //verificar si es una lista de id's
                 //se inserta la primer variable
                 NodoTS variable=new NodoTS(nombre,tipo,null,tals);
+                variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                 Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
                 if (busqueda == null)
                     lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -59,6 +61,7 @@ public class TS {
                 for(Nodo id:lid.hijos){
                     nombre=id.getValor();
                     variable=new NodoTS(nombre,tipo,null,tals);
+                    variable.setVisibilidad(id.getVisibilidad());
                     busqueda = buscarVarAsig(nombre,cont_ambito);
                     if (busqueda == null)
                         lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -72,6 +75,7 @@ public class TS {
                     Nodo clase=Recorrido.buscarClase(nombre_obj);
                     if(clase!=null){
                         NodoTS variable=new NodoTS(nombre,tipo,null,tals);
+                        variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                         variable.ambito=new Ambito(-1, cont_ambito);
                         nuevoALS(clase.hijos.get(1),variable.ambito);
                         lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -92,6 +96,7 @@ public class TS {
                         val_casteo = new Valor(tipo, null);
                     }else{                    
                         NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
+                        variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                         NodoTS busqueda = lista_ambitos.get(cont_ambito).buscarVariable(nombre);
                         if (busqueda == null)
                             lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -107,6 +112,7 @@ public class TS {
             //verificar si es una sola variable y no tiene valor
             if(dec.hijos.size()==1){
                 NodoTS variable=new NodoTS(nombre,tipo,null,tals);
+                variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                 NodoTS busqueda = ambito.buscarVariable(nombre);
                 if (busqueda == null)
                     ambito.insertarVariable(variable);
@@ -114,6 +120,7 @@ public class TS {
                 //verificar si es una lista de id's
                 //se inserta la primer variable
                 NodoTS variable=new NodoTS(nombre,tipo,null,tals);
+                variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                 NodoTS busqueda = ambito.buscarVariable(nombre);
                 if (busqueda == null)
                     ambito.insertarVariable(variable);
@@ -122,6 +129,7 @@ public class TS {
                 for(Nodo id:lid.hijos){
                     nombre=id.getValor();
                     variable=new NodoTS(nombre,tipo,null,tals);
+                    variable.setVisibilidad(id.getVisibilidad());
                     busqueda = ambito.buscarVariable(nombre);
                     if (busqueda == null)
                         ambito.insertarVariable(variable);
@@ -136,6 +144,7 @@ public class TS {
                     if(clase!=null){
                         NodoTS variable=new NodoTS(nombre,tipo,null,tals);
                         variable.ambito=new Ambito(-1, cont_ambito);
+                        variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                         nuevoALS(clase.hijos.get(1),variable.ambito);
                         ambito.insertarVariable(variable);
                     }else{
@@ -155,6 +164,7 @@ public class TS {
                         val_casteo = new Valor(tipo, null);
                     }else{                    
                         NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
+                        variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
                         NodoTS busqueda = ambito.buscarVariable(nombre);
                         if (busqueda == null)
                             ambito.insertarVariable(variable);

@@ -6,6 +6,7 @@
 package Analisis;
 
 import Extras.Constante;
+import TablaSimbolos.Ambito;
 
 /**
  *
@@ -15,6 +16,7 @@ public class Valor {
     int tipo;
     String valor;
     String tals;
+    Ambito ambito=null;
 
     public Valor() {
         this.tipo = Constante.tvacio;
