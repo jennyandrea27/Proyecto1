@@ -37,7 +37,7 @@ terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, pu
 nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
 nonterminal Nodo DECLARACION, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
 nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
-nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO,EXP2,EXP3;
+nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO,EXP2,EXP3,ID;
 nonterminal String OPREL,OPPARA,TVAR,TFUN;
 nonterminal Integer VISIBILIDAD,TVISIBILIDAD;
 
@@ -119,16 +119,17 @@ LLAVE ::= LLLAVE
                     | LPFUN;
 VALASIG ::= EXP:exp{:RESULT = exp;:}
                        | nuevo id:id parentesisa parentesisc {:RESULT = Fabrica.crearNodoNuevo(id);:};
-LID ::= LID:lid punto id:id
-                {:
-                    Nodo id1=Fabrica.crearNodoHoja(Constante.id,id);
-                    RESULT = Fabrica.insertarLID(lid,id1);
-                 :}
-                |  id:id  
-                {:
-                    Nodo id1=Fabrica.crearNodoHoja(Constante.id,id);
-                    RESULT = Fabrica.crearNodoLID(id1);
-                 :};
+LID ::= LID:lid punto ID:id
+                {:                                        
+                    RESULT = Fabrica.insertarLID(lid,id);
+                 :}             
+                |  ID:id       {:RESULT = Fabrica.crearNodoLID(id);:};
+ID ::= id:id  {: RESULT=Fabrica.crearNodoHoja(Constante.id,id);:}                
+            |id:id parentesisa LPFUN:pdecfun parentesisc
+            {:
+                RESULT=Fabrica.crearNodoHoja(Constante.id,id);
+                RESULT.insertarHijo(pdecfun);
+            :};
 DECFUN ::= TFUN:tfun id:id parentesisa PDECFUN:pdecfun parentesisc VISIBILIDAD:visibilidad llavea CUERPO:cuerpo llavec
                     {:RESULT = Fabrica.crearNodoDecFun(tfun,id,pdecfun,visibilidad,cuerpo);:};
 TVAR ::= tentero{:RESULT = Constante.tnum+"";:}
@@ -151,7 +152,7 @@ PDECFUN ::= PDECFUN:pdecfun coma TVAR:tvar id:id
                         :}
                         |{:RESULT= Fabrica.crearNodoLPAR(null);:};
 RETORNAR ::= retornar EXP:exp{:RESULT = new Nodo(Constante.retornar); RESULT.insertarHijo(exp);:};
-LLAMADO ::= llamar LID:lid parentesisa LPFUN:lpfun parentesisc{:RESULT = Fabrica.crearNodoLlamado(lid,lpfun);:}
+LLAMADO ::= llamar LID:lid {:RESULT = Fabrica.crearNodoLlamado(lid);:}
                          | llamarhk id:id parentesisa LPFUN:lpfun parentesisc{:RESULT = Fabrica.crearNodoLlamado(id,lpfun);:};
 LPFUN ::= LPFUN:lpar coma EXP:exp{:RESULT=Fabrica.insertarPar(lpar,exp);:}
                  | EXP:exp{:RESULT=Fabrica.crearNodoLPAR(exp);:}
@@ -240,7 +241,12 @@ SENTENCIA ::= ASIGNACION:asignacion pregc {:RESULT = asignacion;:}
                           | IMPRIMIR:imprimir{:RESULT = imprimir;:}
                           | GRAPHIKAR:graphikar {:RESULT = graphikar;:}
                           | continuar pregc{:RESULT = new Nodo(Constante.continuar);:}
-                          | terminar pregc{:RESULT = new Nodo(Constante.terminar);:};
+                          | terminar pregc{:RESULT = new Nodo(Constante.terminar);:}
+                          |LID:lid OPPARA:op
+                            {:
+                                Nodo op2=Fabrica.crearNodoHoja(Constante.num,"1",Constante.tnum+"");
+                                RESULT = Fabrica.crearNodoOperacion(op,lid,op2);
+                            :};
 
 IMPRIMIR ::= imprimir parentesisa EXP:exp parentesisc pregc{:RESULT = new Nodo(Constante.imprimir); RESULT.insertarHijo(exp);:};
 

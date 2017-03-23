@@ -14,6 +14,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.LinkedList;
 
 /**
  *
@@ -145,7 +146,7 @@ public class SemanticoGraphik {
                     TS.asignarVar(nombre,valor2);                    
                 }
             }else{
-                TablaErrores.insertarError("La variable "+nombre+" no ha sido declarada.", 0, 0);
+                TablaErrores.insertarError("Error semantico, la variable "+nombre+" no ha sido declarada.", 0, 0);
             }
         }else{//es un acceso id.id.id
             
@@ -153,28 +154,83 @@ public class SemanticoGraphik {
     }    
     public static NodoTS accederLID(Nodo lid){
         //obtener primer id
-        String nombre=lid.hijos.get(0).getValor();
         NodoTS variable=null;
-        variable=TS.buscarVar(nombre, TS.cont_ambito);
         boolean salir=false;
         int cont =1;
+        String nombre=lid.hijos.get(0).getValor();
+        //verificar si el primer id tiene parametros, es una funcion
+        Nodo id1=lid.hijos.get(0);
+        if(id1.hijos.size()>0){//es una funcion
+            //funcion declarada en clase de metodo inicio
+            //obtener parametros de funcion
+            //generar lista de parametros del llamado
+            Nodo lpar = id1.hijos.get(0);
+            String p="";
+            LinkedList<Valor> par_llamado = new LinkedList<Valor>();
+            for(Nodo hijo : lpar.hijos)
+            {
+                Valor par = SemanticoGraphik.evaluarEXP(hijo);
+                p += Casteo.valTipo(par.getTipo())+"_";
+                par_llamado.add(par);
+            }
+            //buscar funcion
+            Nodo fun=Recorrido.buscarFun(nombre, null,par_llamado);
+            if(fun !=null){
+            //ejecutar funcion
+            //insertar ambito funcion
+            TS.insertarAmbito(-1);
+            variable=SemanticoGraphik.ejecutarFun(fun,par_llamado);    
+            //eliminar ambito funcion
+            //TS.eliminarAmbito();
+            }else{                
+                TablaErrores.insertarError("Error semantico, la funcion "+nombre+"_"+p+" no ha sido declarada.", 0, 0);
+                return null;
+            }
+        }else{
+            //es una variable
+            variable=TS.buscarVar(nombre, TS.cont_ambito);            
+        }
         while(cont < lid.hijos.size() && !salir){            
-            if(variable!=null){
+            if(variable!=null){                                
                 //verficar si variable es tipo id
                 if(variable.getTipo() == Constante.tid){
                     //puede tener atributos
-                    if(variable.ambito!=null){
+                    //verificar si el siguiente es tipo funcion
+                    if(lid.hijos.get(cont).hijos.size()>0){//es una funcion
                         String nombre1=nombre;
                         nombre=lid.hijos.get(cont).getValor();
-                        variable=variable.ambito.buscarVariable(nombre);
-                        if(variable== null){
-                            salir=true;
-                            TablaErrores.insertarError("ALS "+nombre1+" no contiene atributo "+nombre, cont, cont);
+                        id1=lid.hijos.get(cont);
+                        Nodo lpar = id1.hijos.get(0);
+                        String p="";
+                        LinkedList<Valor> par_llamado = new LinkedList<Valor>();
+                        for(Nodo hijo : lpar.hijos)
+                        {
+                            Valor par = SemanticoGraphik.evaluarEXP(hijo);
+                            p += Casteo.valTipo(par.getTipo())+"_";
+                            par_llamado.add(par);
                         }
-                    }else{
-                        //variable no ha sido inicializada
-                        salir=true;
-                        TablaErrores.insertarError("Variable "+nombre+" no ha sido inicializada.", 1, 1);
+                        Nodo fun=Recorrido.buscarFun(nombre, variable.getTals(),par_llamado);
+                            if(fun !=null){
+                            //ejecutar funcion
+                            variable=SemanticoGraphik.ejecutarFun(fun,par_llamado);    
+                            }else{
+                                salir=true;
+                                TablaErrores.insertarError("Error semantico, la funcion "+nombre+"_"+p+" no ha sido declarada.", 0, 0);
+                            }
+                    }else{                        
+                        if(variable.ambito!=null){
+                            String nombre1=nombre;
+                            nombre=lid.hijos.get(cont).getValor();
+                            variable=variable.ambito.buscarVariable(nombre);
+                            if(variable== null){
+                                salir=true;
+                                TablaErrores.insertarError("ALS "+nombre1+" no contiene atributo "+nombre, cont, cont);
+                            }
+                        }else{
+                            //variable no ha sido inicializada
+                            salir=true;
+                            TablaErrores.insertarError("Variable "+nombre+" no ha sido inicializada.", 1, 1);
+                        }
                     }
                 }else{
                     //es atributo
@@ -193,5 +249,55 @@ public class SemanticoGraphik {
         }
         return null;
     }
-    
+    public static Valor llamar(Nodo llamar){
+        Valor resultado=new Valor();
+            //nodo llamar tiene lista de id's
+            //verificar si el ultimo id es una funcion
+            Nodo lid=llamar.hijos.get(0);
+            int tam_lid=lid.hijos.size();
+            Nodo ultimo=lid.hijos.get(tam_lid-1);
+            if(ultimo.hijos.size()>0){
+                //tiene parametros, es una funcion
+                //llamar a metodo accederLID
+                NodoTS res=accederLID(lid);
+                resultado=new Valor(res.getTipo(), res.getValor(), res.getTals());
+            }else{
+                //error id al cual se quiere acceder no es una funcion
+                TablaErrores.insertarError("El id "+ultimo.getValor()+" no es una funcion.", tam_lid, tam_lid);
+            }
+            return resultado;
+    }
+    public static NodoTS ejecutarFun(Nodo funcion,LinkedList<Valor> par_llamado){
+        NodoTS res=null;
+        //insertar variable de retorno
+        NodoTS retorno=new NodoTS(Constante.retornar,funcion.getTipo(),"");
+        TS.insertarVariable(retorno);
+        //recorrer las variables y agregarlas a ambito
+        Nodo l_par_fun = funcion.hijos.get(0);
+            for (int i = 0; i < l_par_fun.hijos.size(); i++)
+            {
+                String nombre = l_par_fun.hijos.get(i).getValor();
+                int tipo = par_llamado.get(i).getTipo();
+                String valor = par_llamado.get(i).getValor();
+                NodoTS par = new NodoTS(nombre, tipo, valor);
+                TS.insertarVariable(par);
+            }            
+        //ejecutar cuerpo funcion
+        Valor ret=Recorrido.recorrerSent(funcion.hijos.get(1));
+        //verificar si tipo de retorno coincide
+        if(retorno.getTipo() == ret.getTipo()){
+            //si son tipo objeto verificar que sea el mismo ALS
+            if(retorno.getTipo() == Constante.tid){
+                if(retorno.getTals().equals(ret.getTals()))
+                    res=new NodoTS(funcion.getValor(),res.getTipo(),res.getValor());                
+                else
+                    TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+res.getTals(), 0, 0);                
+            }else{
+                res=new NodoTS(funcion.getValor(),ret.getTipo(),ret.getValor());                                
+            }
+        }else{
+            TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+res.getTipo(), 0, 0);                            
+        }
+        return res;
+    }
 }

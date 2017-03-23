@@ -5,6 +5,8 @@
  */
 package Analisis;
 
+import Extras.Constante;
+
 /**
  *
  * @author Jenny
@@ -15,7 +17,7 @@ public class Valor {
     String tals;
 
     public Valor() {
-        this.tipo = -1;
+        this.tipo = Constante.tvacio;
         this.valor = "";
     }
     

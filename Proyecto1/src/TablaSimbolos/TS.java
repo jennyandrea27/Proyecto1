@@ -65,21 +65,38 @@ public class TS {
                 }
             }else{
                 //si tiene valor inicial
-                Valor val = new Valor(tipo, null);
-                Valor val_casteo= new Valor(tipo, null);
-                Nodo v_inicial=dec.hijos.get(1);                
-                //tiene valor inicial
-                val = SemanticoGraphik.evaluarEXP(v_inicial);
-                val_casteo = Casteo.Asignacion(tipo, val);
-                if (val_casteo.getTipo() == Constante.terror){
-                    TablaErrores.insertarError(val_casteo.getValor(), 1,1);
-                    val_casteo = new Valor(tipo, null);
-                }else{                    
-                    NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
-                    Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
-                    if (busqueda == null)
+                //verificar si es objeto o variable
+                if(dec.hijos.get(1).getNombre().equals(Constante.nuevo)){
+                    //es un objeto, buscar nodo de la clase que se instancia
+                    String nombre_obj=dec.hijos.get(1).getValor();
+                    Nodo clase=Recorrido.buscarClase(nombre_obj);
+                    if(clase!=null){
+                        NodoTS variable=new NodoTS(nombre,tipo,null,tals);
+                        variable.ambito=new Ambito(-1, cont_ambito);
+                        nuevoALS(clase.hijos.get(1),variable.ambito);
                         lista_ambitos.get(cont_ambito).insertarVariable(variable);
-                }                                                   
+                    }else{
+                        //clase no ha sido declarada
+                        TablaErrores.insertarError("ALS "+nombre_obj+" no ha sido declarado.", 1, 1);
+                    }
+                    
+                }else{                    
+                    Valor val = new Valor(tipo, null);
+                    Valor val_casteo= new Valor(tipo, null);
+                    Nodo v_inicial=dec.hijos.get(1);                
+                    //tiene valor inicial
+                    val = SemanticoGraphik.evaluarEXP(v_inicial);
+                    val_casteo = Casteo.Asignacion(tipo, val);
+                    if (val_casteo.getTipo() == Constante.terror){
+                        TablaErrores.insertarError(val_casteo.getValor(), 1,1);
+                        val_casteo = new Valor(tipo, null);
+                    }else{                    
+                        NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
+                        NodoTS busqueda = lista_ambitos.get(cont_ambito).buscarVariable(nombre);
+                        if (busqueda == null)
+                            lista_ambitos.get(cont_ambito).insertarVariable(variable);
+                    }                                                   
+                }                                              
             }//no tiene valor inicial
         }
         public static void declararVar(Nodo dec,Ambito ambito){//agrega variable a un ambito especifico
@@ -207,11 +224,18 @@ public class TS {
         }        
         return s;
     }
-    public static void insertarAmbito(int ambito_padre)
-        {
+    public static void insertarAmbito(int ambito_padre){
             cont_ambito++;
             Ambito ambito = new Ambito(ambito_padre, cont_ambito);
             lista_ambitos.add(ambito);
         }
+    public static void eliminarAmbito(){
+            lista_ambitos.remove(cont_ambito);
+            cont_ambito--;
+        }
+    public static void insertarVariable(NodoTS var){
+            lista_ambitos.get(cont_ambito).variables.add(var);
+        }
+
 
 }

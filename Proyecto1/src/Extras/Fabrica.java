@@ -23,6 +23,7 @@ public class Fabrica {
             case Constante.tbool+"":
             case Constante.tcadena+"":
             case Constante.tcaracter+"":
+            case Constante.tvacio+"":
                 tipo_var=Integer.parseInt(tipo);
             break;
             default:
@@ -142,13 +143,10 @@ public class Fabrica {
         }
         return llamado;
     }
-    public static Nodo crearNodoLlamado(Nodo lid,Nodo lpar){
+    public static Nodo crearNodoLlamado(Nodo lid){
         Nodo llamado=new Nodo(Constante.llamar);
         if(lid!=null){
             llamado.insertarHijo(lid);
-        }
-        if(lpar!=null){
-            llamado.insertarHijo(lpar);
         }
         return llamado;
     }
@@ -295,6 +293,7 @@ public class Fabrica {
             case Constante.tbool+"":
             case Constante.tcadena+"":
             case Constante.tcaracter+"":
+            case Constante.tvacio+"":
                 tipo_var=Integer.parseInt(tfun);
             break;
             default:
@@ -344,6 +343,7 @@ public class Fabrica {
             case Constante.tbool+"":
             case Constante.tcadena+"":
             case Constante.tcaracter+"":
+            case Constante.tvacio+"":
                 tipo_var=Integer.parseInt(tvar);
             break;
             default:

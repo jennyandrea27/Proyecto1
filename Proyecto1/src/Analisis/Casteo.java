@@ -768,5 +768,25 @@ public class Casteo {
             }
             return valor2; 
         }        
-    
+public static int Tipo(String tipo)
+        {
+            switch (tipo)
+            {
+                case Constante.num:
+                    return Constante.tnum;                    
+                case Constante.cadena:
+                    return Constante.tcadena;
+                case Constante.caracter:
+                    return Constante.tcaracter;                
+                case Constante.bool:
+                    return Constante.tbool;                
+                case Constante.vacio:
+                    return Constante.tvacio;
+                case Constante.decimal:
+                    return Constante.tdecimal;
+                case Constante.id:
+                    return Constante.tid;
+            }
+            return -1;            
+        }    
 }

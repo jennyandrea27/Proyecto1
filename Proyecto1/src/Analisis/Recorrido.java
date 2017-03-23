@@ -8,6 +8,7 @@ package Analisis;
 import Extras.Constante;
 import Reportes.TablaErrores;
 import TablaSimbolos.TS;
+import java.util.LinkedList;
 
 /**
  *
@@ -74,12 +75,79 @@ public class Recorrido {
                 Nodo inicio=buscarNodo(clase_inicio.hijos.get(1), Constante.inicio);
                 Nodo cuerpo_inicio=inicio.getHijo(0);
                 //recorrer las sentencias del cuerpo de inicio
+                TS.insertarAmbito(cont);
                 recorrerSent(cuerpo_inicio);
+                //TS.eliminarAmbito();
             }else{
                 //error metodo inicio no existe
                 TablaErrores.insertarError("Error semantico, metodo Inicio no fue declarado.", 1, 1);
             }
             
+        }
+        public static Nodo buscarFun(String nombre, String nombre_clase,LinkedList par_llamado){
+            Nodo funcion=new Nodo("");
+            Nodo lals=buscarNodo(raiz,Constante.als);
+            if(nombre_clase==null){
+                //se debe buscar en clase que tiene metodo principal
+                //buscar lista de als
+                //buscar clase con metodo inicio
+                Nodo clase_inicio=buscarClaseDeInicio(lals);
+                if(clase_inicio!=null){                    
+                    Nodo cuerpo_inicio=clase_inicio.getHijo(1);
+                    //recorrer cuerpo para encontrar funcion
+                    funcion=buscarFun(cuerpo_inicio,nombre,par_llamado);
+                    if(funcion==null)
+                        TablaErrores.insertarError("Error semantico, funcion "+nombre+" no fue declarada.", 1, 1);
+                    else
+                        return funcion;                    
+                }else{
+                    //error metodo inicio no existe
+                    TablaErrores.insertarError("Error semantico, metodo Inicio no fue declarado.", 1, 1);
+                }
+            }else{
+                //se debe encontrar en el arbol del ALS que contiene esa funcion
+                Nodo clase=buscarClase(nombre_clase);
+                if(clase!=null){
+                    //buscar funcion
+                    Nodo cuerpo_clase=clase.getHijo(1);
+                    funcion=buscarFun(cuerpo_clase, nombre, par_llamado);
+                    if(funcion!=null)
+                        return funcion;
+                }else{                    
+                    TablaErrores.insertarError("Error semantico, la clase "+nombre_clase+" no ha sido declarada.", cont, cont);               
+                }
+
+            }
+            return null;            
+        }
+        public static Nodo buscarFun(Nodo cuerpo,String nombre,LinkedList <Valor> par_llamado){            
+            for(Nodo sent:cuerpo.hijos){
+                if(sent.getNombre().equals(Constante.decfun)){
+                  if(sent.getValor().equals(nombre))  {
+                      //se ha encontrado funcion
+                      //verificar si coinciden los parametros
+                        boolean encontrada = true;                             
+                        Nodo lpar = sent.hijos.get(0);
+                        if(lpar.hijos.size() == par_llamado.size()){
+                            //comparar cada parametro
+                            for (int i = 0; i < lpar.hijos.size();i++){                                        
+                                if (par_llamado.get(i).getTipo() != lpar.hijos.get(i).getTipo()){
+                                    encontrada = false;
+                                }
+                                if(par_llamado.get(i).getTipo()==Constante.tid){
+                                    if(! par_llamado.get(i).getTals().equals(lpar.hijos.get(i).getTals())){
+                                        encontrada =false;
+                                    }
+                                }
+                            }
+                            if (encontrada){
+                                return sent;
+                            }
+                        }//no coincide cantidad de parametros                      
+                  }//coincide nombre
+                }//es decfun
+            }//for
+            return null;
         }
         public static Valor recorrerSent(Nodo cuerpo){
             Valor res=new Valor();
@@ -90,6 +158,16 @@ public class Recorrido {
                             break;
                         case Constante.dec:
                             TS.declararVar(sent);
+                            break;
+                        case Constante.llamar:
+                            res=SemanticoGraphik.llamar(sent);
+                            break;
+                        case Constante.retornar:
+                            if(sent.hijos.size()>0){
+                                res=SemanticoGraphik.evaluarEXP(sent.hijos.get(0));
+                            }else{
+                                TablaErrores.insertarError("Errpor semantico, sentencia "+Constante.retornar+" no tiene valor de retorno asociado.", 1, 1);
+                            }
                             break;
                     }
                 }
