@@ -108,11 +108,12 @@ public class SemanticoGraphik {
                  break;
            case Constante.lid:
                NodoTS lid=accederLID(op);
-               if(lid!=null)
+               if(lid!=null){
                    res=new Valor(lid.getTipo(),lid.getValor());
-               if(lid.getTipo()== Constante.tid){
-                   res.setTals(lid.getTals());
-                   res.ambito=(Ambito)lid.ambito;
+                    if(lid.getTipo()== Constante.tid){
+                        res.setTals(lid.getTals());
+                        res.ambito=(Ambito)lid.ambito;
+                    }
                }
                break;
             default://es valor puntual
@@ -185,13 +186,13 @@ public class SemanticoGraphik {
             TS.insertarAmbito(-1);
             variable=SemanticoGraphik.ejecutarFun(fun,par_llamado);    
             //eliminar ambito funcion
-            //TS.eliminarAmbito();
+            TS.eliminarAmbito();
             }else{                
                 TablaErrores.insertarError("Error semantico, la funcion "+nombre+"_"+p+" no ha sido declarada.", 0, 0);
                 return null;
             }
         }else{
-            //es una variable
+            //es una variable            
             variable=TS.buscarVar(nombre, TS.cont_ambito);            
         }
         while(cont < lid.hijos.size() && !salir){            
@@ -222,9 +223,15 @@ public class SemanticoGraphik {
                             TS.lista_ambitos.add(variable.ambito);
                             //agregar ambito de la funcion
                             TS.insertarAmbito(variable.ambito.getAmbito_Actual());
-                            variable=SemanticoGraphik.ejecutarFun(fun,par_llamado);    
+                            //verificar visibilidad
+                            if(fun.getVisibilidad()==Constante.privado || fun.getVisibilidad()==Constante.protegido){
+                                salir=true;
+                                TablaErrores.insertarError("Error semantico, la visibilidad de la funcion "+nombre+"_"+p+" no permite acceder a ella.", 0, 0);                                
+                            }else{
+                                variable=SemanticoGraphik.ejecutarFun(fun,par_llamado);    
+                            }
                             //eliminar ambito de funcion
-                            //TS.eliminarAmbito();
+                            TS.eliminarAmbito();
                             }else{
                                 salir=true;
                                 TablaErrores.insertarError("Error semantico, la funcion "+nombre+"_"+p+" no ha sido declarada.", 0, 0);
@@ -232,22 +239,27 @@ public class SemanticoGraphik {
                     }else{                        
                         if(variable.ambito!=null){
                             String nombre1=nombre;
-                            nombre=lid.hijos.get(cont).getValor();
-                            variable=variable.ambito.buscarVariable(nombre);
-                            if(variable== null){
+                            if(variable.getVisibilidad() == Constante.privado || variable.getVisibilidad() == Constante.protegido){
                                 salir=true;
-                                TablaErrores.insertarError("ALS "+nombre1+" no contiene atributo "+nombre, cont, cont);
+                                TablaErrores.insertarError("Error semantico, la visibilidad de ALS "+nombre1+"  no permite acceder a atributos.", cont, cont);
+                            }else{                                
+                                nombre=lid.hijos.get(cont).getValor();
+                                variable=variable.ambito.buscarVariable(nombre);                            
+                                if(variable== null){
+                                    salir=true;
+                                    TablaErrores.insertarError("Error semantico, ALS "+nombre1+" no contiene atributo "+nombre, cont, cont);
+                                }
                             }
                         }else{
                             //variable no ha sido inicializada
                             salir=true;
-                            TablaErrores.insertarError("Variable "+nombre+" no ha sido inicializada.", 1, 1);
+                            TablaErrores.insertarError("Error semantico, variable "+nombre+" no ha sido inicializada.", 1, 1);
                         }
                     }
                 }else{
                     //es atributo
                     salir=true;
-                    TablaErrores.insertarError("Variable "+nombre+" no es de tipo ALS.", 1, 1);
+                    TablaErrores.insertarError("Error semantico, ariable "+nombre+" no es de tipo ALS.", 1, 1);
                 }
             }else{
                 //variable no ha sido declarada
@@ -272,7 +284,9 @@ public class SemanticoGraphik {
                 //tiene parametros, es una funcion
                 //llamar a metodo accederLID
                 NodoTS res=accederLID(lid);
-                resultado=new Valor(res.getTipo(), res.getValor(), res.getTals());
+                if(res!=null){                    
+                    resultado=new Valor(res.getTipo(), res.getValor(), res.getTals());
+                }
             }else{
                 //error id al cual se quiere acceder no es una funcion
                 TablaErrores.insertarError("El id "+ultimo.getValor()+" no es una funcion.", tam_lid, tam_lid);
@@ -306,13 +320,13 @@ public class SemanticoGraphik {
                     res.setTals(ret.getTals());
                     res.ambito=(Ambito)ret.ambito;
                 }else{
-                    TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+res.getTals(), 0, 0);                
+                    TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+ret.getTals(), 0, 0);                
                 }
             }else{
                 res=new NodoTS(funcion.getValor(),ret.getTipo(),ret.getValor());                                
             }
         }else{
-            TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+res.getTipo(), 0, 0);                            
+            TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+Casteo.valTipo(ret.getTipo()), 0, 0);                            
         }
         return res;
     }

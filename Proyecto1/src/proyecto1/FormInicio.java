@@ -252,7 +252,8 @@ public class FormInicio extends javax.swing.JFrame {
 
     private void bCargarGKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarGKActionPerformed
         // TODO add your handling code here:
-        String entrada=tbArchivo.getText();            
+        String entrada=tbArchivo.getText();   
+        TablaErrores.error=false;
             if(entrada.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");
             }else{                

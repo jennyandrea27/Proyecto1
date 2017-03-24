@@ -41,10 +41,11 @@ public class TS {
             int tipo=dec.hijos.get(0).getTipo();
             String tals=dec.hijos.get(0).getTals();
             String nombre=dec.hijos.get(0).getValor();
+            int visibilidad=dec.hijos.get(0).getVisibilidad();
             //verificar si es una sola variable y no tiene valor
             if(dec.hijos.size()==1){
                 NodoTS variable=new NodoTS(nombre,tipo,null,tals);
-                variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
+                variable.setVisibilidad(visibilidad);
                 Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
                 if (busqueda == null)
                     lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -52,7 +53,7 @@ public class TS {
                 //verificar si es una lista de id's
                 //se inserta la primer variable
                 NodoTS variable=new NodoTS(nombre,tipo,null,tals);
-                variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
+                variable.setVisibilidad(visibilidad);
                 Ambito busqueda = buscarVarAsig(nombre,cont_ambito);
                 if (busqueda == null)
                     lista_ambitos.get(cont_ambito).insertarVariable(variable);
