@@ -303,24 +303,6 @@ public class SemanticoGraphik {
         }
         return null;
     }
-    public static Valor si(Nodo si){
-        Valor cond=evaluarEXP(si.hijos.get(0));
-        Valor res=new Valor();
-        if(cond.getTipo()==Constante.tbool){
-            if(cond.getValor().equals(Constante.verdadero)){
-                //ejecutar sentencias verdaderas
-                res=Recorrido.recorrerSent(si.hijos.get(1));
-            }else{
-                //ejecutar sentencias falsas
-                if(si.hijos.size()==3){                    
-                    res=Recorrido.recorrerSent(si.hijos.get(2));
-                }
-            }
-        }else{
-            //la expresion no es de tipo bool
-        }
-        return res;
-    }
     public static Valor llamar(Nodo llamar){
         Valor resultado=new Valor();
             //nodo llamar tiene lista de id's
@@ -387,9 +369,81 @@ public class SemanticoGraphik {
         Valor val1=evaluarEXP(imprimir.hijos.get(0));
         Valor val_imprimir=Casteo.Asignacion(Constante.tcadena, val1);
         if(val_imprimir.getTipo()==Constante.terror){
-            TablaErrores.insertarError("Sentencia imprimir no recibe parametro tipo "+Casteo.valTipo(val1.getTipo()),1,1);
+            TablaErrores.insertarError("Error semantico, sentencia imprimir no recibe parametro tipo "+Casteo.valTipo(val1.getTipo()),1,1);
         }else{
-            FormInicio.texto_salida+=val_imprimir.getValor();
+            FormInicio.texto_salida+=val_imprimir.getValor()+"\n";
         }
     }
+    public static Valor si(Nodo si){
+        Valor cond=evaluarEXP(si.hijos.get(0));
+        Valor res=new Valor();
+        if(cond.getTipo()==Constante.tbool){
+            if(cond.getValor().equals(Constante.verdadero)){
+                //ejecutar sentencias verdaderas
+                res=Recorrido.recorrerSent(si.hijos.get(1));
+            }else{
+                //ejecutar sentencias falsas
+                if(si.hijos.size()==3){                    
+                    res=Recorrido.recorrerSent(si.hijos.get(2));
+                }
+            }
+        }else{
+            //la expresion no es de tipo bool
+            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" en sentencia Si.", 0, 0);
+        }
+        return res;
+    }
+    public static Valor seleccion(Nodo seleccion){
+        return null;
+    }
+    public static Valor para(Nodo para){
+        return null;
+    }
+    public static Valor mientras(Nodo mientras){
+        Valor cond=evaluarEXP(mientras.hijos.get(0));
+        Valor res=new Valor();
+        if(cond.getTipo()==Constante.tbool){
+            TS.insertarAmbito(TS.cont_ambito);
+            while(cond.getValor().equals(Constante.verdadero)){
+                res=Recorrido.recorrerSent(mientras.hijos.get(1));
+                if(res.getCat_retorno()==Constante.cat_continuar){
+                    res.setCat_retorno(-1);
+                }else if (res.getCat_retorno()==Constante.cat_terminar){
+                    res.setCat_retorno(-1);
+                    break;
+                }else if (res.getCat_retorno()==Constante.cat_retornar){
+                    break;
+                }
+                cond=evaluarEXP(mientras.hijos.get(0));
+            }
+            TS.eliminarAmbito();
+        }else{
+            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" en sentencia Mientras.", 0, 0);            
+        }
+        return res;
+    }
+    public static Valor hacerMientras(Nodo hacer ){
+        Valor cond=evaluarEXP(hacer.hijos.get(0));
+        Valor res=new Valor();
+        if(cond.getTipo()==Constante.tbool){
+            TS.insertarAmbito(TS.cont_ambito);
+            do{                
+                res=Recorrido.recorrerSent(hacer.hijos.get(1));
+                if(res.getCat_retorno()==Constante.cat_continuar){
+                    res.setCat_retorno(-1);
+                }else if (res.getCat_retorno()==Constante.cat_terminar){
+                    res.setCat_retorno(-1);
+                    break;
+                }else if (res.getCat_retorno()==Constante.cat_retornar){
+                    break;
+                }
+                cond=evaluarEXP(hacer.hijos.get(0));}
+                while(cond.getValor().equals(Constante.verdadero));
+            TS.eliminarAmbito();
+        }else{
+            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" en sentencia Hacer-Mientras.", 0, 0);            
+        }
+        return res;        
+    }    
+    
 }

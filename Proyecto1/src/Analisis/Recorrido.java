@@ -181,6 +181,30 @@ public class Recorrido {
                         case Constante.imprimir:
                             SemanticoGraphik.imprimir(sent);
                             break;
+                        case Constante.mientras:
+                            res=SemanticoGraphik.mientras(sent);
+                            if(res.getCat_retorno()==Constante.cat_retornar || res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_terminar){
+                                return res;
+                            }
+                            break;
+                        case Constante.hacermientras:
+                            res=SemanticoGraphik.hacerMientras(sent);
+                            if(res.getCat_retorno()==Constante.cat_retornar || res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_terminar){
+                                return res;
+                            }
+                            break;
+                        case Constante.caso:
+                            res=SemanticoGraphik.seleccion(sent);
+                            if(res.getCat_retorno()==Constante.cat_retornar || res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_terminar){
+                                return res;
+                            }
+                            break;
+                        case Constante.para:
+                            res=SemanticoGraphik.para(sent);
+                            if(res.getCat_retorno()==Constante.cat_retornar || res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_terminar){
+                                return res;
+                            }
+                            break;
                     }
                 }
             return res;
