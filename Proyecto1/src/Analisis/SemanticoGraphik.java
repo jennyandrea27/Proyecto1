@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
+import proyecto1.FormInicio;
 
 /**
  *
@@ -107,27 +108,47 @@ public class SemanticoGraphik {
                     res=Casteo.xor(op1,op2);   
                  break;
            case Constante.lid:
-               NodoTS lid=accederLID(op);
-               if(lid!=null){
-                   res=new Valor(lid.getTipo(),lid.getValor());
-                    if(lid.getTipo()== Constante.tid){
-                        res.setTals(lid.getTals());
-                        res.ambito=(Ambito)lid.ambito;
+               if(op.hijos.get(op.hijos.size()-1).hijos.size()==0){
+                    NodoTS lid=accederLID(op);
+                    if(lid!=null){
+                        res=new Valor(lid.getTipo(),lid.getValor());
+                         if(lid.getTipo()== Constante.tid){
+                             res.setTals(lid.getTals());
+                             res.ambito=(Ambito)lid.ambito;
+                         }
+                    }else{
+                        String er="";
+                        for(Nodo n:op.hijos){
+                            er+=n.getValor()+".";
+                        }
+                        er=er.substring(0,er.length()-1);
+                      TablaErrores.insertarError("Error semantio, la variable "+er+" no ha sido declarada.", 0, 0);
                     }
+               }else{
+                        String er="";
+                        for(Nodo n:op.hijos){
+                            er+=n.getValor()+".";
+                        }
+                        er=er.substring(0,er.length()-1);
+                        TablaErrores.insertarError("Error semantio, la variable "+er+" no se encuentra dentro de instruccion LLAMAR.", 0, 0);                        
                }
+               break;
+           case Constante.llamar:
+               res=llamar(op);
                break;
             default://es valor puntual
                 return new Valor(op.getTipo(),op.getValor());
         }
         return res;
     }
+    
     public static void asignacionVar(Nodo asig){
         //obtener el valor almacenado en hijos(1)
         Valor res;
         Valor valor = evaluarEXP(asig.hijos.get(1));
         System.out.println("Valor: "+valor.getValor()+" Tipo: "+Casteo.valTipo(valor.getTipo()));
         //obtener id
-        String nombre=asig.hijos.get(0).hijos.get(0).getValor();
+        String nombre=asig.hijos.get(0).hijos.get(0).getValor();        
         if(asig.hijos.get(0).getNombre().equals(Constante.lid)){
                 //se tiene una lista de id's llamada a metodo accesoLID
                 NodoTS acceso=accederLID(asig.hijos.get(0));
@@ -137,25 +158,32 @@ public class SemanticoGraphik {
                     if(valor2.getTipo()==Constante.terror)
                         TablaErrores.insertarError(valor2.getValor(), 1, 1);
                     else
-                        acceso.setValor(valor2.getValor());
+                    {
+                       acceso.setValor(valor2.getValor());
+                        if(valor.getTipo()==Constante.tid){
+                            acceso.setTals(valor.getTals());
+                            acceso.ambito=(Ambito)valor.ambito;
+                        }
+                       
+                    }
                 }
             }
         //asigna a variable 
-        if(asig.hijos.get(0).hijos.size()==1){//solo tiene un id
-            NodoTS variable=TS.buscarVar(nombre, TS.cont_ambito);
-            if(variable!=null){
-                Valor valor2 = Casteo.Asignacion(variable.getTipo(), valor);
-                if(valor2.getTipo() == Constante.terror){                    
-                    TablaErrores.insertarError(valor2.getValor(), 1, 1);
-                }else{
-                    TS.asignarVar(nombre,valor2);                    
-                }
-            }else{
-                TablaErrores.insertarError("Error semantico, la variable "+nombre+" no ha sido declarada.", 0, 0);
-            }
-        }else{//es un acceso id.id.id
-            
-        }        
+//        if(asig.hijos.get(0).hijos.size()==1){//solo tiene un id
+//            NodoTS variable=TS.buscarVar(nombre, TS.cont_ambito);
+//            if(variable!=null){
+//                Valor valor2 = Casteo.Asignacion(variable.getTipo(), valor);
+//                if(valor2.getTipo() == Constante.terror){                    
+//                    TablaErrores.insertarError(valor2.getValor(), 1, 1);
+//                }else{
+//                    TS.asignarVar(nombre,valor2);                    
+//                }
+//            }else{
+//                TablaErrores.insertarError("Error semantico, la variable "+nombre+" no ha sido declarada.", 0, 0);
+//            }
+//        }else{//es un acceso id.id.id
+//            
+//        }        
     }    
     public static NodoTS accederLID(Nodo lid){
         //obtener primer id
@@ -232,6 +260,8 @@ public class SemanticoGraphik {
                             }
                             //eliminar ambito de funcion
                             TS.eliminarAmbito();
+                            //eliminar ambito de la variable anterior
+                            TS.eliminarAmbito();
                             }else{
                                 salir=true;
                                 TablaErrores.insertarError("Error semantico, la funcion "+nombre+"_"+p+" no ha sido declarada.", 0, 0);
@@ -273,6 +303,24 @@ public class SemanticoGraphik {
         }
         return null;
     }
+    public static Valor si(Nodo si){
+        Valor cond=evaluarEXP(si.hijos.get(0));
+        Valor res=new Valor();
+        if(cond.getTipo()==Constante.tbool){
+            if(cond.getValor().equals(Constante.verdadero)){
+                //ejecutar sentencias verdaderas
+                res=Recorrido.recorrerSent(si.hijos.get(1));
+            }else{
+                //ejecutar sentencias falsas
+                if(si.hijos.size()==3){                    
+                    res=Recorrido.recorrerSent(si.hijos.get(2));
+                }
+            }
+        }else{
+            //la expresion no es de tipo bool
+        }
+        return res;
+    }
     public static Valor llamar(Nodo llamar){
         Valor resultado=new Valor();
             //nodo llamar tiene lista de id's
@@ -286,6 +334,11 @@ public class SemanticoGraphik {
                 NodoTS res=accederLID(lid);
                 if(res!=null){                    
                     resultado=new Valor(res.getTipo(), res.getValor(), res.getTals());
+                    if(res.getTipo()==Constante.tid){
+                        //agregar ambito y tipo als a res
+                        resultado.setTals(res.getTals());
+                        resultado.ambito=(Ambito)res.ambito;
+                    }
                 }
             }else{
                 //error id al cual se quiere acceder no es una funcion
@@ -326,8 +379,17 @@ public class SemanticoGraphik {
                 res=new NodoTS(funcion.getValor(),ret.getTipo(),ret.getValor());                                
             }
         }else{
-            TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+" no fue declarada de tipo "+Casteo.valTipo(ret.getTipo()), 0, 0);                            
+            TablaErrores.insertarError("Error semantico, la funcion "+funcion.getValor()+"_"+Casteo.valTipo(funcion.getTipo())+" no fue declarada de tipo "+Casteo.valTipo(ret.getTipo()), 0, 0);                            
         }
         return res;
+    }
+    public static void imprimir(Nodo imprimir){
+        Valor val1=evaluarEXP(imprimir.hijos.get(0));
+        Valor val_imprimir=Casteo.Asignacion(Constante.tcadena, val1);
+        if(val_imprimir.getTipo()==Constante.terror){
+            TablaErrores.insertarError("Sentencia imprimir no recibe parametro tipo "+Casteo.valTipo(val1.getTipo()),1,1);
+        }else{
+            FormInicio.texto_salida+=val_imprimir.getValor();
+        }
     }
 }

@@ -179,7 +179,7 @@ comentario_linea=#(\\.|[^\n])*\n
 {caracter}          
 {return new Symbol (TSGraphik.caracter, yycolumn, yyline, yytext().replace("\'", ""));}
 {id}          
-{return new Symbol (TSGraphik.id, yycolumn, yyline, yytext());}
+{return new Symbol (TSGraphik.id, yycolumn, yyline, yytext().toLowerCase());}
 {comentario_parrafo}          
 {/*se ignora*/}
 {comentario_linea}          

@@ -1062,7 +1062,7 @@ StringBuffer string=new StringBuffer();
             }
           case 77: break;
           case 3: 
-            { return new Symbol (TSGraphik.id, yycolumn, yyline, yytext());
+            { return new Symbol (TSGraphik.id, yycolumn, yyline, yytext().toLowerCase());
             }
           case 78: break;
           case 4: 

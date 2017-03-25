@@ -16,21 +16,35 @@ public class Valor {
     int tipo;
     String valor;
     String tals;
-    Ambito ambito=null;
+    int cat_retorno;
+    public Ambito ambito=null;
 
     public Valor() {
         this.tipo = Constante.tvacio;
         this.valor = "";
+        this.tals="";
+        this.cat_retorno=-1;
     }
     
     public Valor(int tipo, String valor) {
         this.tipo = tipo;
         this.valor = valor;
+        this.tals="";
+        this.cat_retorno=-1;
     }
     public Valor(int tipo, String valor,String tals) {
         this.tipo = tipo;
         this.valor = valor;
         this.tals = tals;
+        this.cat_retorno=-1;
+    }
+
+    public int getCat_retorno() {
+        return cat_retorno;
+    }
+
+    public void setCat_retorno(int cat_retorno) {
+        this.cat_retorno = cat_retorno;
     }
 
     public String getTals() {

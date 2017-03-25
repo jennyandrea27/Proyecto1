@@ -89,6 +89,10 @@ public class Constante {
     public static final int tvacio=16;
     public static final int tid=17;
     public static final int terror=19;
+    public static final int cat_retornar=1;
+    public static final int cat_continuar=2;
+    public static final int cat_terminar=3;
+    
     //GRAPHIK
     public static final String var ="var"; 
     public static final String importar="importar"; 

@@ -98,6 +98,10 @@ public class TS {
                     }else{                    
                         NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
                         variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
+                        if(val_casteo.getTipo()==Constante.tid){
+                            variable.setTals(val_casteo.getTals());
+                            variable.ambito=(Ambito)val_casteo.ambito;
+                        }
                         NodoTS busqueda = lista_ambitos.get(cont_ambito).buscarVariable(nombre);
                         if (busqueda == null)
                             lista_ambitos.get(cont_ambito).insertarVariable(variable);
@@ -166,6 +170,10 @@ public class TS {
                     }else{                    
                         NodoTS variable=new NodoTS(nombre,val_casteo.getTipo(),val_casteo.getValor(),tals);
                         variable.setVisibilidad(dec.hijos.get(0).getVisibilidad());
+                        if(val_casteo.getTipo()==Constante.tid){
+                            variable.setTals(val_casteo.getTals());
+                            variable.ambito=(Ambito)val_casteo.ambito;
+                        }
                         NodoTS busqueda = ambito.buscarVariable(nombre);
                         if (busqueda == null)
                             ambito.insertarVariable(variable);

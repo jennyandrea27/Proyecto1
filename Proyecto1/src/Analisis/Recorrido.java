@@ -163,9 +163,24 @@ public class Recorrido {
                             res=SemanticoGraphik.llamar(sent);
                             break;
                         case Constante.retornar:                            
-                            res=SemanticoGraphik.evaluarEXP(sent.hijos.get(0));
-                            
+                            res=SemanticoGraphik.evaluarEXP(sent.hijos.get(0));    
+                            res.setCat_retorno(Constante.cat_retornar);
                             return res;                            
+                        case Constante.continuar:                                                        
+                            res.setCat_retorno(Constante.cat_continuar);
+                            return res;                            
+                        case Constante.terminar:                                                        
+                            res.setCat_retorno(Constante.cat_terminar);
+                            return res;                            
+                        case Constante.si:
+                            res=SemanticoGraphik.si(sent);
+                            if(res.getCat_retorno()==Constante.cat_retornar || res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_terminar){
+                                return res;
+                            }
+                            break;
+                        case Constante.imprimir:
+                            SemanticoGraphik.imprimir(sent);
+                            break;
                     }
                 }
             return res;
