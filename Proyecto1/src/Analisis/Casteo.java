@@ -657,6 +657,8 @@ public class Casteo {
                     return Constante.decimal;
                 case Constante.tcaracter:
                     return Constante.caracter;
+                case Constante.tid:
+                    return Constante.id;
             }
             return "-1";
         }

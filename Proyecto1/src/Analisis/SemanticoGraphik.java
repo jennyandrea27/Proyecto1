@@ -289,7 +289,7 @@ public class SemanticoGraphik {
                 }else{
                     //es atributo
                     salir=true;
-                    TablaErrores.insertarError("Error semantico, ariable "+nombre+" no es de tipo ALS.", 1, 1);
+                    TablaErrores.insertarError("Error semantico, variable "+nombre+" no es de tipo ALS.", 1, 1);
                 }
             }else{
                 //variable no ha sido declarada
@@ -342,6 +342,10 @@ public class SemanticoGraphik {
                 int tipo = par_llamado.get(i).getTipo();
                 String valor = par_llamado.get(i).getValor();
                 NodoTS par = new NodoTS(nombre, tipo, valor);
+                if(par_llamado.get(i).getTipo()==Constante.tid){
+                    par.ambito=(Ambito)par_llamado.get(i).ambito;
+                    par.setTals(par_llamado.get(i).getTals());
+                }
                 TS.insertarVariable(par);
             }            
         //ejecutar cuerpo funcion
@@ -368,7 +372,7 @@ public class SemanticoGraphik {
     public static void imprimir(Nodo imprimir){
         Valor val1=evaluarEXP(imprimir.hijos.get(0));
         Valor val_imprimir=Casteo.Asignacion(Constante.tcadena, val1);
-        if(val_imprimir.getTipo()==Constante.terror){
+        if(val_imprimir.getTipo()==Constante.terror || val_imprimir.getTipo()==-1){
             TablaErrores.insertarError("Error semantico, sentencia imprimir no recibe parametro tipo "+Casteo.valTipo(val1.getTipo()),1,1);
         }else{
             FormInicio.texto_salida+=val_imprimir.getValor()+"\n";
@@ -384,20 +388,99 @@ public class SemanticoGraphik {
             }else{
                 //ejecutar sentencias falsas
                 if(si.hijos.size()==3){                    
-                    res=Recorrido.recorrerSent(si.hijos.get(2));
+                    res=Recorrido.recorrerSent(si.hijos.get(2));                    
                 }
             }
         }else{
             //la expresion no es de tipo bool
-            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" en sentencia Si.", 0, 0);
+            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" como condicion en sentencia Si.", 0, 0);
         }
         return res;
     }
     public static Valor seleccion(Nodo seleccion){
-        return null;
+        Valor res=new Valor();
+        //obtener variable de control
+        Valor var_sel=evaluarEXP(seleccion.hijos.get(0));
+        if(var_sel.getTipo() == Constante.tid){
+            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(var_sel.getTipo())+" como variable en sentencia Seleccion.",1, 1);
+        }else{            
+        //compara con que caso coincide valor de var_sel
+        int pos=-1;
+        boolean b_pos=false;
+        Nodo lcasos=seleccion.hijos.get(1);
+        while(!b_pos){
+            //se guarda posicion de caso que coincide
+            pos++;
+            Nodo caso=lcasos.hijos.get(pos);    
+            if(!caso.getNombre().equals(Constante.defecto)){                
+                Valor val_caso=evaluarEXP(caso.hijos.get(0));
+                if(val_caso.getValor().equals(var_sel.getValor())){                
+                    break;
+                }           
+            }else{
+                b_pos=true;
+            }
+            
+        }
+            //se ejecuta a partir del caso ubicado en pos hasta encontrar break
+            boolean ejecuta=true;
+            while(ejecuta && pos<lcasos.hijos.size()){                
+                Nodo caso=lcasos.hijos.get(pos);
+                if(pos==lcasos.hijos.size()-1){
+                    //entro a defecto cuerpo esta en posicion 1
+                    res=Recorrido.recorrerSent(caso.hijos.get(0));
+                }else{                    
+                    res=Recorrido.recorrerSent(caso.hijos.get(1));
+                }
+                  if(res.getCat_retorno()==Constante.cat_continuar){
+                    res.setCat_retorno(-1);
+                    ejecuta=false;
+                }else if (res.getCat_retorno()==Constante.cat_terminar){
+                    res.setCat_retorno(-1);
+                    break;
+                }else if (res.getCat_retorno()==Constante.cat_retornar){
+                    break;
+                }
+                pos++;
+            }
+            
+        }
+        return res;
     }
     public static Valor para(Nodo para){
-        return null;
+        Valor res=new Valor();
+        TS.insertarAmbito(TS.cont_ambito);
+        if(para.hijos.get(0).getNombre().equals(Constante.dec)){
+            //se debe agregar la variable de control al ambito de sentencia para
+            TS.declararVar(para.hijos.get(0));
+        }else{
+            //es una asignacion asignar valor inicial a variable de control 
+            asignacionVar(para.hijos.get(0));
+        }
+        //evaluar si la condicion se cumple
+        Valor cond=evaluarEXP(para.hijos.get(1));
+        if(cond.getTipo()==Constante.tbool){            
+            //ejecutar cuerpo
+            while(cond.getValor().equals(Constante.verdadero)){
+                res=Recorrido.recorrerSent(para.hijos.get(3));
+                if(res.getCat_retorno()==Constante.cat_continuar){
+                    res.setCat_retorno(-1);
+                }else if (res.getCat_retorno()==Constante.cat_terminar){
+                    res.setCat_retorno(-1);
+                    break;
+                }else if (res.getCat_retorno()==Constante.cat_retornar){
+                    break;
+                }
+                //ejecutar operacion posterio a la variable de control
+                asignacionVar(para.hijos.get(2));
+                //evaluar nuevamente la condicion
+                cond=evaluarEXP(para.hijos.get(1));
+            }
+        }else{
+            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" como condicoin en sentencia Para.", 1, 1);
+        }
+        TS.eliminarAmbito();
+        return res;
     }
     public static Valor mientras(Nodo mientras){
         Valor cond=evaluarEXP(mientras.hijos.get(0));

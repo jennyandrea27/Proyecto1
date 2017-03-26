@@ -11,14 +11,12 @@ parser code
     public static Nodo raiz=new Nodo("raiz");
     public void syntax_error(Symbol s){
         TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
-        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
-        HTML.mostrarErrores();
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);        
     }
 
     public void unrecovered_syntax_error(Symbol s){        
         TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
-        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
-        HTML.mostrarErrores();
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);        
     }
 
 :}
@@ -178,8 +176,11 @@ LCASO ::= LCASO:lcasos CASO:caso{:RESULT = Fabrica.insertarCaso(lcasos,caso);:}
 CASO ::= caso EXP:exp dospuntos CUERPO:cuerpo{:RESULT = Fabrica.crearNodoCaso(exp,cuerpo);:};
 DEFECTO ::= defecto dospuntos CUERPO:cuerpo{:RESULT = new Nodo(Constante.defecto); RESULT.insertarHijo(cuerpo);:}
                         |{:RESULT = null;:};
-PARA ::= para parentesisa VARPARA:varpara dospuntos EXP:exp dospuntos POSTERIOR:posterior parentesisc llavea CUERPO llavec
-                {:RESULT = Fabrica.crearNodoPara(varpara,exp,posterior);:};
+PARA ::= para parentesisa VARPARA:varpara dospuntos EXP:exp dospuntos POSTERIOR:pos parentesisc llavea CUERPO:cuerpo llavec
+                {:
+                Nodo posterior=Fabrica.crearNodoAsignacion(pos.hijos.get(0),pos,null);
+                RESULT = Fabrica.crearNodoPara(varpara,exp,posterior,cuerpo);
+                :};
 
 VARPARA::= var TVAR:tvar id:id igual EXP:exp{:RESULT = Fabrica.crearNodoDeclaracion(tvar,id,-1,exp);:}  
                      | LID:lid igual EXP:exp{:RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);:};

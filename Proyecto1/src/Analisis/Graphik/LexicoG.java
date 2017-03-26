@@ -2,6 +2,7 @@
 
 package Analisis.Graphik;
 import java_cup.runtime.*;
+import Reportes.*;
 
 
 /**
@@ -1066,7 +1067,7 @@ StringBuffer string=new StringBuffer();
             }
           case 78: break;
           case 4: 
-            { /*errores lexicos*/
+            { TablaErrores.insertarError("Error lexico, caracter "+yytext()+" no pertenece al lenguaje.",yyline,yycolumn);
             }
           case 79: break;
           case 5: 

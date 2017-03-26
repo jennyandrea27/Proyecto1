@@ -717,14 +717,12 @@ public class SintacticoG extends java_cup.runtime.lr_parser {
     public static Nodo raiz=new Nodo("raiz");
     public void syntax_error(Symbol s){
         TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
-        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
-        HTML.mostrarErrores();
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);        
     }
 
     public void unrecovered_syntax_error(Symbol s){        
         TablaErrores.insertarError("Error Sintactico: "+s.value.toString()+" ",s.right,s.left);
-        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);
-        HTML.mostrarErrores();
+        System.out.println(s.value.toString()+" Fila: " +s.right+", Columna: "+s.left);        
     }
 
 
@@ -1756,10 +1754,16 @@ class CUP$SintacticoG$actions {
 		int expleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-6)).left;
 		int expright = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-6)).right;
 		Nodo exp = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-6)).value;
-		int posteriorleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-4)).left;
-		int posteriorright = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-4)).right;
-		Nodo posterior = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-4)).value;
-		RESULT = Fabrica.crearNodoPara(varpara,exp,posterior);
+		int posleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-4)).left;
+		int posright = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-4)).right;
+		Nodo pos = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-4)).value;
+		int cuerpoleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).left;
+		int cuerporight = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).right;
+		Nodo cuerpo = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).value;
+		
+                Nodo posterior=Fabrica.crearNodoAsignacion(pos.hijos.get(0),pos,null);
+                RESULT = Fabrica.crearNodoPara(varpara,exp,posterior,cuerpo);
+                
               CUP$SintacticoG$result = parser.getSymbolFactory().newSymbol("PARA",36, ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-10)), ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.peek()), RESULT);
             }
           return CUP$SintacticoG$result;

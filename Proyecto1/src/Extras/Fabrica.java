@@ -30,7 +30,7 @@ public class Fabrica {
                 tipo_var=Constante.tid;
             break;
         }
-        return new Nodo(nombre, valor, tipo_var);        
+        return new Nodo(nombre, valor, tipo_var,tipo);        
     }
     public static Nodo crearNodoHoja(String nombre,String valor, int tipo,String tals){        
         return new Nodo(nombre, valor, tipo,tals);        
@@ -365,7 +365,7 @@ public class Fabrica {
         mientras.insertarHijo(cuerpo);
         return mientras;
     }
-    public static Nodo crearNodoPara(Nodo varpara,Nodo cond,Nodo posterior){
+    public static Nodo crearNodoPara(Nodo varpara,Nodo cond,Nodo posterior,Nodo cuerpo){
         Nodo para=new Nodo(Constante.para);
         if(varpara!=null){
             para.insertarHijo(varpara);
@@ -375,6 +375,9 @@ public class Fabrica {
         }
         if(posterior!=null){
             para.insertarHijo(posterior);
+        }
+        if(cuerpo!=null){
+            para.insertarHijo(cuerpo);
         }
         return para;
     }

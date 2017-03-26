@@ -204,7 +204,7 @@ public class Recorrido {
                             if(res.getCat_retorno()==Constante.cat_retornar || res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_terminar){
                                 return res;
                             }
-                            break;
+                            break;                        
                     }
                 }
             return res;

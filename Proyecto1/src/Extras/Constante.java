@@ -86,9 +86,9 @@ public class Constante {
     public static final int tbool=7;
     public static final int tdecimal=10;
     public static final int tcaracter=15;
-    public static final int tvacio=16;
-    public static final int tid=17;
-    public static final int terror=19;
+    public static final int tvacio=56;
+    public static final int tid=57;
+    public static final int terror=58;
     public static final int cat_retornar=1;
     public static final int cat_continuar=2;
     public static final int cat_terminar=3;

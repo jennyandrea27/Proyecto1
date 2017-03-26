@@ -35,5 +35,6 @@ public class HTML {
         }catch(Exception e){
             System.out.println("No se pudo generar Errores.html");
         }
+        TablaErrores.error=false;
     }
 }

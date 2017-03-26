@@ -1,5 +1,6 @@
 package Analisis.Graphik;
 import java_cup.runtime.*;
+import Reportes.*;
 
 %%
 %{//codigo java
@@ -189,4 +190,6 @@ comentario_linea=#(\\.|[^\n])*\n
 }
 
     
-[^]             {/*errores lexicos*/}
+[^]             {
+                    TablaErrores.insertarError("Error lexico, caracter "+yytext()+" no pertenece al lenguaje.",yyline,yycolumn);                    
+                  }
