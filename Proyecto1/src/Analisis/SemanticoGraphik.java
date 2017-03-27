@@ -167,23 +167,7 @@ public class SemanticoGraphik {
                        
                     }
                 }
-            }
-        //asigna a variable 
-//        if(asig.hijos.get(0).hijos.size()==1){//solo tiene un id
-//            NodoTS variable=TS.buscarVar(nombre, TS.cont_ambito);
-//            if(variable!=null){
-//                Valor valor2 = Casteo.Asignacion(variable.getTipo(), valor);
-//                if(valor2.getTipo() == Constante.terror){                    
-//                    TablaErrores.insertarError(valor2.getValor(), 1, 1);
-//                }else{
-//                    TS.asignarVar(nombre,valor2);                    
-//                }
-//            }else{
-//                TablaErrores.insertarError("Error semantico, la variable "+nombre+" no ha sido declarada.", 0, 0);
-//            }
-//        }else{//es un acceso id.id.id
-//            
-//        }        
+            }      
     }    
     public static NodoTS accederLID(Nodo lid){
         //obtener primer id
@@ -399,6 +383,7 @@ public class SemanticoGraphik {
     }
     public static Valor seleccion(Nodo seleccion){
         Valor res=new Valor();
+        TS.insertarAmbito(TS.cont_ambito);
         //obtener variable de control
         Valor var_sel=evaluarEXP(seleccion.hijos.get(0));
         if(var_sel.getTipo() == Constante.tid){
@@ -426,25 +411,22 @@ public class SemanticoGraphik {
             boolean ejecuta=true;
             while(ejecuta && pos<lcasos.hijos.size()){                
                 Nodo caso=lcasos.hijos.get(pos);
-                if(pos==lcasos.hijos.size()-1){
+                if(caso.getNombre().equals(Constante.defecto)){
                     //entro a defecto cuerpo esta en posicion 1
                     res=Recorrido.recorrerSent(caso.hijos.get(0));
                 }else{                    
                     res=Recorrido.recorrerSent(caso.hijos.get(1));
                 }
-                  if(res.getCat_retorno()==Constante.cat_continuar){
-                    res.setCat_retorno(-1);
+                  if(res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_retornar){                    
                     ejecuta=false;
                 }else if (res.getCat_retorno()==Constante.cat_terminar){
                     res.setCat_retorno(-1);
-                    break;
-                }else if (res.getCat_retorno()==Constante.cat_retornar){
-                    break;
+                    ejecuta=false;                    
                 }
                 pos++;
-            }
-            
+            }            
         }
+        TS.eliminarAmbito();
         return res;
     }
     public static Valor para(Nodo para){

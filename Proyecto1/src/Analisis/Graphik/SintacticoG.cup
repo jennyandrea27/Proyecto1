@@ -177,9 +177,8 @@ CASO ::= caso EXP:exp dospuntos CUERPO:cuerpo{:RESULT = Fabrica.crearNodoCaso(ex
 DEFECTO ::= defecto dospuntos CUERPO:cuerpo{:RESULT = new Nodo(Constante.defecto); RESULT.insertarHijo(cuerpo);:}
                         |{:RESULT = null;:};
 PARA ::= para parentesisa VARPARA:varpara dospuntos EXP:exp dospuntos POSTERIOR:pos parentesisc llavea CUERPO:cuerpo llavec
-                {:
-                Nodo posterior=Fabrica.crearNodoAsignacion(pos.hijos.get(0),pos,null);
-                RESULT = Fabrica.crearNodoPara(varpara,exp,posterior,cuerpo);
+                {:                
+                RESULT = Fabrica.crearNodoPara(varpara,exp,pos,cuerpo);
                 :};
 
 VARPARA::= var TVAR:tvar id:id igual EXP:exp{:RESULT = Fabrica.crearNodoDeclaracion(tvar,id,-1,exp);:}  
@@ -187,7 +186,8 @@ VARPARA::= var TVAR:tvar id:id igual EXP:exp{:RESULT = Fabrica.crearNodoDeclarac
 POSTERIOR ::= LID:lid OPPARA:op
                             {:
                                 Nodo op2=Fabrica.crearNodoHoja(Constante.num,"1",Constante.tnum+"");
-                                RESULT = Fabrica.crearNodoOperacion(op,lid,op2);
+                                Nodo exp = Fabrica.crearNodoOperacion(op,lid,op2);
+                                RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);
                             :}
                            |ASIGNACION:asignacion{:RESULT = asignacion;:};
 OPPARA ::= masmas{:RESULT = Constante.suma;:}
@@ -243,10 +243,11 @@ SENTENCIA ::= ASIGNACION:asignacion pregc {:RESULT = asignacion;:}
                           | GRAPHIKAR:graphikar {:RESULT = graphikar;:}
                           | continuar pregc{:RESULT = new Nodo(Constante.continuar);:}
                           | terminar pregc{:RESULT = new Nodo(Constante.terminar);:}
-                          |LID:lid OPPARA:op
+                          |LID:lid OPPARA:op pregc
                             {:
                                 Nodo op2=Fabrica.crearNodoHoja(Constante.num,"1",Constante.tnum+"");
-                                RESULT = Fabrica.crearNodoOperacion(op,lid,op2);
+                                Nodo exp = Fabrica.crearNodoOperacion(op,lid,op2);
+                                RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);
                             :};
 
 IMPRIMIR ::= imprimir parentesisa EXP:exp parentesisc pregc{:RESULT = new Nodo(Constante.imprimir); RESULT.insertarHijo(exp);:};
