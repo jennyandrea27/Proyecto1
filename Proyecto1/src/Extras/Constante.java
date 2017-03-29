@@ -13,6 +13,7 @@ public class Constante {
     public static final String mod="'mod'";
     public static final String sqrt="'sqrt'";
     public static final String pot="'pot'";
+    public static final String potencia="^";
     public static final String let="let";
     public static final String calcular="calcular";
     public static final String succ="succ";
@@ -60,6 +61,7 @@ public class Constante {
     public static final String dim1="dim1";   
     public static final String dim2="dim2";   
     public static final String asig="asig";   
+    public static final String lasig="lasig";   
     public static final String lid="lid";   
     public static final String idl="idl";
     public static final String id="id";   

@@ -18,6 +18,8 @@ public class NodoTS {
     public Ambito ambito=null;
     private String tals;
     private int visibilidad;
+    public LinkedList <Valor> valores;
+    public LinkedList <Integer> dimensiones;
 
     public NodoTS(String nombre) {
         this.nombre = nombre;

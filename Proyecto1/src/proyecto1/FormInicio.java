@@ -6,15 +6,15 @@
 package proyecto1;
 
 import Analisis.ArchivoDot;
-import Analisis.Graphik.LexicoG;
-import Analisis.Graphik.SintacticoG;
-import Analisis.HaskellArchivo.LexicoH;
-import Analisis.HaskellArchivo.SintacticoH;
+import Analisis.Graphik.*;
+import Analisis.HaskellArchivo.*;
+import Analisis.HaskellTerminal.*;
 import Analisis.Recorrido;
+import Analisis.RecorridoHT;
 import Analisis.SemanticoGraphik;
 import Reportes.HTML;
 import Reportes.TablaErrores;
-import TablaSimbolos.TS;
+import TablaSimbolos.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.StringReader;
@@ -215,18 +215,36 @@ public class FormInicio extends javax.swing.JFrame {
     private void tbEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbEntradaKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
             String texto=tbEntrada.getText();
-            String entrada=texto.substring(1);
-            if(entrada.equals("")){
+            texto_salida="";            
+            if(texto.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");
             }else{
-                System.out.println(entrada);
+                tbSalida.append(texto+"\n");
+                String entrada=texto.substring(1);
                 tbEntrada.setText(">");
+                LexicoHT lexico = new LexicoHT(new BufferedReader( new StringReader(entrada)));
+                SintacticoHT sintactico= new SintacticoHT(lexico);
                 try {
-                    LexicoH lexico = new LexicoH(new BufferedReader( new StringReader(entrada)));
-                    SintacticoH sintactico= new SintacticoH(lexico);
                     sintactico.parse();
+                    ArchivoDot.graficar(sintactico.raiz, "ASTHaskellT");
                 } catch (Exception ex) {
                     System.out.println("Error "+ex.getMessage());
+                }
+                if(sintactico.raiz!=null){                    
+                    if(TablaErrores.error){                        
+                        JOptionPane.showMessageDialog(null,"Verifique errores lexio y sintacticos.");
+                        HTML.mostrarErrores();
+                    }else{                        
+                        TSH.insertarAmbito(TSH.cont_ambito);
+                        RecorridoHT.recorrerArbol(sintactico.raiz);
+                    }
+                    if(TablaErrores.error){
+                        JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");
+                        HTML.mostrarErrores();
+                    }else{                                                
+                        //TS.recorrerListaAmbitos();
+                        tbSalida.append(texto_salida+"\n");
+                    }
                 }
             }
             
@@ -235,7 +253,8 @@ public class FormInicio extends javax.swing.JFrame {
 
     private void bCargarHKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarHKActionPerformed
         // TODO add your handling code here:
-        String entrada=tbArchivo.getText();            
+        String entrada=tbArchivo.getText();       
+        texto_salida="";
             if(entrada.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");
             }else{                
@@ -252,8 +271,7 @@ public class FormInicio extends javax.swing.JFrame {
 
     private void bCargarGKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarGKActionPerformed
         // TODO add your handling code here:
-        String entrada=tbArchivo.getText();   
-        
+        String entrada=tbArchivo.getText();           
         texto_salida="";
             if(entrada.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");

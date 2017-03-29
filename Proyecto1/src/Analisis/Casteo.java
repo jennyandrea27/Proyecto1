@@ -6,6 +6,8 @@
 package Analisis;
 
 import Extras.Constante;
+import Reportes.TablaErrores;
+import TablaSimbolos.TS;
 
 /**
  *
@@ -213,6 +215,32 @@ public class Casteo {
         }
         return res;
     }    
+   public static Valor mod(Valor op1, Valor op2){
+        Valor res=new Valor();
+        switch(op1.getTipo()+op2.getTipo()){                                  
+            case 20://decimal con decimal                
+                res=new Valor(Constante.tdecimal,Double.parseDouble(op1.getValor()) % Double.parseDouble(op2.getValor())+"");
+                break;            
+            case 25://decimal con caracter                
+                if(op1.getTipo() == Constante.tcaracter)
+                    res = new Valor(Constante.tdecimal,(int)op1.getValor().charAt(0) % Double.parseDouble(op2.getValor())+"");
+                else
+                    res = new Valor(Constante.tdecimal,Double.parseDouble(op1.getValor()) % (int)op2.getValor().charAt(0)+"");                
+                break;
+            case 17://bool con decimal                
+            case 10://cadena con boolean
+            case 14://bool con bool            
+            case 22://boolean con caracter
+            case 4: //numero con cadena
+            case 6://cadena con cadena                
+            case 13://decimal con cadena
+            case 18://cadena con caracter
+            case 30://caracter con caracter
+                res=new Valor(Constante.terror,"Error semantico, no se puede realizar division entre: "+valTipo(op1.getTipo())+" y "+valTipo(op2.getTipo()));
+                break;                                
+        }
+        return res;
+    }    
    public static Valor potencia(Valor op1, Valor op2){
         Valor res=new Valor();
         switch(op1.getTipo()+op2.getTipo()){
@@ -260,6 +288,39 @@ public class Casteo {
         }
         return res;
     }   
+   public static Valor sqrt(Valor op1, Valor op2){
+        Valor res=new Valor();
+        double raiz=0;
+        switch(op1.getTipo()+op2.getTipo()){               
+            case 20://decimal con decimal                
+                raiz=Math.pow(Double.parseDouble(op2.getValor()),1 / Double.parseDouble(op1.getValor()) );
+                res=new Valor(Constante.tdecimal,raiz+"");
+                break;            
+            case 25://decimal con caracter                
+                if(op1.getTipo() == Constante.tcaracter){
+                    raiz=Math.pow(Double.parseDouble(op2.getValor()),1 / (int)op1.getValor().charAt(0) );
+                    res = new Valor(Constante.tdecimal,raiz+"");
+                }else{
+                    raiz=Math.pow((int)op2.getValor().charAt(0),1 / Double.parseDouble(op1.getValor()) );
+                    res = new Valor(Constante.tdecimal,raiz+"");                
+                }
+                break;
+            case 10://cadena con boolean
+            case 8://numero con bool                
+            case 17://bool con decimal                    
+            case 14://bool con bool                                    
+            case 22://boolean con caracter
+            case 4: //numero con cadena
+            case 6://cadena con cadena                
+            case 13://decimal con cadena
+            case 18://cadena con caracter
+            case 30://caracter con caracter                                
+                res=new Valor(Constante.terror,"Error semantico, no se puede realizar multiplicacion entre: "+valTipo(op1.getTipo())+" y "+valTipo(op2.getTipo()));
+                break;                                
+        }
+        return res;
+    }    
+   
    public static Valor restaUnaria(Valor op1){
         Valor res=new Valor();
         switch(op1.getTipo()){
@@ -662,7 +723,7 @@ public class Casteo {
             }
             return "-1";
         }
-    public static Valor Asignacion(int tipo1, Valor valor2){        
+    public static Valor Asignacion(int tipo1, Valor valor2,String tals){                
         switch (tipo1){
                 case Constante.tnum:
                     switch (valor2.getTipo()){                        
@@ -767,6 +828,14 @@ public class Casteo {
                             break;
                     }
                     break;
+            }
+            if(tipo1==valor2.getTipo()){
+                if(tipo1 == Constante.tid){
+                    if(!tals.equals(valor2.getTals())){
+                        valor2.setValor("Error semantico, no se puede asignar un tipo "+valor2.getTals()+" a un tipo "+tals);
+                        valor2.setTipo(Constante.terror);
+                    }
+                }
             }
             return valor2; 
         }        

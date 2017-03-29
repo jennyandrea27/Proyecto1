@@ -14,6 +14,9 @@ public class Generar {
         //haskell
         GenerarLexico.generarHaskell("src/Analisis/HaskellArchivo/LexicoH.jflex");
         GenerarSintactico.generarHaskell();
+        //haskell terminal
+        GenerarLexico.generarHaskellTerminal("src/Analisis/HaskellTerminal/LexicoHT.jflex");
+        GenerarSintactico.generarHaskellTerminal();
         //graphik
         GenerarLexico.generarGraphik("src/Analisis/Graphik/LexicoG.jflex");
         GenerarSintactico.generarGraphik();

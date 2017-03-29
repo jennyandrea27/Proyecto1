@@ -859,7 +859,7 @@ StringBuffer string=new StringBuffer();
             }
           case 86: break;
           case 33: 
-            { return new Symbol (TSHaskell.caracter, yycolumn, yyline, yytext());
+            { return new Symbol (TSHaskell.caracter, yycolumn, yyline, yytext().toLowerCase());
             }
           case 87: break;
           case 34: 

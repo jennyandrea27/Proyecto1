@@ -89,8 +89,8 @@ public class Fabrica {
         }
         return lfunciones;
     }
-    public static Nodo crearNodoEXP(Nodo exp){
-        Nodo ex=new Nodo(Constante.exp);
+    public static Nodo crearNodoCalcular(Nodo exp){
+        Nodo ex=new Nodo(Constante.calcular);
         ex.insertarHijo(exp);
         return ex;
     }
@@ -107,8 +107,8 @@ public class Fabrica {
         concat.insertarHijo(op2);
         return concat;
     }
-    public static Nodo crearNodoAsigLista(String valor, Nodo asig){
-        Nodo asignacion=new Nodo(Constante.asig,valor);        
+    public static Nodo crearNodoAsigLista(String nombre,String valor, Nodo asig){
+        Nodo asignacion=new Nodo(nombre,valor);        
         if(asig!=null){
             asignacion.insertarHijo(asig);
         }

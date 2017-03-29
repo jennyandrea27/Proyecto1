@@ -26,6 +26,21 @@ public class GenerarSintactico {
             System.out.println(e.getMessage());
         }
     }
+    public static void generarHaskellTerminal(){
+        String [] opciones=new String[7];
+        opciones[0]="-destdir";
+        opciones[1]="src/Analisis/HaskellTerminal";
+        opciones[2]="-symbols";
+        opciones[3]="TSHT";
+        opciones[4]="-parser";
+        opciones[5]="SintacticoHT";
+        opciones[6]="src/Analisis/HaskellTerminal/SintacticoHT.cup";
+        try{
+            java_cup.Main.main(opciones);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
     public static void generarGraphik(){
         String [] opciones=new String[7];
         opciones[0]="-destdir";

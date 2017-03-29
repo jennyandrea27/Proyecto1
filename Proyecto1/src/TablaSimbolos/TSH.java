@@ -5,38 +5,65 @@
  */
 package TablaSimbolos;
 
+import Analisis.Casteo;
+import Analisis.Nodo;
+import Analisis.Recorrido;
+import Analisis.SemanticoGraphik;
+import Analisis.Valor;
 import Extras.Constante;
-import Analisis.*;
 import Reportes.TablaErrores;
+import static TablaSimbolos.TS.nuevoALS;
 import java.util.LinkedList;
 
 /**
  *
  * @author Jenny
  */
-public class TS {
+public class TSH {
     public static LinkedList<Ambito>lista_ambitos=new LinkedList<Ambito>();
     public static int cont_ambito = 0;
-
-        public static void AmbitoGlobal(Nodo als)
-        {
-            lista_ambitos.clear();
-            cont_ambito=0;
-            //se agrega ambito de clase que contiene metodo inicio
-            Ambito clase_inicio = new Ambito(-1, cont_ambito);            
-            lista_ambitos.add(clase_inicio);   
-            Nodo cuerpo=als.hijos.get(1);            
-            nuevoALS(cuerpo,clase_inicio);
+    
+    public static String recorrerListaAmbitos(){
+        String s="";
+        for(Ambito a: lista_ambitos){
+            s+="Ambito "+a.getAmbito_Actual()+" Padre: "+a.getAmbito_Padre()+"\n";
+            for(NodoTS n:a.variables){
+                s+="---> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo()+" Tals: "+n.getTals()+"\n";
+                if(n.ambito!=null){
+                    s+=recorrerListaAmbitos(n.ambito,1);
+                }
+            }
         }
-        public static void nuevoALS(Nodo cuerpo, Ambito ambito){
-            for (Nodo hijo : cuerpo.hijos){
-                if (hijo.getNombre().equals(Constante.dec)){
-                    //metodo declarar var
-                    declararVar(hijo,ambito);
-                }//es declaracion
-            }//foreach            
+        System.out.println(s);
+        return s;
+    }  
+    public static String recorrerListaAmbitos(Ambito ambito,int i){        
+        String s="";
+        String t="";
+        for(int j=0;j<i;j++){
+            t+="-----";
         }
-        public static void declararVar(Nodo dec){//agrega variable al ultimos ambito que se encuentra en lista_ambitos
+        for(NodoTS n:ambito.variables){
+            s+=t+"---> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo()+" Tals: "+n.getTals()+"\n";
+            if(n.ambito!=null){
+                s+=recorrerListaAmbitos(n.ambito,i+1);
+            }
+        }        
+        return s;
+    }
+    public static void insertarAmbito(int ambito_padre){
+            cont_ambito++;
+            Ambito ambito = new Ambito(ambito_padre, cont_ambito);
+            lista_ambitos.add(ambito);
+        }
+    public static void eliminarAmbito(){
+            lista_ambitos.remove(cont_ambito);
+            cont_ambito--;
+        }
+    public static void insertarVariable(NodoTS var){
+            lista_ambitos.get(cont_ambito).variables.add(var);
+        }
+    public static void declararVar(Nodo dec){//agrega variable al ultimos ambito que se encuentra en lista_ambitos
             //dec en su primer hijo tiene nombre y tipo de variable a asignar
             int tipo=dec.hijos.get(0).getTipo();
             String tals=dec.hijos.get(0).getTals();
@@ -215,46 +242,4 @@ public class TS {
                 lista_ambitos.get(lugar_var.getAmbito_Padre()).variables.get(lugar_var.getAmbito_Actual()).setValor(valor.getValor());
             }
         }
-    public static String recorrerListaAmbitos(){
-        String s="";
-        for(Ambito a: lista_ambitos){
-            s+="Ambito "+a.getAmbito_Actual()+" Padre: "+a.getAmbito_Padre()+"\n";
-            for(NodoTS n:a.variables){
-                s+="---> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo()+" Tals: "+n.getTals()+"\n";
-                if(n.ambito!=null){
-                    s+=recorrerListaAmbitos(n.ambito,1);
-                }
-            }
-        }
-        System.out.println(s);
-        return s;
-    }  
-    public static String recorrerListaAmbitos(Ambito ambito,int i){        
-        String s="";
-        String t="";
-        for(int j=0;j<i;j++){
-            t+="-----";
-        }
-        for(NodoTS n:ambito.variables){
-            s+=t+"---> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo()+" Tals: "+n.getTals()+"\n";
-            if(n.ambito!=null){
-                s+=recorrerListaAmbitos(n.ambito,i+1);
-            }
-        }        
-        return s;
-    }
-    public static void insertarAmbito(int ambito_padre){
-            cont_ambito++;
-            Ambito ambito = new Ambito(ambito_padre, cont_ambito);
-            lista_ambitos.add(ambito);
-        }
-    public static void eliminarAmbito(){
-            lista_ambitos.remove(cont_ambito);
-            cont_ambito--;
-        }
-    public static void insertarVariable(NodoTS var){
-            lista_ambitos.get(cont_ambito).variables.add(var);
-        }
-
-
 }

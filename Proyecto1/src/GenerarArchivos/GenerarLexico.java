@@ -19,6 +19,10 @@ public class GenerarLexico {
         File archivo=new File(ruta);
         jflex.Main.generate(archivo);
     }
+    public static void generarHaskellTerminal(String ruta){
+        File archivo=new File(ruta);
+        jflex.Main.generate(archivo);
+    }
     public static void generarGraphik(String ruta){
         File archivo=new File(ruta);
         jflex.Main.generate(archivo);

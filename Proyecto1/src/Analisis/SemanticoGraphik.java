@@ -5,11 +5,15 @@
  */
 package Analisis;
 
+import static Analisis.RecorridoHT.porcentaje;
 import Extras.Constante;
 import Reportes.TablaErrores;
 import TablaSimbolos.Ambito;
 import TablaSimbolos.NodoTS;
 import TablaSimbolos.TS;
+import static TablaSimbolos.TS.cont_ambito;
+import static TablaSimbolos.TS.lista_ambitos;
+import static TablaSimbolos.TS.nuevoALS;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,10 +58,21 @@ public class SemanticoGraphik {
                     res=Casteo.division(op1,op2);
                 break;
             case Constante.pot:
+            case Constante.potencia:
                     op1=evaluarEXP(op.getHijo(0));
                     op2=evaluarEXP(op.getHijo(1));
                     res=Casteo.potencia(op1,op2);
                     break;
+            case Constante.mod:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.mod(op1,op2);
+                break;
+            case Constante.sqrt:
+                    op1=evaluarEXP(op.getHijo(0));
+                    op2=evaluarEXP(op.getHijo(1));
+                    res=Casteo.sqrt(op1,op2);
+                break;
             case Constante.mayor:
                     op1=evaluarEXP(op.getHijo(0));
                     op2=evaluarEXP(op.getHijo(1));
@@ -136,6 +151,9 @@ public class SemanticoGraphik {
            case Constante.llamar:
                res=llamar(op);
                break;
+            case Constante.porcentaje:
+             res=new Valor(porcentaje.getTipo(),porcentaje.getValor());
+             break;          
             default://es valor puntual
                 return new Valor(op.getTipo(),op.getValor());
         }
@@ -145,29 +163,47 @@ public class SemanticoGraphik {
     public static void asignacionVar(Nodo asig){
         //obtener el valor almacenado en hijos(1)
         Valor res;
-        Valor valor = evaluarEXP(asig.hijos.get(1));
-        System.out.println("Valor: "+valor.getValor()+" Tipo: "+Casteo.valTipo(valor.getTipo()));
-        //obtener id
-        String nombre=asig.hijos.get(0).hijos.get(0).getValor();        
-        if(asig.hijos.get(0).getNombre().equals(Constante.lid)){
-                //se tiene una lista de id's llamada a metodo accesoLID
-                NodoTS acceso=accederLID(asig.hijos.get(0));
-                if(acceso!=null){
-                    //se obtuvo valor de la lista de id's
-                    Valor valor2 = Casteo.Asignacion(acceso.getTipo(), valor);
-                    if(valor2.getTipo()==Constante.terror)
-                        TablaErrores.insertarError(valor2.getValor(), 1, 1);
-                    else
-                    {
-                       acceso.setValor(valor2.getValor());
-                        if(valor.getTipo()==Constante.tid){
-                            acceso.setTals(valor.getTals());
-                            acceso.ambito=(Ambito)valor.ambito;
-                        }
-                       
+        Valor valor=new Valor();
+        NodoTS acceso=accederLID(asig.hijos.get(0));
+        if(asig.hijos.get(1).getNombre().equals(Constante.nuevo)){
+            //verificar si es tipo id
+            if(acceso.getTipo()==Constante.tid){
+                //es un objeto, buscar nodo de la clase que se instancia
+                    String nombre_obj=asig.hijos.get(1).getValor();
+                    Nodo clase=Recorrido.buscarClase(nombre_obj);
+                    if(clase!=null){
+                        acceso.ambito=new Ambito(-1, cont_ambito);
+                        nuevoALS(clase.hijos.get(1),acceso.ambito);                        
+                    }else{
+                        //clase no ha sido declarada
+                        TablaErrores.insertarError("ALS "+nombre_obj+" no ha sido declarado.", 1, 1);
                     }
-                }
-            }      
+            }else{
+                TablaErrores.insertarError("Variable no ha sido declarada de tipo ALS.", 1, 1);
+            }
+        }else{            
+            valor = evaluarEXP(asig.hijos.get(1));
+            //obtener id
+            String nombre=asig.hijos.get(0).hijos.get(0).getValor();        
+            if(asig.hijos.get(0).getNombre().equals(Constante.lid)){
+                    //se tiene una lista de id's llamada a metodo accesoLID
+                    if(acceso!=null){
+                        //se obtuvo valor de la lista de id's
+                        Valor valor2 = Casteo.Asignacion(acceso.getTipo(), valor,acceso.getTals());
+                        if(valor2.getTipo()==Constante.terror)
+                            TablaErrores.insertarError(valor2.getValor(), 1, 1);
+                        else
+                        {
+                           acceso.setValor(valor2.getValor());
+                            if(valor.getTipo()==Constante.tid){
+                                acceso.setTals(valor.getTals());
+                                acceso.ambito=(Ambito)valor.ambito;
+                            }
+
+                        }
+                    }
+                }      
+        }        
     }    
     public static NodoTS accederLID(Nodo lid){
         //obtener primer id
@@ -355,7 +391,7 @@ public class SemanticoGraphik {
     }
     public static void imprimir(Nodo imprimir){
         Valor val1=evaluarEXP(imprimir.hijos.get(0));
-        Valor val_imprimir=Casteo.Asignacion(Constante.tcadena, val1);
+        Valor val_imprimir=Casteo.Asignacion(Constante.tcadena, val1,"");
         if(val_imprimir.getTipo()==Constante.terror || val_imprimir.getTipo()==-1){
             TablaErrores.insertarError("Error semantico, sentencia imprimir no recibe parametro tipo "+Casteo.valTipo(val1.getTipo()),1,1);
         }else{

@@ -7,6 +7,7 @@ package Analisis;
 
 import Extras.Constante;
 import TablaSimbolos.Ambito;
+import java.util.LinkedList;
 
 /**
  *
@@ -18,6 +19,8 @@ public class Valor {
     String tals;
     int cat_retorno;
     public Ambito ambito=null;
+    public LinkedList <Valor> valores;
+    public LinkedList <Integer> dimensiones;
 
     public Valor() {
         this.tipo = Constante.tvacio;
