@@ -28,7 +28,7 @@ action code
 
 terminal String mod, sqrt, pot, let, calcular, succ, decc, min, max, sum, product, revers, impr, par, asc, desc, length, si, entonces, fin, sino, caso, concatenacion, suma, resta, mult, div,eol,puntoycoma, acceso;
 terminal String o, y, mayor, menor, mayorigual, menorigual, igualacion, distinto, igual, dolar, corchetea, corchetec, llavea, llavec, num, id, coma, cadena,caracter, parentesisa, parentesisc,dospuntos;
-nonterminal Nodo S, HASKELL, LISTA, VALLISTA, EXP, LPARLISTA, PARLISTA, CALCULAR, SUCC, DECC, MIN, MAX, CONCAT, OTRA;
+nonterminal Nodo S, HASKELL, LISTA, VALLISTA, EXP, LPARLISTA, PARLISTA, CALCULAR, SUCC, DECC, MIN, MAX, CONCAT, OTRA,ACC;
 nonterminal Nodo LVOTRA, VOTRA, ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, DECFUN, PDECFUN,CUERPO, OPLENGUAJE;
 nonterminal Nodo LLAMADO, LPFUN, SI, COND, REL, CASO, VCASO, LCASOS, CASOS, SENTENCIAS, VALFUN, VALCASE, LENGTH, OPLISTAEXP;
 nonterminal String OPREL;
@@ -114,7 +114,10 @@ LENGTH ::= dolar length VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLis
 
 CONCAT ::= VALLISTA:op1 concatenacion VALLISTA:op2{:RESULT = Fabrica.crearNodoConcat(op1,op2);:};
 
-ACCESO ::= VALLISTA:vallista acceso CALCULAR:calcular{:RESULT = Fabrica.crearNodoAcceso(vallista,calcular);:};
+ACCESO ::= dolar VALLISTA:vallista ACC:calcular dolar{:RESULT = Fabrica.crearNodoAcceso(vallista,calcular);:};
+
+ACC ::= acceso CALCULAR:calcular{:RESULT = Fabrica.crearNodoAcc(calcular,null);:}
+              | acceso CALCULAR:calcular1 acceso CALCULAR:calcular2{:RESULT = Fabrica.crearNodoAcc(calcular1,calcular2);:};
 
 OPLISTA ::= REVERS:revers{:RESULT = revers;:}
                      | IMPR:impr{:RESULT = impr;:}
@@ -188,7 +191,7 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | LLAMADO:llamado{:RESULT = llamado;:}
              | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");:}
              | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:}
-             | id:id{:RESULT = Fabrica.crearNodoHoja(Constante.id,id);:};
+             | id:id{:RESULT = Fabrica.crearNodoHoja(Constante.id,id);:}             ;
 
 SI ::= si COND:cond entonces CUERPO:lv sino CUERPO:lf fin{:RESULT = Fabrica.crearNodoSi(cond,lv,lf);:};
 

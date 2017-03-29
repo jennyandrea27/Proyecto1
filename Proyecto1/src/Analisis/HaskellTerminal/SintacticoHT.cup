@@ -29,7 +29,7 @@ action code
 terminal String mod, sqrt, pot, let, calcular, succ, decc, min, max, sum, product, revers, impr, par, asc, desc, length, concatenacion, suma, resta, mult, div, acceso;
 terminal String  igual, dolar, corchetea, corchetec, llavea, llavec, num, id, coma, cadena,caracter, parentesisa, parentesisc,porcentaje;
 nonterminal Nodo S, LISTA, VALLISTA, EXP, LPARLISTA, CALCULAR, SUCC, DECC, MIN, MAX, CONCAT,PARLISTA,OTRA, LVOTRA,VOTRA;
-nonterminal Nodo ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, OPLENGUAJE;
+nonterminal Nodo ACCESO, OPLISTA, REVERS, IMPR, PAR, ASC, DESC, SUM, PRODUCT, OPLENGUAJE, ACC;
 nonterminal Nodo LLAMADO, LPFUN, SENTENCIAS, VALFUN, LENGTH, OPLISTAEXP;
 
 precedence left suma, resta;
@@ -107,7 +107,10 @@ LENGTH ::= dolar length VALLISTA:vallista dolar{:RESULT = Fabrica.crearNodoOpLis
 
 CONCAT ::= VALLISTA:op1 concatenacion VALLISTA:op2{:RESULT = Fabrica.crearNodoConcat(op1,op2);:};
 
-ACCESO ::= VALLISTA:vallista acceso CALCULAR:calcular{:RESULT = Fabrica.crearNodoAcceso(vallista,calcular);:};
+ACCESO ::= dolar VALLISTA:vallista ACC:calcular dolar{:RESULT = Fabrica.crearNodoAcceso(vallista,calcular);:};
+
+ACC ::= acceso CALCULAR:calcular{:RESULT = Fabrica.crearNodoAcc(calcular,null);:}
+              | acceso CALCULAR:calcular1 acceso CALCULAR:calcular2{:RESULT = Fabrica.crearNodoAcc(calcular1,calcular2);:};
 
 OPLISTA ::= REVERS:revers{:RESULT = revers;:}
                      | IMPR:impr{:RESULT = impr;:}

@@ -438,4 +438,67 @@ public class SemanticoHaskell {
         res=new Valor(Constante.tdecimal,l+"");
         return res;
     }
+
+    static Valor acceso(Nodo r) {
+        Valor res=new Valor();
+        //buscar lista
+        Nodo id=r.hijos.get(0);
+        Nodo acceso=r.hijos.get(1);
+        if(id.getNombre().equals(Constante.id)){
+            res=acceso_id(id,acceso);
+        }else{
+            res=acceso_lasig(id,acceso);
+        }
+        return res;
+    }
+    public static Valor acceso_id(Nodo id,Nodo acceso){
+        Valor res=new Valor();
+        String nombre=id.hijos.get(0).getValor();
+        NodoTS var=TSH.buscarVar(nombre, TSH.cont_ambito);
+        Valor indice=RecorridoHT.ejecutarSent(acceso.hijos.get(0));
+            if(var!=null){
+                //obtener indice
+                //verificar cuantas dimensiones tiene el acceso
+                if(acceso.hijos.size()==1){
+                    //es acceso a una dimension
+                    res=var.valores.get(Integer.parseInt(indice.getValor()));
+                }else{
+                    //es acceso a dos dimensiones
+                    if(var.dimensiones.size()==2){                        
+                        Valor pos=var.valores.get(Integer.parseInt(indice.getValor()));
+                        Valor indice2=RecorridoHT.ejecutarSent(acceso.hijos.get(1));
+                        Valor pos2=pos.valores.get(Integer.parseInt(indice2.getValor()));
+                        res=new Valor(pos2.getTipo(),pos2.getValor());
+                    }else{
+                        res=new Valor(Constante.terror,"Error semantico, la lista "+nombre+" no ha sido declarada de dos dimensiones.");
+                    }                    
+                }
+            }
+            return res;
+    }
+
+    private static Valor acceso_lasig(Nodo lasig, Nodo acceso) {
+        Valor res = new Valor();
+        Valor indice=RecorridoHT.ejecutarSent(acceso.hijos.get(0));
+        if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
+            //es de dos dimensiones
+            if(acceso.hijos.size()==1){
+                //acceso es de una dimension
+                res=lista_asig(lasig.hijos.get(Integer.parseInt(indice.getValor())));
+            }else{
+                Valor pos =lista_asig(lasig.hijos.get(Integer.parseInt(indice.getValor())));
+                Valor indice2=RecorridoHT.ejecutarSent(acceso.hijos.get(1));
+                Valor pos2=pos.valores.get(Integer.parseInt(indice2.getValor()));
+                res=new Valor(pos2.getTipo(),pos2.getValor());
+            }
+        }else{            
+            //es de una dimension
+            if(acceso.hijos.size()==1){
+                res=RecorridoHT.ejecutarSent(lasig.hijos.get(Integer.parseInt(indice.getValor())));                
+            }else{
+                res=new Valor(Constante.terror,"Error semantico, la lista no ha sido declarada de dos dimensiones.");
+            }
+        }
+        return res;
+    }
 }

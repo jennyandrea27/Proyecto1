@@ -259,13 +259,26 @@ public class FormInicio extends javax.swing.JFrame {
             if(entrada.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");
             }else{                
+                LexicoH lexico = new LexicoH(new BufferedReader( new StringReader(entrada)));
+                SintacticoH sintactico= new SintacticoH(lexico);
                 try {
-                    LexicoH lexico = new LexicoH(new BufferedReader( new StringReader(entrada)));
-                    SintacticoH sintactico= new SintacticoH(lexico);
                     sintactico.parse();
                     ArchivoDot.graficar(sintactico.raiz, "ASTHaskell");
                 } catch (Exception ex) {
                     System.out.println("Error "+ex.getMessage());
+                }
+                if(sintactico.raiz!=null){                    
+                    if(TablaErrores.error){                        
+                        JOptionPane.showMessageDialog(null,"Verifique errores lexio y sintacticos.");
+                        HTML.mostrarErrores();
+                    }
+                    if(TablaErrores.error){
+                        JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");
+                        HTML.mostrarErrores();
+                    }else{                                                
+                        //TS.recorrerListaAmbitos();
+                        tbSalida.append(texto_salida+"\n");
+                    }
                 }
             }
     }//GEN-LAST:event_bCargarHKActionPerformed

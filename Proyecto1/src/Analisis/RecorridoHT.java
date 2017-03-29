@@ -59,7 +59,10 @@ public class RecorridoHT {
                 break;
            case Constante.length:
                 res=SemanticoHaskell.length(r);
-                break;                
+                break;      
+           case Constante.acceso:
+               res=SemanticoHaskell.acceso(r);
+               break;
         }
         return res;
     }

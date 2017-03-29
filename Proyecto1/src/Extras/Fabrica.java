@@ -158,6 +158,16 @@ public class Fabrica {
         }
         return acceso;
     }
+    public static Nodo crearNodoAcc(Nodo calc1, Nodo calc2){
+        Nodo acc=new Nodo(Constante.acceso);
+        if(calc1!=null){
+            acc.insertarHijo(calc1);            
+        }
+        if(calc2!=null){
+            acc.insertarHijo(calc2);            
+        }        
+        return acc;
+    }
     public static Nodo crearNodoSi(Nodo cond, Nodo lv, Nodo lf){
         Nodo si = new Nodo(Constante.si);
         if(cond!=null){
