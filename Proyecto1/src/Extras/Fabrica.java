@@ -122,10 +122,8 @@ public class Fabrica {
     }
     public static Nodo crearNodoOpLista(String nombre, Nodo vallista){
         Nodo op = new Nodo(nombre);        
-        if(vallista!=null){
-            for(Nodo hijo: vallista.hijos){                
-                op.insertarHijo(hijo);
-            }
+        if(vallista!=null){            
+            op.insertarHijo(vallista);            
         }
         return op;
     }

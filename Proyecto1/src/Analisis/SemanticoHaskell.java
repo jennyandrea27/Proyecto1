@@ -7,6 +7,8 @@ package Analisis;
 
 import Extras.Constante;
 import Reportes.TablaErrores;
+import TablaSimbolos.NodoTS;
+import TablaSimbolos.TSH;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -62,8 +64,7 @@ public class SemanticoHaskell {
         Nodo lasig=list.hijos.get(0);
         //verificar si es arreglo de dos dimensiones
         if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
-            //cantidad de hijos de lasig es la cantidad de dimensiones
-            int dim=lasig.hijos.size();
+            //cantidad de hijos de lasig es la cantidad de dimensiones            
             for(Nodo asig:lasig.hijos){
                 //por cada hijo se crea una dimension
                 Valor dimension=lista_asig(asig);
@@ -98,7 +99,7 @@ public class SemanticoHaskell {
                 res.dimensiones=new LinkedList<>();
                 res.valores=new LinkedList<>();
                 //agregar tama;o de la dimension
-                res.dimensiones.add(Integer.valueOf(dimension.valores.size()));
+                res.dimensiones.add(dimension.valores.size());
                 //recorrer cada valor para agregarlo a valores de la lista
                 res.valores.addAll(dimension.valores);
             }
@@ -126,6 +127,315 @@ public class SemanticoHaskell {
         if(!valido){
             res=new Valor(Constante.terror,"Error semantico; tipos de valores asignados a la lista no coinciden.");
         }
+        return res;
+    }
+    public static Valor sum(Nodo sum) {
+        Nodo lasig=sum.hijos.get(0);
+        Valor res=new Valor();
+        double total=0;
+        if(lasig.getNombre().equals(Constante.lasig)){
+            res=sum_lista(lasig);
+        }else{
+            //es un id de un arreglo ya declarado
+            //buscar variable en ambito
+            NodoTS var=TSH.buscarVar(lasig.hijos.get(0).getValor(), TSH.cont_ambito);
+            if(var!=null){
+                if(var.dimensiones.size()==1){
+                    //es de una dimension
+                    for(Valor v:var.valores){
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            total+=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            total+=Double.parseDouble(v.getValor());
+                        }
+                    }
+                }else{
+                    //es de dos dimensiones
+                    for(Valor d:var.valores){
+                    //por cada hijo se crea una dimension                        
+                        for(Valor v:d.valores){
+                            if(v.getTipo()==Constante.tcaracter){                            
+                            total+=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            }else{                                
+                                    total+=Double.parseDouble(v.getValor());
+                            }
+                        }                        
+                    }            
+                }                
+                res=new Valor(Constante.tdecimal,total+"");
+            }else{
+                //la variable no existe
+                res=new Valor(Constante.terror,"Error semantic, la lista "+lasig.hijos.get(0).getValor()+" no ha sido declarada.");                
+            }
+            return res;
+        }        
+        return res;
+    }
+    public static Valor sum_lista(Nodo lasig){
+        double total=0;
+        Valor res=new Valor();
+        if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
+            //tiene dos dimensiones
+            for(Nodo asig:lasig.hijos){
+                //por cada hijo se crea una dimension
+                Valor dimension=lista_asig(asig);
+                if(dimension.getTipo()!= Constante.terror){
+                    for(Valor v:dimension.valores){
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            total+=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{
+                            total+=Double.parseDouble(v.getValor());
+                        }
+                    }
+                }                
+            }            
+        }else{
+            //tiene una dimension
+            Valor dimension=lista_asig(lasig);
+            //verificar si no se encontro un error
+            if(dimension.getTipo()==Constante.terror){
+                TablaErrores.insertarError(dimension.getValor(), 1, 1);                
+            }else{
+                //sumar cada valor que trae la dimension
+                for(Valor v:dimension.valores){
+                    if(v.getTipo()==Constante.tcaracter){                            
+                            total+=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                        
+                            total+=Double.parseDouble(v.getValor());
+                        }
+                }
+            }
+        }
+        res=new Valor(Constante.tdecimal,total+"");
+        return res;
+    }
+    public static Valor product(Nodo product) {
+        Nodo lasig=product.hijos.get(0);
+        Valor res=new Valor();
+        double total=1;
+        if(lasig.getNombre().equals(Constante.lasig)){
+            res=product_lista(lasig);
+        }else{
+            //es un id de un arreglo ya declarado
+            //buscar variable en ambito
+            NodoTS var=TSH.buscarVar(lasig.hijos.get(0).getValor(), TSH.cont_ambito);
+            if(var!=null){
+                if(var.dimensiones.size()==1){
+                    //es de una dimension
+                    for(Valor v:var.valores){
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            total*=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            total*=Double.parseDouble(v.getValor());
+                        }
+                    }
+                }else{
+                    //es de dos dimensiones
+                    for(Valor d:var.valores){
+                    //por cada hijo se crea una dimension                        
+                        for(Valor v:d.valores){
+                            if(v.getTipo()==Constante.tcaracter){                            
+                                total*=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            }else{                                
+                                total*=Double.parseDouble(v.getValor());
+                            }
+                        }                        
+                    }            
+                }                
+                res=new Valor(Constante.tdecimal,total+"");
+            }else{
+                //la variable no existe
+                res=new Valor(Constante.terror,"Error semantic, la lista "+lasig.hijos.get(0).getValor()+" no ha sido declarada.");                
+            }            
+        }        
+        return res;
+    }
+    public static Valor product_lista(Nodo lasig){
+        double total=1;
+        Valor res=new Valor();
+        if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
+            //tiene dos dimensiones
+            for(Nodo asig:lasig.hijos){
+                //por cada hijo se crea una dimension
+                Valor dimension=lista_asig(asig);
+                if(dimension.getTipo()!= Constante.terror){
+                    for(Valor v:dimension.valores){
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            total*=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{
+                            total*=Double.parseDouble(v.getValor());
+                        }
+                    }
+                }                
+            }            
+        }else{
+            //tiene una dimension
+            Valor dimension=lista_asig(lasig);
+            //verificar si no se encontro un error
+            if(dimension.getTipo()==Constante.terror){
+                TablaErrores.insertarError(dimension.getValor(), 1, 1);                
+            }else{
+                //sumar cada valor que trae la dimension
+                for(Valor v:dimension.valores){
+                    if(v.getTipo()==Constante.tcaracter){                            
+                            total*=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                        
+                            total*=Double.parseDouble(v.getValor());
+                        }
+                }
+            }
+        }
+        res=new Valor(Constante.tdecimal,total+"");
+        return res;
+    }
+    public static Valor max(Nodo max) {
+        Nodo lasig=max.hijos.get(0);
+        Valor res=new Valor();
+        double m=0;
+        if(lasig.getNombre().equals(Constante.lasig)){
+            res=max_lista(lasig);
+        }else{
+            //es un id de un arreglo ya declarado
+            //buscar variable en ambito
+            NodoTS var=TSH.buscarVar(lasig.hijos.get(0).getValor(), TSH.cont_ambito);
+            if(var!=null){
+                if(var.dimensiones.size()==1){
+                    //es de una dimension
+                    for(Valor v:var.valores){
+                        double actual=0;
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            actual=Double.parseDouble(v.getValor());
+                        }
+                        if(actual>m){
+                            m=actual;
+                        }
+                    }
+                }else{
+                    //es de dos dimensiones
+                    for(Valor d:var.valores){
+                    //por cada hijo se crea una dimension                        
+                        for(Valor v:d.valores){
+                            double actual=0;
+                            if(v.getTipo()==Constante.tcaracter){                            
+                                actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            }else{                            
+                                actual=Double.parseDouble(v.getValor());
+                            }
+                            if(actual>m){
+                                m=actual;
+                            }
+                        }                        
+                    }            
+                }                
+                res=new Valor(Constante.tdecimal,m+"");
+            }else{
+                //la variable no existe
+                res=new Valor(Constante.terror,"Error semantic, la lista "+lasig.hijos.get(0).getValor()+" no ha sido declarada.");                
+            }            
+        }        
+        return res;
+    }
+    public static Valor max_lista(Nodo lasig){
+        double m=1;
+        Valor res=new Valor();
+        if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
+            //tiene dos dimensiones
+            for(Nodo asig:lasig.hijos){
+                //por cada hijo se crea una dimension
+                Valor dimension=lista_asig(asig);
+                if(dimension.getTipo()!= Constante.terror){
+                    for(Valor v:dimension.valores){
+                        double actual=0;
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            actual=Double.parseDouble(v.getValor());
+                        }
+                        if(actual>m){
+                            m=actual;
+                        }
+                    }
+                }                
+            }            
+        }else{
+            //tiene una dimension
+            Valor dimension=lista_asig(lasig);
+            //verificar si no se encontro un error
+            if(dimension.getTipo()==Constante.terror){
+                TablaErrores.insertarError(dimension.getValor(), 1, 1);                
+            }else{
+                //sumar cada valor que trae la dimension
+                for(Valor v:dimension.valores){
+                    double actual=0;
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            actual=Double.parseDouble(v.getValor());
+                        }
+                        if(actual>m){
+                            m=actual;
+                        }
+                }
+            }
+        }
+        res=new Valor(Constante.tdecimal,m+"");
+        return res;
+    }
+    public static Valor length(Nodo length) {
+        Nodo lasig=length.hijos.get(0);
+        Valor res=new Valor();
+        double l=0;
+        if(lasig.getNombre().equals(Constante.lasig)){
+            res=length_lista(lasig);
+        }else{
+            //es un id de un arreglo ya declarado
+            //buscar variable en ambito
+            NodoTS var=TSH.buscarVar(lasig.hijos.get(0).getValor(), TSH.cont_ambito);
+            if(var!=null){
+                if(var.dimensiones.size()==1){
+                    //es de una dimension
+                    l+=var.valores.size();
+                }else{
+                    //es de dos dimensiones
+                    for(Valor d:var.valores){
+                    //por cada hijo se crea una dimension                        
+                        l+=d.valores.size();
+                    }            
+                }                
+                res=new Valor(Constante.tdecimal,l+"");
+            }else{
+                //la variable no existe
+                res=new Valor(Constante.terror,"Error semantic, la lista "+lasig.hijos.get(0).getValor()+" no ha sido declarada.");                
+            }            
+        }        
+        return res;
+    }
+    public static Valor length_lista(Nodo lasig){
+        double l=0;
+        Valor res=new Valor();
+        if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
+            //tiene dos dimensiones
+            for(Nodo asig:lasig.hijos){
+                //por cada hijo se crea una dimension
+                Valor dimension=lista_asig(asig);
+                if(dimension.getTipo()!= Constante.terror){
+                    l+=dimension.valores.size();
+                }                
+            }            
+        }else{
+            //tiene una dimension
+            Valor dimension=lista_asig(lasig);
+            //verificar si no se encontro un error
+            if(dimension.getTipo()==Constante.terror){
+                TablaErrores.insertarError(dimension.getValor(), 1, 1);                
+            }else{
+                //sumar cada valor que trae la dimension
+                l+=dimension.valores.size();
+            }
+        }
+        res=new Valor(Constante.tdecimal,l+"");
         return res;
     }
 }

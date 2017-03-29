@@ -48,6 +48,18 @@ public class RecorridoHT {
                     TablaErrores.insertarError(res.getValor(), 2, 2);
                 }
                 break;
+            case Constante.sum:
+                res=SemanticoHaskell.sum(r);
+                break;
+           case Constante.product:
+                res=SemanticoHaskell.product(r);
+                break;
+            case Constante.max:
+                res=SemanticoHaskell.max(r);
+                break;
+           case Constante.length:
+                res=SemanticoHaskell.length(r);
+                break;                
         }
         return res;
     }
