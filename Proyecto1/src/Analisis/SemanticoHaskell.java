@@ -57,6 +57,7 @@ public class SemanticoHaskell {
         Valor res=new Valor();    
         res.dimensiones=new LinkedList<>();
         res.valores=new LinkedList<>();
+        int tipo=-1;
         //obtener primer hijo de list
         Nodo lasig=list.hijos.get(0);
         //verificar si es arreglo de dos dimensiones
@@ -69,8 +70,12 @@ public class SemanticoHaskell {
                 if(dimension.getTipo()!= Constante.terror){
                     res.dimensiones.add(Integer.valueOf(dimension.valores.size()));
                     res.valores.add(dimension);
-                }
-                int tam=res.dimensiones.get(0);
+                    tipo=dimension.getTipo();
+                }                
+            }
+            res.setValor(list.getValor());
+            res.setTipo(tipo);
+            int tam=res.dimensiones.get(0);
                 boolean valido=true;
                 for(int i =1;i<res.dimensiones.size();i++){
                     if(tam!=res.dimensiones.get(i)){
@@ -78,9 +83,8 @@ public class SemanticoHaskell {
                     }
                 }
                 if(!valido){
-                    res=new Valor(Constante.terror,"Error semantico, las dimensiones asignadas no coinciden.");
+                    res=new Valor(Constante.terror,"Error semantico, las dimensiones asignadas a lista '"+res.getValor()+"' no coinciden.");
                 }
-            }
         }else{
             //es de una dimension
             //cada hijo de lasig es calcular, un nuevo valor a agregar en la lista de valores de la lista

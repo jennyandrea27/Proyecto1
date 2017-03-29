@@ -235,7 +235,8 @@ public class FormInicio extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null,"Verifique errores lexio y sintacticos.");
                         HTML.mostrarErrores();
                     }else{                        
-                        TSH.insertarAmbito(TSH.cont_ambito);
+                        Ambito a=new Ambito(-1,0);
+                        TSH.lista_ambitos.add(a);
                         RecorridoHT.recorrerArbol(sintactico.raiz);
                     }
                     if(TablaErrores.error){

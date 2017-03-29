@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * @author Jenny
  */
 public class TS {
-    public static LinkedList<Ambito>lista_ambitos=new LinkedList<Ambito>();
+    public static LinkedList<Ambito>lista_ambitos=new LinkedList<>();
     public static int cont_ambito = 0;
 
         public static void AmbitoGlobal(Nodo als)

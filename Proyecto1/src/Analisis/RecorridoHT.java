@@ -6,6 +6,7 @@
 package Analisis;
 
 import Extras.Constante;
+import Reportes.TablaErrores;
 import TablaSimbolos.NodoTS;
 import TablaSimbolos.TSH;
 import proyecto1.FormInicio;
@@ -40,8 +41,11 @@ public class RecorridoHT {
                 res=SemanticoHaskell.list(r);
                 if(res.getTipo()!=Constante.terror){
                     NodoTS var=new NodoTS(res.getValor(),res.getTipo(),"");
-                    
+                    var.dimensiones=res.dimensiones;
+                    var.valores=res.valores;
                     TSH.insertarVariable(var);
+                }else{
+                    TablaErrores.insertarError(res.getValor(), 2, 2);
                 }
                 break;
         }
