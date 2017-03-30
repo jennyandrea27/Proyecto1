@@ -133,9 +133,9 @@ cadena=\"(\\.|[^\"])*\"
 {cadena}            
 { return new Symbol(TSHaskell.cadena, yycolumn, yyline, yytext().replace("\"", "")); }
 {id}          
-{return new Symbol (TSHaskell.id, yycolumn, yyline, yytext());}
+{return new Symbol (TSHaskell.id, yycolumn, yyline, yytext().toLowerCase());}
 {caracter}          
-{return new Symbol (TSHaskell.caracter, yycolumn, yyline, yytext().toLowerCase());}
+{return new Symbol (TSHaskell.caracter, yycolumn, yyline, yytext().replace("'",""));}
 {espacio}          
 {/*se ignora*/}
 }

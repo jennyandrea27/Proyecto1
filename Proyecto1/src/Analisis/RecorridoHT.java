@@ -94,4 +94,12 @@ public class RecorridoHT {
             }
         }
     }
+
+    static Valor ejecutarFun(Nodo cuerpo) {
+        Valor res=new Valor();
+        for(Nodo sent:cuerpo.hijos){
+            res=ejecutarSent(sent);
+        }
+        return res;
+    }
 }

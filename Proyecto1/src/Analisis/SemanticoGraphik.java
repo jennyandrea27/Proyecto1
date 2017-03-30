@@ -153,7 +153,13 @@ public class SemanticoGraphik {
                break;
             case Constante.porcentaje:
              res=new Valor(porcentaje.getTipo(),porcentaje.getValor());
-             break;          
+             break;    
+           case Constante.llamado:
+               res=SemanticoGraphik.llamado(op);
+               if(res.getTipo()==Constante.terror){
+                    TablaErrores.insertarError(res.getValor(), 1, 1);
+               }
+                           break;
             default://es valor puntual
                 return new Valor(op.getTipo(),op.getValor());
         }
@@ -229,9 +235,9 @@ public class SemanticoGraphik {
             //buscar funcion
             Nodo fun=Recorrido.buscarFun(nombre, null,par_llamado);
             if(fun !=null){
-            //ejecutar funcion
             //insertar ambito funcion
             TS.insertarAmbito(-1);
+            //ejecutar funcion
             variable=SemanticoGraphik.ejecutarFun(fun,par_llamado);    
             //eliminar ambito funcion
             TS.eliminarAmbito();
@@ -546,5 +552,32 @@ public class SemanticoGraphik {
         }
         return res;        
     }    
+
+    static Valor llamado(Nodo sent) {
+        Valor res=new Valor();
+        //buscar funcionhk en nodo incluye de archivo graphik
+        boolean incluye=Recorrido.buscarFunIncluye(sent.getValor());
+        if(incluye){
+            //obtener parametros de llamado
+            Nodo lpar=sent.hijos.get(0);
+            LinkedList<Valor> par_llamado = new LinkedList<Valor>();
+            for(Nodo hijo : lpar.hijos)
+            {
+                Valor par = SemanticoGraphik.evaluarEXP(hijo);            
+                par_llamado.add(par);
+            }
+            //buscar funcion
+            Nodo fun=MemoriaHaskell.buscarFun(sent.getValor(), par_llamado);
+            if(fun!=null){
+                //ejecutar sentencias de la funcion
+                res=RecorridoHT.ejecutarFun(fun.hijos.get(1));                
+            }else{
+                res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido declarada.");
+            }
+        }else{
+            res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido incluida a archivo Graohik.");
+        }
+        return res;
+    }
     
 }

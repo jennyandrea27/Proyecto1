@@ -9,6 +9,7 @@ import Analisis.ArchivoDot;
 import Analisis.Graphik.*;
 import Analisis.HaskellArchivo.*;
 import Analisis.HaskellTerminal.*;
+import Analisis.MemoriaHaskell;
 import Analisis.Recorrido;
 import Analisis.RecorridoHT;
 import Analisis.SemanticoGraphik;
@@ -17,6 +18,7 @@ import Reportes.TablaErrores;
 import TablaSimbolos.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -263,20 +265,26 @@ public class FormInicio extends javax.swing.JFrame {
                 SintacticoH sintactico= new SintacticoH(lexico);
                 try {
                     sintactico.parse();
-                    ArchivoDot.graficar(sintactico.raiz, "ASTHaskell");
                 } catch (Exception ex) {
                     System.out.println("Error "+ex.getMessage());
                 }
                 if(sintactico.raiz!=null){                    
                     if(TablaErrores.error){                        
-                        JOptionPane.showMessageDialog(null,"Verifique errores lexio y sintacticos.");
+                        JOptionPane.showMessageDialog(null,"Verifique errores lexicos y sintacticos.");
                         HTML.mostrarErrores();
                     }
                     if(TablaErrores.error){
                         JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");
                         HTML.mostrarErrores();
                     }else{                                                
-                        //TS.recorrerListaAmbitos();
+                        //TS.recorrerListaAmbitos();                        
+                        MemoriaHaskell.raiz.hijos.addAll(sintactico.raiz.hijos);
+                        texto_salida+="Archivo Haskell ha sido cargado a memoria.";
+                        try {
+                            ArchivoDot.graficar(MemoriaHaskell.raiz, "ASTHaskell");
+                        } catch (IOException ex) {
+                            Logger.getLogger(FormInicio.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         tbSalida.append(texto_salida+"\n");
                     }
                 }
@@ -300,7 +308,7 @@ public class FormInicio extends javax.swing.JFrame {
                 }
                 if(sintactico.raiz!=null){                    
                     if(TablaErrores.error){                        
-                        JOptionPane.showMessageDialog(null,"Verifique errores lexio y sintacticos.");
+                        JOptionPane.showMessageDialog(null,"Verifique errores lexicos y sintacticos.");
                         HTML.mostrarErrores();
                     }else{                        
                         Recorrido.recorrerArbol(sintactico.raiz);

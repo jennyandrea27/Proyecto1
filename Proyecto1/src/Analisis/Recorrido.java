@@ -204,9 +204,25 @@ public class Recorrido {
                             if(res.getCat_retorno()==Constante.cat_retornar || res.getCat_retorno()==Constante.cat_continuar || res.getCat_retorno()==Constante.cat_terminar){
                                 return res;
                             }
-                            break;                        
+                            break;       
+                        case Constante.llamado:
+                            res=SemanticoGraphik.llamado(sent);
+                            if(res.getTipo()==Constante.terror){
+                                TablaErrores.insertarError(res.getValor(), 1, 1);
+                            }
+                            break;
                     }
                 }
             return res;
         }        
+
+    static boolean buscarFunIncluye(String valor) {
+        Nodo encabezado=raiz.hijos.get(0);
+        for(Nodo enc:encabezado.hijos){            
+            if(enc.getNombre().equals(Constante.incluir) && enc.hijos.get(0).getValor().equals(valor)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -51,7 +51,7 @@ S ::=   HASKELL:hk
 HASKELL ::= HASKELL:hk DECFUN:decfun{:RESULT=Fabrica.insertarFuncion(hk,decfun);:}
                         | DECFUN:decfun {:RESULT = Fabrica.crearNodoLFunciones(decfun);:};
 
-LISTA ::=  let id:id igual VALLISTA:val {:RESULT = Fabrica.crearNodoLista(id,val);:};
+LISTA ::=  dolar let id:id igual VALLISTA:val dolar{:RESULT = Fabrica.crearNodoLista(id,val);:};
 
 VALLISTA ::=   CONCAT:concat{:RESULT = Fabrica.crearNodoAsigLista(Constante.concat,Constante.concat,concat);:}
                           | cadena:cadena 
