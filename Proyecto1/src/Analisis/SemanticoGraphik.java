@@ -159,7 +159,15 @@ public class SemanticoGraphik {
                if(res.getTipo()==Constante.terror){
                     TablaErrores.insertarError(res.getValor(), 1, 1);
                }
-                           break;
+                break;
+           case Constante.id:
+               NodoTS buscar=TS.buscarVar(op.getValor(), TS.cont_ambito);
+               if(buscar!=null){
+                   res=new Valor(buscar.getTipo(), buscar.getValor());
+               }else{
+                   res=new Valor(Constante.terror, "La variable "+op.getNombre()+" no ha sido declarada.");
+               }
+               break;
             default://es valor puntual
                 return new Valor(op.getTipo(),op.getValor());
         }
@@ -555,6 +563,7 @@ public class SemanticoGraphik {
 
     static Valor llamado(Nodo sent) {
         Valor res=new Valor();
+        //agregar ambito de llamado como globar
         //buscar funcionhk en nodo incluye de archivo graphik
         boolean incluye=Recorrido.buscarFunIncluye(sent.getValor());
         if(incluye){
@@ -570,7 +579,25 @@ public class SemanticoGraphik {
             Nodo fun=MemoriaHaskell.buscarFun(sent.getValor(), par_llamado);
             if(fun!=null){
                 //ejecutar sentencias de la funcion
+                TS.cont_ambito++;
+                Ambito fun_llamado=new Ambito(-1, TS.cont_ambito);
+                TS.lista_ambitos.add(fun_llamado);
+                //agregar variables al ambito de la funcion que viene en parametros
+                Nodo l_par_fun = fun.hijos.get(0);
+                for (int i = 0; i < l_par_fun.hijos.size(); i++)
+                {
+                    String nombre = l_par_fun.hijos.get(i).getValor();
+                    int tipo = par_llamado.get(i).getTipo();
+                    String valor = par_llamado.get(i).getValor();
+                    NodoTS par = new NodoTS(nombre, tipo, valor);
+                    if(par_llamado.get(i).getTipo()==Constante.tid){
+                        res=new Valor(Constante.terror, "Error semantico, funcion de haskell no permite tipo ALS como parametros.");                        
+                    }else{                        
+                        TS.insertarVariable(par);
+                    }
+                }            
                 res=RecorridoHT.ejecutarFun(fun.hijos.get(1));                
+                TS.eliminarAmbito();
             }else{
                 res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido declarada.");
             }
