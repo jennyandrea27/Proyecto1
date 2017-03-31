@@ -206,7 +206,7 @@ public class Recorrido {
                             }
                             break;       
                         case Constante.llamado:
-                            res=SemanticoGraphik.llamado(sent);
+                            res=MemoriaHaskell.llamado(sent);
                             if(res.getTipo()==Constante.terror){
                                 TablaErrores.insertarError(res.getValor(), 1, 1);
                             }

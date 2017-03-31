@@ -5,6 +5,7 @@
  */
 package Analisis;
 
+import static Analisis.SemanticoGraphik.evaluarEXP;
 import Extras.Constante;
 import Reportes.TablaErrores;
 import TablaSimbolos.NodoTS;
@@ -47,12 +48,14 @@ public class SemanticoHaskell {
         Valor res=new Valor();
         res=RecorridoHT.ejecutarSent(succ.hijos.get(0));
         res.setValor((Double.parseDouble(res.getValor())+1)+"");
+        res.setTipo(Constante.tdecimal);
         return res;
     }
     public static Valor decc(Nodo decc){
         Valor res=new Valor();
         res=RecorridoHT.ejecutarSent(decc.hijos.get(0));
         res.setValor((Double.parseDouble(res.getValor())-1)+"");
+        res.setTipo(Constante.tdecimal);
         return res;
     }
     public static Valor list(Nodo list){
@@ -462,6 +465,7 @@ public class SemanticoHaskell {
                 if(acceso.hijos.size()==1){
                     //es acceso a una dimension
                     res=var.valores.get(Integer.parseInt(indice.getValor()));
+                    res.setTipo(var.getTipo());
                 }else{
                     //es acceso a dos dimensiones
                     if(var.dimensiones.size()==2){                        
@@ -498,6 +502,23 @@ public class SemanticoHaskell {
             }else{
                 res=new Valor(Constante.terror,"Error semantico, la lista no ha sido declarada de dos dimensiones.");
             }
+        }
+        return res;
+    }
+    public static Valor si(Nodo si){
+        Valor cond=evaluarEXP(si.hijos.get(0));
+        Valor res=new Valor();
+        if(cond.getTipo()==Constante.tbool){
+            if(cond.getValor().equals(Constante.verdadero)){
+                //ejecutar sentencias verdaderas
+                res=RecorridoHT.ejecutarCuerpo(si.hijos.get(1));
+            }else{
+                //ejecutar sentencias falsas                
+                res=RecorridoHT.ejecutarCuerpo(si.hijos.get(2));                                    
+            }
+        }else{
+            //la expresion no es de tipo bool
+            TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" como condicion en sentencia Si.", 0, 0);
         }
         return res;
     }

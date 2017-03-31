@@ -8,6 +8,7 @@ package Analisis;
 import Extras.Constante;
 import Reportes.TablaErrores;
 import TablaSimbolos.NodoTS;
+import TablaSimbolos.TS;
 import TablaSimbolos.TSH;
 import proyecto1.FormInicio;
 
@@ -28,6 +29,21 @@ public class RecorridoHT {
             case Constante.calcular:
                 res=SemanticoGraphik.evaluarEXP(r.hijos.get(0));
             break;
+            case Constante.id:
+                //buscar en la tabla de simbolos de haskell terminal si existe la variable
+                NodoTS buscar2=TSH.buscarVar(r.getValor(), TSH.cont_ambito);
+                if(buscar2!=null){
+                    res=new Valor(buscar2.getTipo(), buscar2.getValor());
+                    if(buscar2.dimensiones!=null){
+                        res.dimensiones=buscar2.dimensiones;                           
+                    }
+                    if(buscar2.valores!=null){
+                        res.valores=buscar2.valores;
+                    }
+                }else{
+                    res=new Valor(Constante.terror, "La lista "+r.getValor()+" no ha sido declarada.");
+                }                              
+               break;
             case Constante.succ:
                 res=SemanticoHaskell.succ(r);
                 break;
@@ -63,6 +79,12 @@ public class RecorridoHT {
            case Constante.acceso:
                res=SemanticoHaskell.acceso(r);
                break;
+           case Constante.llamado:
+               res=MemoriaHaskell.llamado_terminal(r);
+               break;
+           case Constante.si:
+               res=SemanticoHaskell.si(r);
+               break;
         }
         return res;
     }
@@ -95,7 +117,7 @@ public class RecorridoHT {
         }
     }
 
-    static Valor ejecutarFun(Nodo cuerpo) {
+    static Valor ejecutarCuerpo(Nodo cuerpo) {
         Valor res=new Valor();
         for(Nodo sent:cuerpo.hijos){
             res=ejecutarSent(sent);

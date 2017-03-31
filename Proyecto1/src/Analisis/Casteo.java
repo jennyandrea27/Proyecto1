@@ -729,9 +729,21 @@ public class Casteo {
                     switch (valor2.getTipo()){                        
                         case Constante.tcadena:
                         case Constante.tid:
-                        case Constante.tdecimal:
                             valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Entero.");
                             valor2.setTipo(Constante.terror);
+                            break;
+                        case Constante.tdecimal:
+                            //verificar si puede obtenerse unicamente la parte entera
+                            Double temp=Double.parseDouble(valor2.getValor());
+                            int temp2=temp.intValue();
+                            if(temp2-temp == 0){
+                                //se puede asignar a tipo entero
+                                valor2.setTipo(Constante.tnum);
+                                valor2.setValor(temp2+"");
+                            }else{                                
+                                valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Entero.");
+                                valor2.setTipo(Constante.terror);
+                            }
                             break;
                         case Constante.tbool:
                             valor2.setTipo(Constante.tnum);

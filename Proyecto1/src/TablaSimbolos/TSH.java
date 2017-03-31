@@ -61,7 +61,7 @@ public class TSH {
             cont_ambito--;
         }
     public static void insertarVariable(NodoTS var){
-            lista_ambitos.get(cont_ambito).variables.add(var);
+            lista_ambitos.get(cont_ambito).variables.add(0,var);
         }
     public static void declararVar(Nodo dec){//agrega variable al ultimos ambito que se encuentra en lista_ambitos
             //dec en su primer hijo tiene nombre y tipo de variable a asignar

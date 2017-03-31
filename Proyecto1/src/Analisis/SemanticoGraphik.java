@@ -5,6 +5,7 @@
  */
 package Analisis;
 
+import Analisis.HaskellTerminal.TSHT;
 import static Analisis.RecorridoHT.porcentaje;
 import Extras.Constante;
 import Reportes.TablaErrores;
@@ -14,6 +15,7 @@ import TablaSimbolos.TS;
 import static TablaSimbolos.TS.cont_ambito;
 import static TablaSimbolos.TS.lista_ambitos;
 import static TablaSimbolos.TS.nuevoALS;
+import TablaSimbolos.TSH;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -155,7 +157,7 @@ public class SemanticoGraphik {
              res=new Valor(porcentaje.getTipo(),porcentaje.getValor());
              break;    
            case Constante.llamado:
-               res=SemanticoGraphik.llamado(op);
+               res=MemoriaHaskell.llamado(op);
                if(res.getTipo()==Constante.terror){
                     TablaErrores.insertarError(res.getValor(), 1, 1);
                }
@@ -165,8 +167,30 @@ public class SemanticoGraphik {
                if(buscar!=null){
                    res=new Valor(buscar.getTipo(), buscar.getValor());
                }else{
-                   res=new Valor(Constante.terror, "La variable "+op.getNombre()+" no ha sido declarada.");
+                   //buscar en la tabla de simbolos de haskell terminal si existe la variable
+                   NodoTS buscar2=TSH.buscarVar(op.getValor(), TSH.cont_ambito);
+                   if(buscar2!=null){
+                       res=new Valor(buscar2.getTipo(), buscar2.getValor());
+                       if(buscar2.dimensiones!=null){
+                           res.dimensiones=buscar2.dimensiones;                           
+                       }
+                       if(buscar2.valores!=null){
+                           res.valores=buscar2.valores;
+                       }
+                   }else{
+                       res=new Valor(Constante.terror, "La variable "+op.getNombre()+" no ha sido declarada.");
+                   }
                }
+               break;
+           case Constante.calcular:
+           case Constante.sum:
+           case Constante.product:
+           case Constante.max:
+           case Constante.length:
+           case Constante.acceso:
+           case Constante.succ:
+           case Constante.dec:
+               res=RecorridoHT.ejecutarSent(op);
                break;
             default://es valor puntual
                 return new Valor(op.getTipo(),op.getValor());
@@ -560,51 +584,6 @@ public class SemanticoGraphik {
         }
         return res;        
     }    
-
-    static Valor llamado(Nodo sent) {
-        Valor res=new Valor();
-        //agregar ambito de llamado como globar
-        //buscar funcionhk en nodo incluye de archivo graphik
-        boolean incluye=Recorrido.buscarFunIncluye(sent.getValor());
-        if(incluye){
-            //obtener parametros de llamado
-            Nodo lpar=sent.hijos.get(0);
-            LinkedList<Valor> par_llamado = new LinkedList<Valor>();
-            for(Nodo hijo : lpar.hijos)
-            {
-                Valor par = SemanticoGraphik.evaluarEXP(hijo);            
-                par_llamado.add(par);
-            }
-            //buscar funcion
-            Nodo fun=MemoriaHaskell.buscarFun(sent.getValor(), par_llamado);
-            if(fun!=null){
-                //ejecutar sentencias de la funcion
-                TS.cont_ambito++;
-                Ambito fun_llamado=new Ambito(-1, TS.cont_ambito);
-                TS.lista_ambitos.add(fun_llamado);
-                //agregar variables al ambito de la funcion que viene en parametros
-                Nodo l_par_fun = fun.hijos.get(0);
-                for (int i = 0; i < l_par_fun.hijos.size(); i++)
-                {
-                    String nombre = l_par_fun.hijos.get(i).getValor();
-                    int tipo = par_llamado.get(i).getTipo();
-                    String valor = par_llamado.get(i).getValor();
-                    NodoTS par = new NodoTS(nombre, tipo, valor);
-                    if(par_llamado.get(i).getTipo()==Constante.tid){
-                        res=new Valor(Constante.terror, "Error semantico, funcion de haskell no permite tipo ALS como parametros.");                        
-                    }else{                        
-                        TS.insertarVariable(par);
-                    }
-                }            
-                res=RecorridoHT.ejecutarFun(fun.hijos.get(1));                
-                TS.eliminarAmbito();
-            }else{
-                res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido declarada.");
-            }
-        }else{
-            res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido incluida a archivo Graohik.");
-        }
-        return res;
-    }
+    
     
 }
