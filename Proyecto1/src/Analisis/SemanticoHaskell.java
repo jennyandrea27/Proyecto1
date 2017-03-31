@@ -9,6 +9,7 @@ import static Analisis.SemanticoGraphik.evaluarEXP;
 import Extras.Constante;
 import Reportes.TablaErrores;
 import TablaSimbolos.NodoTS;
+import TablaSimbolos.TS;
 import TablaSimbolos.TSH;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -507,8 +508,9 @@ public class SemanticoHaskell {
     }
     public static Valor si(Nodo si){
         Valor cond=evaluarEXP(si.hijos.get(0));
-        Valor res=new Valor();
+        Valor res=new Valor();        
         if(cond.getTipo()==Constante.tbool){
+            TS.insertarAmbito(TS.cont_ambito);
             if(cond.getValor().equals(Constante.verdadero)){
                 //ejecutar sentencias verdaderas
                 res=RecorridoHT.ejecutarCuerpo(si.hijos.get(1));
@@ -516,10 +518,44 @@ public class SemanticoHaskell {
                 //ejecutar sentencias falsas                
                 res=RecorridoHT.ejecutarCuerpo(si.hijos.get(2));                                    
             }
+            TS.eliminarAmbito();
         }else{
             //la expresion no es de tipo bool
             TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(cond.getTipo())+" como condicion en sentencia Si.", 0, 0);
         }
+        return res;
+    }
+
+    static Valor caso(Nodo r) {
+        Valor res=new Valor();
+        //hijo 0 tiene variable a comparar
+        Valor var=SemanticoGraphik.evaluarEXP(r.hijos.get(0));
+        TS.insertarAmbito(TS.cont_ambito);
+        for(int i =0;i<r.hijos.get(1).hijos.size();i++){
+            Nodo caso=r.hijos.get(1).hijos.get(i);
+            Valor val_caso=SemanticoGraphik.evaluarEXP(caso.hijos.get(0));
+            if(var.getTipo()==val_caso.getTipo()){
+                if(val_caso.getTipo()==Constante.tdecimal ){                    
+                    if(Double.parseDouble(val_caso.getValor()) == Double.parseDouble(var.getValor())){                        
+                        //coincide valor de caso
+                        //ejecutar sentencias de caso actual
+                        res=RecorridoHT.ejecutarCuerpo(caso.hijos.get(1));
+                        break;
+                    }
+                }else{
+                    //puede ser caracter 
+                    if(val_caso.getValor().equals(var.getValor())){
+                        //coincide valor de caso
+                        //ejecutar sentencias de caso actual
+                        res=RecorridoHT.ejecutarCuerpo(caso.hijos.get(1));
+                        break;                        
+                    }
+                }
+            }else{
+                res=new Valor(Constante.terror, "Error semantico, ");
+            }       
+        }
+        TS.eliminarAmbito();
         return res;
     }
 }

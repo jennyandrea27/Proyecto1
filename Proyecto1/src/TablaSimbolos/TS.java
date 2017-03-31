@@ -16,15 +16,13 @@ import java.util.LinkedList;
  */
 public class TS {
     public static LinkedList<Ambito>lista_ambitos=new LinkedList<>();
-    public static int cont_ambito = 0;
+    public static int cont_ambito = -1;
 
         public static void AmbitoGlobal(Nodo als)
         {
             lista_ambitos.clear();
-            cont_ambito=0;
-            //se agrega ambito de clase que contiene metodo inicio
-            Ambito clase_inicio = new Ambito(-1, cont_ambito);            
-            lista_ambitos.add(clase_inicio);   
+            insertarAmbito(-1);
+            Ambito clase_inicio=lista_ambitos.get(0);
             Nodo cuerpo=als.hijos.get(1);            
             nuevoALS(cuerpo,clase_inicio);
         }

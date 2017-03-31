@@ -739,7 +739,7 @@ StringBuffer string=new StringBuffer();
             }
           case 56: break;
           case 3: 
-            { return new Symbol (TSHaskell.id, yycolumn, yyline, yytext());
+            { return new Symbol (TSHaskell.id, yycolumn, yyline, yytext().toLowerCase());
             }
           case 57: break;
           case 4: 
@@ -859,7 +859,7 @@ StringBuffer string=new StringBuffer();
             }
           case 86: break;
           case 33: 
-            { return new Symbol (TSHaskell.caracter, yycolumn, yyline, yytext().toLowerCase());
+            { return new Symbol (TSHaskell.caracter, yycolumn, yyline, yytext().replace("'",""));
             }
           case 87: break;
           case 34: 

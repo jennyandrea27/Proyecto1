@@ -2046,7 +2046,7 @@ class CUP$SintacticoH$actions {
 		int numleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int numright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String num = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");
+		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tdecimal+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("EXP",4, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;
@@ -2385,7 +2385,7 @@ class CUP$SintacticoH$actions {
 		int numleft = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).left;
 		int numright = ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()).right;
 		String num = (String)((java_cup.runtime.Symbol) CUP$SintacticoH$stack.peek()).value;
-		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");
+		RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tdecimal+"");
               CUP$SintacticoH$result = parser.getSymbolFactory().newSymbol("VCASO",36, ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), ((java_cup.runtime.Symbol)CUP$SintacticoH$stack.peek()), RESULT);
             }
           return CUP$SintacticoH$result;

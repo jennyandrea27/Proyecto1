@@ -89,13 +89,9 @@ public class MemoriaHaskell {
             Nodo fun=MemoriaHaskell.buscarFun(sent.getValor(), par_llamado);
             if(fun!=null){
                 //ejecutar sentencias de la funcion
-                if(TS.cont_ambito>0){                    
-                    TS.cont_ambito++;
-                }                
-                Ambito fun_llamado=new Ambito(-1, TS.cont_ambito);
-                TS.lista_ambitos.add(fun_llamado);
+                TS.insertarAmbito(-1);
                 //agregar variables al ambito de la funcion que viene en parametros
-                Nodo l_par_fun = fun.hijos.get(0);
+                Nodo l_par_fun = fun.hijos.get(0);                
                 for (int i = 0; i < l_par_fun.hijos.size(); i++)
                 {
                     String nombre = l_par_fun.hijos.get(i).getValor();
@@ -117,8 +113,8 @@ public class MemoriaHaskell {
                         }
                     }
                 }            
-                res=RecorridoHT.ejecutarCuerpo(fun.hijos.get(1));                
-                TS.eliminarAmbito();
+                res=RecorridoHT.ejecutarCuerpo(fun.hijos.get(1));                        
+                TS.eliminarAmbito();                
             }else{
                 res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido declarada.");
             }

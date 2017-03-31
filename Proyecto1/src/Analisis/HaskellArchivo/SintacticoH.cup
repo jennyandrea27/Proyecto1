@@ -189,7 +189,7 @@ EXP ::= EXP:op1 suma EXP:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,o
              | PRODUCT:product{:RESULT = product;:}
              | LENGTH:length{:RESULT = length;:}
              | LLAMADO:llamado{:RESULT = llamado;:}
-             | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");:}
+             | num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tdecimal+"");:}
              | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:}
              | id:id{:RESULT = Fabrica.crearNodoHoja(Constante.id,id);:}             ;
 
@@ -226,7 +226,7 @@ OPLENGUAJE ::= SUCC:succ{:RESULT = succ;:}
                                | MIN:min{:RESULT = min;:}
                                | MAX:max{:RESULT = max;:};
 
-VCASO ::= num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tnum+"");:}
+VCASO ::= num:num {:RESULT = Fabrica.crearNodoHoja(Constante.num,num,Constante.tdecimal+"");:}
                     | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:};
 
 LCASOS ::= LCASOS:lcasos CASOS:caso{:RESULT = Fabrica.insertarCaso(lcasos,caso);:}
