@@ -80,6 +80,9 @@ public class Constante {
     public static final String acceso="acceso"; 
     public static final String lcasos="lcasos"; 
     public static final String encabezado="encabezado"; 
+    public static final String llave="llave"; 
+    public static final String l_llave="l_llave";     
+    public static final String arr="arr";     
     public static final int publico=0; 
     public static final int protegido=1; 
     public static final int  privado=2; 

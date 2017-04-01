@@ -389,4 +389,40 @@ public class Fabrica {
         }
         return para;
     }
+    public static Nodo crearNodoL_Llave(Nodo llave){
+        Nodo l_llave=new Nodo(Constante.l_llave);        
+        if(llave!=null){
+            l_llave.insertarHijo(llave);
+        }
+        return l_llave;
+    }
+    public static Nodo insertarLlave(Nodo l_llave, Nodo llave){
+        if(llave!=null){
+            l_llave.insertarHijo(llave);            
+        }
+        return l_llave;
+    }
+    public static Nodo crearNodoL_Corchete(Nodo corchete){
+        Nodo l_corchete=new Nodo(Constante.dim);        
+        if(corchete!=null){
+            l_corchete.insertarHijo(corchete);
+        }
+        return l_corchete;
+    }
+    public static Nodo insertarCorchete(Nodo l_corchete, Nodo corchete){
+        if(corchete!=null){
+            l_corchete.insertarHijo(corchete);            
+        }
+        return l_corchete;
+    }
+    public static Nodo crearNodoArr(Nodo corchetes,Nodo l_llave){
+        Nodo arr=new Nodo(Constante.arr);
+        if(corchetes!=null){
+            arr.insertarHijo(corchetes);
+        }
+        if(l_llave!=null){
+            arr.insertarHijo(l_llave);
+        }
+        return arr;
+    }
 }

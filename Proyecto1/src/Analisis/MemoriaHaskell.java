@@ -47,20 +47,21 @@ public class MemoriaHaskell {
             Nodo fun=MemoriaHaskell.buscarFun(sent.getValor(), par_llamado);
             if(fun!=null){
                 //agregar ambito de llamado como global
-                TS.cont_ambito++;
-                Ambito fun_llamado=new Ambito(-1, TS.cont_ambito);
-                TS.lista_ambitos.add(fun_llamado);
+                TS.insertarAmbito(-1);
                 //agregar variables al ambito de la funcion que viene en parametros
                 Nodo l_par_fun = fun.hijos.get(0);
                 for (int i = 0; i < l_par_fun.hijos.size(); i++)
                 {
-                    String nombre = l_par_fun.hijos.get(i).getValor();
+                    String nombre = l_par_fun.hijos.get(i).getValor();                    
                     int tipo = par_llamado.get(i).getTipo();
+                    if(tipo==Constante.tnum){
+                        tipo=Constante.tdecimal;
+                    }
                     String valor = par_llamado.get(i).getValor();
                     NodoTS par = new NodoTS(nombre, tipo, valor);
                     if(par_llamado.get(i).getTipo()==Constante.tid){
                         res=new Valor(Constante.terror, "Error semantico, funcion de haskell no permite tipo ALS como parametros.");                        
-                    }else{                        
+                    }else{                                                
                         TS.insertarVariable(par);
                     }
                 }            
@@ -71,7 +72,7 @@ public class MemoriaHaskell {
                 res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido declarada.");
             }
         }else{
-            res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido incluida a archivo Graohik.");
+            res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido incluida a archivo Graphik.");
         }
         return res;
     }

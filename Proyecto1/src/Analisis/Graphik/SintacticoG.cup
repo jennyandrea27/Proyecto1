@@ -32,7 +32,7 @@ terminal String imprimir, pregc, dospuntos, igual, llavea, llavec, masmas, menos
 terminal String mayor, menor, igualacion, distinto, o, y, xor, not, punto, corchetea, corchetec,  decimal, num, cadena, id,caracter;
 terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, publico, protegido, privado,coma,verdadero, falso;
 
-nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
+nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA,LEXP;
 nonterminal Nodo DECLARACION, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
 nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
 nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO,EXP2,EXP3,ID;
@@ -108,13 +108,16 @@ IDL ::= IDL:idl coma id:id VISIBILIDAD:visibilidad
                 RESULT = Fabrica.crearNodoIDL(id1);
                 :};
 ASIG ::= igual VALASIG:valasig{:RESULT = valasig;:}
-              | ARR ASIGARR{:RESULT = null;:}; //->>>>>>>>>>>>>>>>>>>>>>>>>>> ASIGNACION DE ARREGLO
-ASIGARR ::= igual LLLAVE
+              | ARR:arr ASIGARR:asig{:RESULT = Fabrica.crearNodoArr(arr,asig);:}; 
+ARR ::= ARR:arr corchetea EXP:exp corchetec{:RESULT = Fabrica.insertarCorchete(arr,exp);:}                
+                |corchetea EXP:exp corchetec{:RESULT=Fabrica.crearNodoL_Corchete(exp);:};
+
+ASIGARR ::= igual LLAVE:llave{:RESULT = llave;:}
                       | ;
-LLLAVE ::= LLLAVE coma llavea LLAVE llavec
-                     | llavea LLAVE llavec;                     
-LLAVE ::= LLLAVE
-                    | LPFUN;
+LLAVE ::= llavea LLLAVE:lllave llavec{:RESULT = lllave;:}
+                     | llavea LPFUN:lpfun llavec{:RESULT = lpfun;:};                     
+LLLAVE ::= LLLAVE:lllave coma LLAVE:llave{:RESULT = RESULT=Fabrica.insertarLlave(lllave,llave);:}
+                    | LLAVE:llave{:RESULT = Fabrica.crearNodoL_Llave(llave);:};
 VALASIG ::= EXP:exp{:RESULT = exp;:}
                        | nuevo id:id parentesisa parentesisc {:RESULT = Fabrica.crearNodoNuevo(id);:};
 LID ::= LID:lid punto ID:id
@@ -194,9 +197,7 @@ OPPARA ::= masmas{:RESULT = Constante.suma;:}
                      | menosmenos{:RESULT = Constante.resta;:};
 MIENTRAS ::= mientras parentesisa EXP:exp parentesisc llavea CUERPO:cuerpo llavec{:RESULT = Fabrica.crearNodoMientras(Constante.mientras,exp,cuerpo);:};
 HACERMIENTRAS ::= hacer llavea CUERPO:cuerpo llavec mientras parentesisa EXP:exp parentesisc{:RESULT = Fabrica.crearNodoMientras(Constante.hacermientras,exp,cuerpo);:};
-ARR ::= ARR DIM
-             | DIM;
-DIM ::= corchetea EXP corchetec;
+
 EXP ::= EXP:op1 o EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.o,op1,op2);:}   
              | EXP:op1 y EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.y,op1,op2);:}   
              | EXP:op1 xor EXP:op2 {:RESULT=Fabrica.crearNodoOperacion(Constante.xor,op1,op2);:}                

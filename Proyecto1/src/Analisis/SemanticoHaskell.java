@@ -552,7 +552,7 @@ public class SemanticoHaskell {
                     }
                 }
             }else{
-                res=new Valor(Constante.terror, "Error semantico, ");
+                res=new Valor(Constante.terror, "Error semantico, no coinciden los tipos a comparar en Case-Haskell.");
             }       
         }
         TS.eliminarAmbito();
