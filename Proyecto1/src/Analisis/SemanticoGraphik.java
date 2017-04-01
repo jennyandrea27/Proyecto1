@@ -584,6 +584,61 @@ public class SemanticoGraphik {
         }
         return res;        
     }    
+
+    public static NodoTS asigArr(NodoTS arr,Nodo asig) {        
+        Nodo dimensiones=asig.hijos.get(0);
+        int total_dim=dimensiones.hijos.size();
+        int total_datos=1;
+        Nodo valores=asig.hijos.get(1);
+        //agregar dimensiones a NodoTS
+        for(Nodo dim:dimensiones.hijos){
+            Valor d=evaluarEXP(dim);
+            if(d.getTipo()==Constante.tnum){
+                arr.dimensiones.add(Integer.parseInt(d.getValor()));
+                total_datos*=Integer.parseInt(d.getValor());
+            }else{
+                TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(d.getTipo())+" en dimension del arreglo "+arr.getNombre()+".", total_dim, total_dim);
+            }
+        }
+        //metodo que verifica que las dimensiones coincidan con los elementos ingresados
+        boolean ingresar=valoresArreglo(arr,valores,total_dim-1);
+        if(!ingresar){
+            arr.valores.clear();
+            for(int i=0;i<total_datos;i++){
+                Valor v=new Valor(arr.getTipo(), null);
+                arr.valores.add(v);
+            }
+        }
+        
+        return arr;
+    }
+    public static boolean  valoresArreglo(NodoTS arreglo,Nodo valores,int dim){
+        boolean b=true;
+        if(arreglo.dimensiones.get(dim) == valores.hijos.size()){
+            //coincide dimension
+            if(valores.getNombre().equals(Constante.lpar)){
+                for(Nodo v:valores.hijos){
+                    Valor val=evaluarEXP(v);
+                    Valor val_casteo=Casteo.Asignacion(arreglo.getTipo(), val, "");
+                    if(val_casteo.getTipo()==Constante.terror){
+                        TablaErrores.insertarError("Error semantico, el arreglo "+arreglo.getValor()+" fue declarado de tipo "+Casteo.valTipo(arreglo.getTipo()),4 , 4);
+                        b=false;                        
+                    }else{
+                        arreglo.valores.add(val);                        
+                    }                    
+                }
+            }else{
+                //se manda recursion
+                for(Nodo v:valores.hijos){                    
+                    b=valoresArreglo(arreglo,v,dim-1);
+                }
+            }            
+        }else{
+            TablaErrores.insertarError("Error semantico, las dimensiones declaradas del arreglo "+arreglo.getNombre()+" no coinciden con los datos ingresados.", dim, dim);
+            b=false;
+        }
+        return b;
+    }
     
     
 }

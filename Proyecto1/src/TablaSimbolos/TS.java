@@ -65,6 +65,24 @@ public class TS {
                     if (busqueda == null)
                         lista_ambitos.get(cont_ambito).insertarVariable(variable);
                 }
+            }if(dec.hijos.get(1).getNombre().equals(Constante.arr)){
+                //es una declaracion de arreglo
+                Nodo arr=dec.hijos.get(1);
+                if(arr.hijos.size()==2){
+                    //crear variable
+                    NodoTS var=new NodoTS(dec.hijos.get(0).getValor(), dec.hijos.get(0).getTipo(), "");
+                    var.dimensiones=new LinkedList<>();
+                    var.valores=new LinkedList<>();
+                    //tiene lista de llaves
+                    NodoTS arreglo =SemanticoGraphik.asigArr(var,arr);
+                    if(arreglo.getTipo()==Constante.terror){
+                        TablaErrores.insertarError(arreglo.getValor(), 4, 4);
+                    }else{                        
+                        TS.insertarVariable(var);
+                    }
+                }else{
+                    //no tiene asignacion
+                }
             }else{
                 //si tiene valor inicial
                 //verificar si es objeto o variable
