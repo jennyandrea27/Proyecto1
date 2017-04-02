@@ -113,7 +113,7 @@ ARR ::= ARR:arr corchetea EXP:exp corchetec{:RESULT = Fabrica.insertarCorchete(a
                 |corchetea EXP:exp corchetec{:RESULT=Fabrica.crearNodoL_Corchete(exp);:};
 
 ASIGARR ::= igual LLAVE:llave{:RESULT = llave;:}
-                      | ;
+                      | {:RESULT = Fabrica.crearNodoL_Llave(null);:};
 LLAVE ::= llavea LLLAVE:lllave llavec{:RESULT = lllave;:}
                      | llavea LPFUN:lpfun llavec{:RESULT = lpfun;:};                     
 LLLAVE ::= LLLAVE:lllave coma LLAVE:llave{:RESULT = RESULT=Fabrica.insertarLlave(lllave,llave);:}
@@ -217,7 +217,7 @@ EXP3::=EXP3:op1 suma EXP3:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,
              | cadena:cadena {:RESULT = Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena+"");:}
              | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:}
              | LID:lid{:RESULT = lid;:}
-             | LID ARR
+             | LID:lid ARR:arr{:RESULT =lid;RESULT.insertarHijo(arr);:}
              | decimal:dec{:RESULT = Fabrica.crearNodoHoja(Constante.decimal,dec,Constante.tdecimal+"");:}
              | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.verdadero,Constante.tbool+"");:}
              | falso:falso {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.falso,Constante.tbool+"");:};

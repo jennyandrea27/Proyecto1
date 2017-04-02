@@ -1271,7 +1271,7 @@ class CUP$SintacticoG$actions {
           case 38: // ASIGARR ::= 
             {
               Nodo RESULT =null;
-
+		RESULT = Fabrica.crearNodoL_Llave(null);
               CUP$SintacticoG$result = parser.getSymbolFactory().newSymbol("ASIGARR",15, ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.peek()), RESULT);
             }
           return CUP$SintacticoG$result;
@@ -2184,7 +2184,13 @@ class CUP$SintacticoG$actions {
           case 106: // EXP3 ::= LID ARR 
             {
               Nodo RESULT =null;
-
+		int lidleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).left;
+		int lidright = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).right;
+		Nodo lid = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).value;
+		int arrleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.peek()).left;
+		int arrright = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.peek()).right;
+		Nodo arr = (Nodo)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.peek()).value;
+		RESULT =lid;RESULT.insertarHijo(arr);
               CUP$SintacticoG$result = parser.getSymbolFactory().newSymbol("EXP3",47, ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)), ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.peek()), RESULT);
             }
           return CUP$SintacticoG$result;

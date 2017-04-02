@@ -21,6 +21,7 @@ public class TS {
         public static void AmbitoGlobal(Nodo als)
         {
             lista_ambitos.clear();
+            cont_ambito=-1;
             insertarAmbito(-1);
             Ambito clase_inicio=lista_ambitos.get(0);
             Nodo cuerpo=als.hijos.get(1);            
@@ -65,7 +66,7 @@ public class TS {
                     if (busqueda == null)
                         lista_ambitos.get(cont_ambito).insertarVariable(variable);
                 }
-            }if(dec.hijos.get(1).getNombre().equals(Constante.arr)){
+            }else if(dec.hijos.get(1).getNombre().equals(Constante.arr)){
                 //es una declaracion de arreglo
                 Nodo arr=dec.hijos.get(1);
                 if(arr.hijos.size()==2){
@@ -237,6 +238,18 @@ public class TS {
             s+="Ambito "+a.getAmbito_Actual()+" Padre: "+a.getAmbito_Padre()+"\n";
             for(NodoTS n:a.variables){
                 s+="---> Variable "+n.getNombre()+" Valor: "+n.getValor()+" Tipo: "+n.getTipo()+" Tals: "+n.getTals()+"\n";
+                if(n.dimensiones!=null){
+                    s+="------> Dimensiones: [ ";
+                    for(int i=0;i<n.dimensiones.size();i++){
+                        s+=n.dimensiones.get(i)+" ";
+                    }
+                    s+="]\n";
+                    s+="------> Valores: ";
+                    for(Valor v:n.valores){
+                        s+=v.getValor()+" ";
+                    }
+                    s+="\n";
+                }                
                 if(n.ambito!=null){
                     s+=recorrerListaAmbitos(n.ambito,1);
                 }

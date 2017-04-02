@@ -20,6 +20,7 @@ import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import proyecto1.FormInicio;
 
@@ -125,14 +126,19 @@ public class SemanticoGraphik {
                     res=Casteo.xor(op1,op2);   
                  break;
            case Constante.lid:
-               if(op.hijos.get(op.hijos.size()-1).hijos.size()==0){
+               if(op.hijos.get(op.hijos.size()-1).hijos.size()==0 || op.hijos.get(op.hijos.size()-1).getNombre().equals(Constante.dim)){
                     NodoTS lid=accederLID(op);
                     if(lid!=null){
-                        res=new Valor(lid.getTipo(),lid.getValor());
-                         if(lid.getTipo()== Constante.tid){
-                             res.setTals(lid.getTals());
-                             res.ambito=(Ambito)lid.ambito;
-                         }
+                        if(op.hijos.get(op.hijos.size()-1).getNombre().equals(Constante.dim)){
+                            int pos=mapeo(lid,op.hijos.get(op.hijos.size()-1));
+                            res=new Valor(lid.getTipo(),lid.valores.get(pos).getValor());
+                        }else{                            
+                            res=new Valor(lid.getTipo(),lid.getValor());
+                             if(lid.getTipo()== Constante.tid){
+                                 res.setTals(lid.getTals());
+                                 res.ambito=(Ambito)lid.ambito;
+                             }
+                        }
                     }else{
                         String er="";
                         for(Nodo n:op.hijos){
@@ -232,10 +238,16 @@ public class SemanticoGraphik {
                             TablaErrores.insertarError(valor2.getValor(), 1, 1);
                         else
                         {
-                           acceso.setValor(valor2.getValor());
-                            if(valor.getTipo()==Constante.tid){
-                                acceso.setTals(valor.getTals());
-                                acceso.ambito=(Ambito)valor.ambito;
+                            if(asig.hijos.size()==3){
+                                //es asignaciona una posicion del arreglo
+                                int pos=mapeo(acceso,asig.hijos.get(2));
+                                acceso.valores.get(pos).setValor(valor2.getValor());
+                            }else{                                
+                                acceso.setValor(valor2.getValor());
+                                 if(valor.getTipo()==Constante.tid){
+                                     acceso.setTals(valor.getTals());
+                                     acceso.ambito=(Ambito)valor.ambito;
+                                 }
                             }
 
                         }
@@ -281,7 +293,7 @@ public class SemanticoGraphik {
             //es una variable            
             variable=TS.buscarVar(nombre, TS.cont_ambito);            
         }
-        while(cont < lid.hijos.size() && !salir){            
+        while(cont < lid.hijos.size() && !salir && !(lid.hijos.get(cont).getNombre().equals(Constante.dim))){            
             if(variable!=null){                                
                 //verficar si variable es tipo id
                 if(variable.getTipo() == Constante.tid){
@@ -599,22 +611,30 @@ public class SemanticoGraphik {
             }else{
                 TablaErrores.insertarError("Error semantico, no puede evaluarse "+Casteo.valTipo(d.getTipo())+" en dimension del arreglo "+arr.getNombre()+".", total_dim, total_dim);
             }
-        }
-        //metodo que verifica que las dimensiones coincidan con los elementos ingresados
-        boolean ingresar=valoresArreglo(arr,valores,total_dim-1);
-        if(!ingresar){
-            arr.valores.clear();
+        }               
+        if(valores.hijos.size()==0){
+            //no tiene valores, se inicializan en null
+            arr.valores.clear();            
             for(int i=0;i<total_datos;i++){
                 Valor v=new Valor(arr.getTipo(), null);
                 arr.valores.add(v);
             }
+        }else{            
+            boolean ingresar=valoresArreglo(arr,valores,0);
+            if(!ingresar){
+                arr.valores.clear();
+                for(int i=0;i<total_datos;i++){
+                    Valor v=new Valor(arr.getTipo(), null);
+                    arr.valores.add(v);
+                }
+            }
         }
-        
+        //metodo que verifica que las dimensiones coincidan con los elementos ingresados        
         return arr;
     }
     public static boolean  valoresArreglo(NodoTS arreglo,Nodo valores,int dim){
         boolean b=true;
-        if(arreglo.dimensiones.get(dim) == valores.hijos.size()){
+        if(dim<arreglo.dimensiones.size() &&arreglo.dimensiones.get(dim) == valores.hijos.size()){
             //coincide dimension
             if(valores.getNombre().equals(Constante.lpar)){
                 for(Nodo v:valores.hijos){
@@ -624,13 +644,14 @@ public class SemanticoGraphik {
                         TablaErrores.insertarError("Error semantico, el arreglo "+arreglo.getValor()+" fue declarado de tipo "+Casteo.valTipo(arreglo.getTipo()),4 , 4);
                         b=false;                        
                     }else{
-                        arreglo.valores.add(val);                        
-                    }                    
+                        arreglo.valores.add(val);                                                
+                    }                                        
                 }
             }else{
                 //se manda recursion
+                
                 for(Nodo v:valores.hijos){                    
-                    b=valoresArreglo(arreglo,v,dim-1);
+                    b=valoresArreglo(arreglo,v,dim+1);                    
                 }
             }            
         }else{
@@ -639,6 +660,21 @@ public class SemanticoGraphik {
         }
         return b;
     }
-    
+public static int mapeo(NodoTS v1,Nodo dimensiones)    {
+    LinkedList<Integer> indices=new LinkedList<>();
+    for(int i=0;i<dimensiones.hijos.size();i++){
+        indices.add(Integer.parseInt(dimensiones.hijos.get(i).getValor()));
+    }
+    int pos_dato=0;
+    for(int i=0;i<indices.size();i++){
+        int ind=indices.get(i);
+        int dim=1;
+        for(int j=i+1;j<v1.dimensiones.size();j++){
+            dim=dim*v1.dimensiones.get(j);
+        }
+        pos_dato+=ind*dim;
+    }       
+    return pos_dato;
+}
     
 }
