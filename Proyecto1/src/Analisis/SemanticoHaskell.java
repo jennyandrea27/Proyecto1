@@ -387,6 +387,101 @@ public class SemanticoHaskell {
         res=new Valor(Constante.tdecimal,m+"");
         return res;
     }
+    public static Valor min(Nodo min) {
+        Nodo lasig=min.hijos.get(0);
+        Valor res=new Valor();
+        double m=0;
+        if(lasig.getNombre().equals(Constante.lasig)){
+            res=min_lista(lasig);
+        }else{
+            //es un id de un arreglo ya declarado
+            //buscar variable en ambito
+            NodoTS var=TSH.buscarVar(lasig.hijos.get(0).getValor(), TSH.cont_ambito);
+            if(var!=null){
+                if(var.dimensiones.size()==1){
+                    //es de una dimension
+                    for(Valor v:var.valores){
+                        double actual=0;
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            actual=Double.parseDouble(v.getValor());
+                        }
+                        if(actual<m){
+                            m=actual;
+                        }
+                    }
+                }else{
+                    //es de dos dimensiones
+                    for(Valor d:var.valores){
+                    //por cada hijo se crea una dimension                        
+                        for(Valor v:d.valores){
+                            double actual=0;
+                            if(v.getTipo()==Constante.tcaracter){                            
+                                actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            }else{                            
+                                actual=Double.parseDouble(v.getValor());
+                            }
+                            if(actual<m){
+                                m=actual;
+                            }
+                        }                        
+                    }            
+                }                
+                res=new Valor(Constante.tdecimal,m+"");
+            }else{
+                //la variable no existe
+                res=new Valor(Constante.terror,"Error semantic, la lista "+lasig.hijos.get(0).getValor()+" no ha sido declarada.");                
+            }            
+        }        
+        return res;
+    }
+    public static Valor min_lista(Nodo lasig){
+        double m=1;
+        Valor res=new Valor();
+        if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
+            //tiene dos dimensiones
+            for(Nodo asig:lasig.hijos){
+                //por cada hijo se crea una dimension
+                Valor dimension=lista_asig(asig);
+                if(dimension.getTipo()!= Constante.terror){
+                    for(Valor v:dimension.valores){
+                        double actual=0;
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            actual=Double.parseDouble(v.getValor());
+                        }
+                        if(actual<m){
+                            m=actual;
+                        }
+                    }
+                }                
+            }            
+        }else{
+            //tiene una dimension
+            Valor dimension=lista_asig(lasig);
+            //verificar si no se encontro un error
+            if(dimension.getTipo()==Constante.terror){
+                TablaErrores.insertarError(dimension.getValor(), 1, 1);                
+            }else{
+                //sumar cada valor que trae la dimension
+                for(Valor v:dimension.valores){
+                    double actual=0;
+                        if(v.getTipo()==Constante.tcaracter){                            
+                            actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                        }else{                            
+                            actual=Double.parseDouble(v.getValor());
+                        }
+                        if(actual<m){
+                            m=actual;
+                        }
+                }
+            }
+        }
+        res=new Valor(Constante.tdecimal,m+"");
+        return res;
+    }
     public static Valor length(Nodo length) {
         Nodo lasig=length.hijos.get(0);
         Valor res=new Valor();

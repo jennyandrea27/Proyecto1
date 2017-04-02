@@ -80,6 +80,9 @@ public class RecorridoHT {
             case Constante.max:
                 res=SemanticoHaskell.max(r);
                 break;
+            case Constante.min:
+                res=SemanticoHaskell.min(r);
+                break;
            case Constante.length:
                 res=SemanticoHaskell.length(r);
                 break;      

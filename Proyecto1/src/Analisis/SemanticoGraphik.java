@@ -17,17 +17,30 @@ import static TablaSimbolos.TS.lista_ambitos;
 import static TablaSimbolos.TS.nuevoALS;
 import TablaSimbolos.TSH;
 import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import javax.swing.JFrame;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 import proyecto1.FormInicio;
 
 /**
  *
  * @author Jenny
  */
+
 public class SemanticoGraphik {
     public static Valor evaluarEXP(Nodo op){
         Valor res=new Valor();
@@ -664,6 +677,10 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
     LinkedList<Integer> indices=new LinkedList<>();
     for(int i=0;i<dimensiones.hijos.size();i++){
         indices.add(Integer.parseInt(dimensiones.hijos.get(i).getValor()));
+        if(indices.get(i) > v1.dimensiones.get(i)){
+            TablaErrores.insertarError("Error sematico, el indice "+indices.get(i)+" se encuentra fuera de rango en la dimension "+v1.dimensiones.get(i)+" del arreglo "+v1.getNombre(), i, i);
+            return 0;
+        }
     }
     int pos_dato=0;
     for(int i=0;i<indices.size();i++){
@@ -676,5 +693,51 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
     }       
     return pos_dato;
 }
+
+    static void graphikar(Nodo sent) {
+        NodoTS arr1=accederLID(sent.hijos.get(0));
+        NodoTS arr2=accederLID(sent.hijos.get(1));
+        if(arr1.dimensiones!=null && arr2.dimensiones!=null){
+            if(arr1.dimensiones.size()==1 && arr2.dimensiones.size()==1){
+                if(arr1.valores.size()==arr2.valores.size()){
+                    XYSeries graph = new XYSeries("Graphikar_Funcion "+arr1.getNombre()+" - "+arr2.getNombre());
+                    for(int i=0;i<arr1.valores.size();i++){
+                        double x=Double.parseDouble(arr1.valores.get(i).getValor());
+                        double y=Double.parseDouble(arr2.valores.get(i).getValor());
+                        graph.add(x, y);                    
+                    }                    
+                    XYSeriesCollection dataset = new XYSeriesCollection();
+                    dataset.addSeries(graph);             
+                    JFreeChart xylineChart = ChartFactory.createXYLineChart(
+                                    "Graphikar_Funcion "+arr1.getNombre()+" - "+arr2.getNombre(),
+                                    "Eje X",
+                                    "Eje Y",
+                                    dataset,
+                                    PlotOrientation.VERTICAL, true, true, false);
+                    XYPlot plot = xylineChart.getXYPlot();               
+                    XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+                    renderer.setSeriesPaint(0, Color.GREEN);                
+                    renderer.setSeriesStroke(0, new BasicStroke(1.5f));                
+                    plot.setRenderer(renderer);               
+                    ChartPanel panel = new ChartPanel(xylineChart); 
+                    //ventana
+                    JFrame ventana = new JFrame("Graphikar_Funcion");
+                    ventana.setVisible(true);
+                    ventana.setSize(800, 600);
+                    ventana.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                    ventana.add(panel);                    
+                }else{                    
+                    TablaErrores.insertarError("Error semantico, los arreglos en funcion Graphikar no tiene la misma cantidad de valores.", cont_ambito, cont_ambito);
+                }
+            }else{                
+                TablaErrores.insertarError("Error semantico, la funcion Graphikar requiere arreglos de una dimension como parametros.", cont_ambito, cont_ambito);
+            }
+        }else{
+            TablaErrores.insertarError("Error semantico, la funcion Graphikar requiere arreglos como parametros.", cont_ambito, cont_ambito);
+        }
+        
+    }
+
+    
     
 }

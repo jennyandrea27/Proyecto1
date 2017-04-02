@@ -29,12 +29,12 @@ import javax.swing.JOptionPane;
  * @author Jenny
  */
 public class FormInicio extends javax.swing.JFrame {
-    public static String texto_salida="";
+    public static String texto_salida="";    
     /**
      * Creates new form FormInicio
      */
     public FormInicio() {
-        initComponents();
+        initComponents();                
     }
 
     /**
@@ -81,7 +81,7 @@ public class FormInicio extends javax.swing.JFrame {
         tbArchivo.setColumns(20);
         tbArchivo.setFont(new java.awt.Font("Monospaced", 0, 20)); // NOI18N
         tbArchivo.setRows(5);
-        tbArchivo.setText("importar Nodo.gk?\nincluir_HK FormCuadraticaPositiva?\nincluir_HK FormCuadraticaNegativa?\nincluir_HK Permutacion?\nincluir_HK FuncionPolinomial1?\n\nALS obj1 : publico {\nvar entero c,b,d?\nvar Nodo a:publico=nuevo Nodo()?\n\tvacio inicio(){\n\ta.nombre = 4?\n\tvar entero arr1[2][5]={{1,2,3,4,5},{6,7,8,9,10}}?\n\ta.nombre=arr1[0][0]?\n\t}\n\n\tcadena FormCuadraticaPositiva(){\n\ta = (5*2)^2 - 4?\n\tvar entero b = 3?\n\tvar entero c = 8?\n\n\tretornar \"Primer función ejecutada con éxito\"?\n\t}\n\n\tcadena FormCuadraticaNegativa():privado{\n\tvar decimal arreglo[3] = {96, 3, 8}?\n\t\n\tretornar \"Segunda función ejecutada con éxito\"?\n\t}\n\n\tvacio FuncionPolinomial1(entero valor_entrada){\n\tvar entero arreglo[5]?\n\tvar entero i?\n\tPara(i=0: i<5: i++){\n\n\timprimir(\"polinomial: \" + i)?\n\t}\n\t}\n\n\tentero Permutacion_gk(entero n, entero r){\n\tMientras(r>0){\n\tsi(r == n){\n\t\tretornar n?\n\t\t\n\t}\n\timprimir(r)?\n\tr=r - 1?\n\t}\n\t}\n\n\tNodo creacion_nodos(){\n\tvar Nodo nod1 = nuevo Nodo()?\n\tnod1.nombre = \"primero\"?\n\tnod1.numero = 1?\n\tretornar nod1?\n\t}\n}\nALS Nodo : publico{\n\tvar cadena nombre : publico = \"\"?\n\tvar entero numero :publico = 0?\n\tvar bool bandera : publico = verdadero?\n\tvar Nodo2 n=nuevo Nodo2()?\n\tbool cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\tretornar bandera?\n\t}\n}\nALS Nodo2 : publico{\n\tvar cadena nombre2 : publico = \"\"?\n\tvar entero numero2 :publico = 2?\n\tvar bool bandera2 : publico = falso?\n\tvacio cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\t}\n}\n");
+        tbArchivo.setText("importar Nodo.gk?\nincluir_HK FormCuadraticaPositiva?\nincluir_HK FormCuadraticaNegativa?\nincluir_HK Permutacion?\nincluir_HK FuncionPolinomial1?\n\nALS obj1 : publico {\nvar entero c,b,d?\nvar Nodo a:publico=nuevo Nodo()?\n\tvacio inicio(){\n\ta.nombre = 4?\n\tvar entero arr1[5]={1,2,3,4,5}?\n\tgraphikar_funcion(arr1,arr1)?\n\t}\n\n\tcadena FormCuadraticaPositiva(){\n\ta = (5*2)^2 - 4?\n\tvar entero b = 3?\n\tvar entero c = 8?\n\n\tretornar \"Primer función ejecutada con éxito\"?\n\t}\n\n\tcadena FormCuadraticaNegativa():privado{\n\tvar decimal arreglo[3] = {96, 3, 8}?\n\t\n\tretornar \"Segunda función ejecutada con éxito\"?\n\t}\n\n\tvacio FuncionPolinomial1(entero valor_entrada){\n\tvar entero arreglo[5]?\n\tvar entero i?\n\tPara(i=0: i<5: i++){\n\n\timprimir(\"polinomial: \" + i)?\n\t}\n\t}\n\n\tentero Permutacion_gk(entero n, entero r){\n\tMientras(r>0){\n\tsi(r == n){\n\t\tretornar n?\n\t\t\n\t}\n\timprimir(r)?\n\tr=r - 1?\n\t}\n\t}\n\n\tNodo creacion_nodos(){\n\tvar Nodo nod1 = nuevo Nodo()?\n\tnod1.nombre = \"primero\"?\n\tnod1.numero = 1?\n\tretornar nod1?\n\t}\n}\nALS Nodo : publico{\n\tvar cadena nombre : publico = \"\"?\n\tvar entero numero :publico = 0?\n\tvar bool bandera : publico = verdadero?\n\tvar Nodo2 n=nuevo Nodo2()?\n\tbool cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\tretornar bandera?\n\t}\n}\nALS Nodo2 : publico{\n\tvar cadena nombre2 : publico = \"\"?\n\tvar entero numero2 :publico = 2?\n\tvar bool bandera2 : publico = falso?\n\tvacio cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\t}\n}\n");
         jScrollPane2.setViewportView(tbArchivo);
 
         tpPestanas.addTab("tab1", jScrollPane2);

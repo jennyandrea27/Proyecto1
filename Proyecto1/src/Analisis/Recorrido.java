@@ -211,6 +211,9 @@ public class Recorrido {
                                 TablaErrores.insertarError(res.getValor(), 1, 1);
                             }
                             break;
+                        case Constante.graphikar:
+                            SemanticoGraphik.graphikar(sent);
+                            break;
                     }
                 }
             return res;
