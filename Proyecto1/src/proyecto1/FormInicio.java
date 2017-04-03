@@ -13,16 +13,22 @@ import Analisis.MemoriaHaskell;
 import Analisis.Recorrido;
 import Analisis.RecorridoHT;
 import Analisis.SemanticoGraphik;
+import Analisis.Valor;
+import Extras.Constante;
 import Reportes.HTML;
 import Reportes.TablaErrores;
 import TablaSimbolos.*;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import java.util.LinkedList;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -30,6 +36,10 @@ import javax.swing.JOptionPane;
  */
 public class FormInicio extends javax.swing.JFrame {
     public static String texto_salida="";    
+    //para uso de funcion Datos
+    public static LinkedList <Dato> tabla_datos=new LinkedList<>();
+    public static int fila=0;
+    public static int col=0;
     /**
      * Creates new form FormInicio
      */
@@ -58,6 +68,7 @@ public class FormInicio extends javax.swing.JFrame {
         bImportar = new javax.swing.JButton();
         bCargarHK = new javax.swing.JButton();
         bCargarGK = new javax.swing.JButton();
+        bCargar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -81,7 +92,7 @@ public class FormInicio extends javax.swing.JFrame {
         tbArchivo.setColumns(20);
         tbArchivo.setFont(new java.awt.Font("Monospaced", 0, 20)); // NOI18N
         tbArchivo.setRows(5);
-        tbArchivo.setText("importar Nodo.gk?\nincluir_HK FormCuadraticaPositiva?\nincluir_HK FormCuadraticaNegativa?\nincluir_HK Permutacion?\nincluir_HK FuncionPolinomial1?\n\nALS obj1 : publico {\nvar entero c,b,d?\nvar Nodo a:publico=nuevo Nodo()?\n\tvacio inicio(){\n\ta.nombre = 4?\n\tvar entero arr1[5]={1,2,3,4,5}?\n\tgraphikar_funcion(arr1,arr1)?\n\t}\n\n\tcadena FormCuadraticaPositiva(){\n\ta = (5*2)^2 - 4?\n\tvar entero b = 3?\n\tvar entero c = 8?\n\n\tretornar \"Primer función ejecutada con éxito\"?\n\t}\n\n\tcadena FormCuadraticaNegativa():privado{\n\tvar decimal arreglo[3] = {96, 3, 8}?\n\t\n\tretornar \"Segunda función ejecutada con éxito\"?\n\t}\n\n\tvacio FuncionPolinomial1(entero valor_entrada){\n\tvar entero arreglo[5]?\n\tvar entero i?\n\tPara(i=0: i<5: i++){\n\n\timprimir(\"polinomial: \" + i)?\n\t}\n\t}\n\n\tentero Permutacion_gk(entero n, entero r){\n\tMientras(r>0){\n\tsi(r == n){\n\t\tretornar n?\n\t\t\n\t}\n\timprimir(r)?\n\tr=r - 1?\n\t}\n\t}\n\n\tNodo creacion_nodos(){\n\tvar Nodo nod1 = nuevo Nodo()?\n\tnod1.nombre = \"primero\"?\n\tnod1.numero = 1?\n\tretornar nod1?\n\t}\n}\nALS Nodo : publico{\n\tvar cadena nombre : publico = \"\"?\n\tvar entero numero :publico = 0?\n\tvar bool bandera : publico = verdadero?\n\tvar Nodo2 n=nuevo Nodo2()?\n\tbool cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\tretornar bandera?\n\t}\n}\nALS Nodo2 : publico{\n\tvar cadena nombre2 : publico = \"\"?\n\tvar entero numero2 :publico = 2?\n\tvar bool bandera2 : publico = falso?\n\tvacio cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\t}\n}\n");
+        tbArchivo.setText("importar Nodo.gk?\nincluir_HK FormCuadraticaPositiva?\nincluir_HK FormCuadraticaNegativa?\nincluir_HK Permutacion?\nincluir_HK FuncionPolinomial1?\n\nALS obj1 : publico {\nvar entero c,b,d?\nvar Nodo a:publico=nuevo Nodo()?\n\tvacio inicio(){\n\ta.nombre = 4?\n\tvar entero arr1[5]={1,2,3,4,5}?\n\tllamar Datos()?\n\t}\n\n\tvacio Datos(){\n\tProcesar = llamar suma(columna(2), columna(3))?\n\tDonde(1)=\"Guatemala\"?\n\t}\n\tentero suma(entero a,entero b){\n\tretornar a+b?\n\t}\n\tcadena FormCuadraticaPositiva(){\n\ta = (5*2)^2 - 4?\n\tvar entero b = 3?\n\tvar entero c = 8?\n\n\tretornar \"Primer función ejecutada con éxito\"?\n\t}\n\n\tcadena FormCuadraticaNegativa():privado{\n\tvar decimal arreglo[3] = {96, 3, 8}?\n\t\n\tretornar \"Segunda función ejecutada con éxito\"?\n\t}\n\n\tvacio FuncionPolinomial1(entero valor_entrada){\n\tvar entero arreglo[5]?\n\tvar entero i?\n\tPara(i=0: i<5: i++){\n\n\timprimir(\"polinomial: \" + i)?\n\t}\n\t}\n\n\tentero Permutacion_gk(entero n, entero r){\n\tMientras(r>0){\n\tsi(r == n){\n\t\tretornar n?\n\t\t\n\t}\n\timprimir(r)?\n\tr=r - 1?\n\t}\n\t}\n\n\tNodo creacion_nodos(){\n\tvar Nodo nod1 = nuevo Nodo()?\n\tnod1.nombre = \"primero\"?\n\tnod1.numero = 1?\n\tretornar nod1?\n\t}\n}\nALS Nodo : publico{\n\tvar cadena nombre : publico = \"\"?\n\tvar entero numero :publico = 0?\n\tvar bool bandera : publico = verdadero?\n\tvar Nodo2 n=nuevo Nodo2()?\n\tbool cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\tretornar bandera?\n\t}\n}\nALS Nodo2 : publico{\n\tvar cadena nombre2 : publico = \"\"?\n\tvar entero numero2 :publico = 2?\n\tvar bool bandera2 : publico = falso?\n\tvacio cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\t}\n}\n\n");
         jScrollPane2.setViewportView(tbArchivo);
 
         tpPestanas.addTab("tab1", jScrollPane2);
@@ -124,6 +135,7 @@ public class FormInicio extends javax.swing.JFrame {
         bPublicar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         bPublicar.setText("Publicar");
         bPublicar.setContentAreaFilled(false);
+        bPublicar.setEnabled(false);
         bPublicar.setOpaque(true);
         getContentPane().add(bPublicar);
         bPublicar.setBounds(952, 141, 139, 31);
@@ -132,6 +144,7 @@ public class FormInicio extends javax.swing.JFrame {
         bImportar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         bImportar.setText("Importar");
         bImportar.setContentAreaFilled(false);
+        bImportar.setEnabled(false);
         bImportar.setOpaque(true);
         getContentPane().add(bImportar);
         bImportar.setBounds(952, 190, 139, 31);
@@ -162,6 +175,18 @@ public class FormInicio extends javax.swing.JFrame {
         });
         getContentPane().add(bCargarGK);
         bCargarGK.setBounds(950, 410, 140, 31);
+
+        bCargar.setBackground(new java.awt.Color(0, 204, 204));
+        bCargar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        bCargar.setText("CSV");
+        bCargar.setPreferredSize(new java.awt.Dimension(139, 31));
+        bCargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCargarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bCargar);
+        bCargar.setBounds(950, 250, 140, 30);
 
         jLabel2.setBackground(new java.awt.Color(204, 255, 204));
         jLabel2.setOpaque(true);
@@ -324,6 +349,83 @@ public class FormInicio extends javax.swing.JFrame {
             }
     }//GEN-LAST:event_bCargarGKActionPerformed
 
+    private void bCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarActionPerformed
+        // TODO add your handling code here:
+        tabla_datos.clear();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // user selects a file
+            File arch = fileChooser.getSelectedFile();            
+            File archivo = new File(arch.getAbsolutePath());            
+          BufferedReader br = null;      
+          try {
+             br =new BufferedReader(new FileReader(arch.getAbsolutePath()));
+             String lineas = br.readLine();             
+             while (null!=lineas) {               
+                //fields = removeTrailingQuotes(fields);
+                //lineas contiene cada renglo que se reconocio en el archivo                
+                //campos tiene los datos que van en cada columna
+                lineas=lineas.replace("[", "");
+                lineas=lineas.replace("]", "");
+                lineas=lineas.replace("{", "");
+                lineas=lineas.replace("}", "");                
+                String [] campos=lineas.split(",");                
+                Dato dato=new Dato();
+                for(int i=0;i<campos.length;i++){
+                    Valor v=new Valor();
+                    String d=campos[i];                    
+                    while(d.charAt(0)==' '){
+                        d=d.substring(1,d.length());
+                    }
+                    while(d.charAt(d.length()-1)==' '){
+                        d=d.substring(0,d.length()-1);
+                    }
+                    try{
+                        int valor=Integer.parseInt(d);
+                        v=new Valor(Constante.tnum, valor+"");
+                    }catch(Exception e1){
+                        try{
+                            double valor=Double.parseDouble(d);
+                            v=new Valor(Constante.tdecimal, valor+"");
+                        }catch(Exception e2){                            
+                            if(d.contains("\"")){
+                                String valor=d.replace("\"", "");
+                                v=new Valor(Constante.tcadena, valor);
+                            }else{
+                                TablaErrores.insertarError("Error, archivo CSV solamente puede contener datos de tipo Entero, Decimal o Cadena.", i, NORMAL);
+                            }                            
+                        }
+                    }
+                    dato.columnas.add(v);
+                }
+                tabla_datos.add(dato);
+                lineas = br.readLine();                
+             }        
+          } catch (Exception e) {
+             System.err.println("Error! "+e.getMessage());
+          } finally {
+             if (null!=br){
+                try {
+                   br.close();
+                } catch (IOException e) {
+                   System.err.println("Error closing file !! "+e.getMessage());
+                }
+             }
+          }            
+        }
+        for(Dato d:tabla_datos){
+            System.out.println("Dato:");            
+            for(Valor v:d.columnas){
+                System.out.println("----->"+v.getValor()+" - "+v.getTipo());
+            }
+            System.out.println("\n");
+        }
+        texto_salida+="Archivo CSV cargado a memoria.";
+        tbSalida.setText(texto_salida);
+    }//GEN-LAST:event_bCargarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -360,6 +462,7 @@ public class FormInicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bCargar;
     private javax.swing.JButton bCargarGK;
     private javax.swing.JButton bCargarHK;
     private javax.swing.JButton bImportar;

@@ -61,6 +61,18 @@ public class Recorrido {
             }
             return null;
         }
+        public static Nodo buscarDatos(){
+            Nodo lals=buscarNodo(raiz,Constante.als);
+            for(Nodo als : lals.hijos){
+                Nodo cuerpo=als.hijos.get(1);
+                for(Nodo sent : cuerpo.hijos){
+                    if(sent.getValor().equals(Constante.datos)){
+                        return sent;
+                    }                   
+                }
+            }
+            return null;
+        }
         public static void recorrerInicio(Nodo raiz){
             //buscar lista de als
             Nodo lals=buscarNodo(raiz,Constante.als);
@@ -205,7 +217,7 @@ public class Recorrido {
                                 return res;
                             }
                             break;       
-                        case Constante.llamado:
+                        case Constante.llamado:                            
                             res=MemoriaHaskell.llamado(sent);
                             if(res.getTipo()==Constante.terror){
                                 TablaErrores.insertarError(res.getValor(), 1, 1);
@@ -213,9 +225,9 @@ public class Recorrido {
                             break;
                         case Constante.graphikar:
                             SemanticoGraphik.graphikar(sent);
-                            break;
+                            break;                            
                     }
-                }
+                }            
             return res;
         }        
 

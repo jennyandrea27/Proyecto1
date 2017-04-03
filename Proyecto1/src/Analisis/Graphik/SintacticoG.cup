@@ -32,10 +32,11 @@ terminal String imprimir, pregc, dospuntos, igual, llavea, llavec, masmas, menos
 terminal String mayor, menor, igualacion, distinto, o, y, xor, not, punto, corchetea, corchetec,  decimal, num, cadena, id,caracter;
 terminal String mayorigual, menorigual, dondetodo, donde, llamarhk, si, sino, publico, protegido, privado,coma,verdadero, falso;
 
-nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA,LEXP;
+nonterminal Nodo S,LENCABEZADO, ENC, LALS, ASIGNACION, IMPORTAR, HEREDA, CUERPOALS,ALS,SENTENCIA;
 nonterminal Nodo DECLARACION, ASIG, VALASIG, ARR,  ASIGARR, EXP, LID, DECFUN, DEC2,RETORNAR, SENTALS, POSTERIOR;
 nonterminal Nodo PDECFUN, LLAMADO, LPFUN, INICIO, INCLUIR, IDL, SI, SINO, CUERPO, SELECCION, LCASO, CASO,DEFECTO,GRAPHIKAR;
-nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, DIM, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO,EXP2,EXP3,ID;
+nonterminal Nodo PARA, VARPARA, MIENTRAS,HACERMIENTRAS, LLLAVE,LLAVE,IMPRIMIR,ENCABEZADO,EXP2,EXP3,ID;
+nonterminal Nodo DATOS,CDATOS, PROCESAR,DONDE;
 nonterminal String OPREL,OPPARA,TVAR,TFUN;
 nonterminal Integer VISIBILIDAD,TVISIBILIDAD;
 
@@ -88,7 +89,8 @@ CUERPOALS ::= CUERPOALS:cuerpo SENTALS:sent{:RESULT = Fabrica.insertarSentencia(
                          | SENTALS:sent{:RESULT = Fabrica.crearNodoCuerpo(sent);:};
 SENTALS ::= DECFUN:decfun{:RESULT = decfun;:}
                         | DECLARACION:dec  pregc{:RESULT = dec;:}
-                        | INICIO:inicio{:RESULT = inicio;:};
+                        | INICIO:inicio{:RESULT = inicio;:}
+                        |DATOS:datos{:RESULT = datos;:};
 HEREDA ::= hereda id:id{:RESULT = Fabrica.crearNodoHereda(id);:}
                      |{:RESULT = Fabrica.crearNodoHereda("");:};
 DECLARACION ::= var TVAR:tvar id:id VISIBILIDAD:visibilidad DEC2:dec2{:RESULT = Fabrica.crearNodoDeclaracion(tvar,id,visibilidad,dec2);:};
@@ -220,7 +222,8 @@ EXP3::=EXP3:op1 suma EXP3:op2{:RESULT=Fabrica.crearNodoOperacion(Constante.suma,
              | LID:lid ARR:arr{:RESULT =lid;RESULT.insertarHijo(arr);:}
              | decimal:dec{:RESULT = Fabrica.crearNodoHoja(Constante.decimal,dec,Constante.tdecimal+"");:}
              | verdadero:verdadero {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.verdadero,Constante.tbool+"");:}
-             | falso:falso {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.falso,Constante.tbool+"");:};
+             | falso:falso {:RESULT = Fabrica.crearNodoHoja(Constante.bool,Constante.falso,Constante.tbool+"");:}
+             | columna parentesisa EXP:exp parentesisc {:RESULT = Fabrica.crearNodoOperacion(Constante.columna,exp);:};
 OPREL ::= mayor {:RESULT = Constante.mayor;:}
                     | menor{:RESULT = Constante.menor;:}
                     | mayorigual{:RESULT = Constante.mayorigual;:}
@@ -249,7 +252,23 @@ SENTENCIA ::= ASIGNACION:asignacion pregc {:RESULT = asignacion;:}
                                 Nodo op2=Fabrica.crearNodoHoja(Constante.num,"1",Constante.tnum+"");
                                 Nodo exp = Fabrica.crearNodoOperacion(op,lid,op2);
                                 RESULT = Fabrica.crearNodoAsignacion(lid,exp,null);
-                            :};
+                            :}                          
+                          |llamar datos parentesisa parentesisc pregc
+                         {:
+                            Nodo datos=new Nodo(Constante.datos);
+                            RESULT=Fabrica.crearNodoLlamado(datos);
+                          :};
+DATOS ::= tvacio datos parentesisa parentesisc llavea CDATOS:cuerpo llavec
+                {:  
+                    Nodo par=new Nodo(Constante.lpar);
+                    RESULT = Fabrica.crearNodoDecFun(Constante.tvacio+"",Constante.datos,par,-1,cuerpo);
+                :};
+
+CDATOS ::= PROCESAR:procesar DONDE:donde{:RESULT = Fabrica.crearNodoCuerpo(procesar); RESULT.insertarHijo(donde);:};
+PROCESAR ::= procesar igual EXP:exp pregc {:RESULT=Fabrica.crearNodoOperacion(Constante.procesar,exp);:};
+DONDE ::=   donde parentesisa EXP:exp1 parentesisc igual EXP:exp2 pregc{:RESULT=Fabrica.crearNodoOperacion(Constante.donde,exp1,exp2);:}
+                     | dondecada parentesisa EXP:exp parentesisc pregc{:RESULT=Fabrica.crearNodoOperacion(Constante.dondecada,exp);:}
+                     | dondetodo parentesisa EXP:exp parentesisc pregc{:RESULT=Fabrica.crearNodoOperacion(Constante.dondetodo,exp);:};                    
 
 IMPRIMIR ::= imprimir parentesisa EXP:exp parentesisc pregc{:RESULT = new Nodo(Constante.imprimir); RESULT.insertarHijo(exp);:};
 

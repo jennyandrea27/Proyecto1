@@ -8,6 +8,7 @@ package Analisis;
 import Analisis.HaskellTerminal.TSHT;
 import static Analisis.RecorridoHT.porcentaje;
 import Extras.Constante;
+import Reportes.HTML;
 import Reportes.TablaErrores;
 import TablaSimbolos.Ambito;
 import TablaSimbolos.NodoTS;
@@ -34,6 +35,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import proyecto1.Dato;
 import proyecto1.FormInicio;
 
 /**
@@ -211,9 +213,19 @@ public class SemanticoGraphik {
            case Constante.dec:
                res=RecorridoHT.ejecutarSent(op);
                break;
+           case Constante.columna:
+               //se obtiene valor en la fila actual de FormInicio.fila y se devuelve
+               Dato d=FormInicio.tabla_datos.get(FormInicio.fila);               
+               Valor col=evaluarEXP(op.hijos.get(0));
+               if(col.getTipo()==Constante.tnum){
+                   res=d.columnas.get(Integer.parseInt(col.getValor())-1);
+               }else{
+                   res=new Valor(Constante.terror,"Error semantico, no puede accederse a dato de una columna con un indice de tipo "+Casteo.valTipo(col.getTipo()));
+               }
+               break;
             default://es valor puntual
                 return new Valor(op.getTipo(),op.getValor());
-        }
+        }        
         return res;
     }
     
@@ -391,23 +403,27 @@ public class SemanticoGraphik {
             //nodo llamar tiene lista de id's
             //verificar si el ultimo id es una funcion
             Nodo lid=llamar.hijos.get(0);
-            int tam_lid=lid.hijos.size();
-            Nodo ultimo=lid.hijos.get(tam_lid-1);
-            if(ultimo.hijos.size()>0){
-                //tiene parametros, es una funcion
-                //llamar a metodo accederLID
-                NodoTS res=accederLID(lid);
-                if(res!=null){                    
-                    resultado=new Valor(res.getTipo(), res.getValor(), res.getTals());
-                    if(res.getTipo()==Constante.tid){
-                        //agregar ambito y tipo als a res
-                        resultado.setTals(res.getTals());
-                        resultado.ambito=(Ambito)res.ambito;
+            if(lid.getNombre().equals(Constante.datos)){
+                datos();
+            }else{                
+                int tam_lid=lid.hijos.size();
+                Nodo ultimo=lid.hijos.get(tam_lid-1);
+                if(ultimo.hijos.size()>0){
+                    //tiene parametros, es una funcion
+                    //llamar a metodo accederLID
+                    NodoTS res=accederLID(lid);
+                    if(res!=null){                    
+                        resultado=new Valor(res.getTipo(), res.getValor(), res.getTals());
+                        if(res.getTipo()==Constante.tid){
+                            //agregar ambito y tipo als a res
+                            resultado.setTals(res.getTals());
+                            resultado.ambito=(Ambito)res.ambito;
+                        }
                     }
+                }else{
+                    //error id al cual se quiere acceder no es una funcion
+                    TablaErrores.insertarError("El id "+ultimo.getValor()+" no es una funcion.", tam_lid, tam_lid);
                 }
-            }else{
-                //error id al cual se quiere acceder no es una funcion
-                TablaErrores.insertarError("El id "+ultimo.getValor()+" no es una funcion.", tam_lid, tam_lid);
             }
             return resultado;
     }
@@ -735,6 +751,71 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
         }else{
             TablaErrores.insertarError("Error semantico, la funcion Graphikar requiere arreglos como parametros.", cont_ambito, cont_ambito);
         }
+        
+    }
+
+    private static void datos() {
+        //buscar metodo datos
+        Nodo nodo_datos=Recorrido.buscarDatos();
+        if(nodo_datos!=null){
+            //cuerpo esta en el hijo 1
+            Nodo cuerpo=nodo_datos.hijos.get(1);
+            //procesar esta en hijo 0 de cuerpo
+            Nodo procesar=cuerpo.hijos.get(0);
+            //donde esta en hijo 1 de cuerpo
+            Nodo donde=cuerpo.hijos.get(1);
+            //verificar si la tabla_datos fue inicializada
+            if(FormInicio.tabla_datos.size()>0){
+                switch(donde.getNombre()){
+                    case Constante.donde:
+                        donde(procesar,donde);
+                        break;
+                    case Constante.dondecada:
+                        dondeCada(procesar,donde);
+                        break;
+                    case Constante.dondetodo:
+                        dondeTodo(procesar,donde);
+                        break;
+                }
+            }else{
+                TablaErrores.insertarError("Error semantico, no se ha cargado archivo CSV a memoria.", cont_ambito, cont_ambito);
+            }
+        }
+        
+    }
+
+    private static void donde(Nodo procesar,Nodo donde) {
+        //indice_col indica el numero de columna a evaluar en la condicion
+        Valor indice_col=evaluarEXP(donde.hijos.get(0));
+        //v_compara indica el valor que debe tener la columna del dato
+        Valor v_compara=evaluarEXP(donde.hijos.get(1));        
+        //tabla temporal que almacena los datos a los cuales se podra aplicar la funcion procesar
+        LinkedList<Dato>datos=new LinkedList<>();
+        //tabla resultante del proceso
+        LinkedList<Dato>datos_resultado=new LinkedList<>();        
+        Dato encabezado=FormInicio.tabla_datos.get(0);
+        encabezado.columnas.add(new Valor(Constante.tcadena, "Resultado"));
+        datos_resultado.add(encabezado);
+        for(int i=1;i<FormInicio.tabla_datos.size();i++){
+            Dato d=FormInicio.tabla_datos.get(i);
+            int indice=Integer.parseInt(indice_col.getValor())-1;
+            if(d.columnas.get(indice).getValor().equals(v_compara.getValor())){
+                //sobre este valor se trabaja el metodo procesar
+                FormInicio.fila=i;
+                Valor proc=evaluarEXP(procesar.hijos.get(0));
+                d.columnas.add(proc);
+                datos_resultado.add(d);
+            }
+        }
+        //se muestra la tabla con los datos de resultado
+        HTML.mostrarDatos(datos_resultado);        
+    }
+
+    private static void dondeCada(Nodo procesar,Nodo donde) {
+        
+    }
+
+    private static void dondeTodo(Nodo procesar,Nodo donde) {
         
     }
 
