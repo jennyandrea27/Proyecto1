@@ -750,8 +750,7 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
             }
         }else{
             TablaErrores.insertarError("Error semantico, la funcion Graphikar requiere arreglos como parametros.", cont_ambito, cont_ambito);
-        }
-        
+        }        
     }
 
     private static void datos() {
@@ -780,8 +779,7 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
             }else{
                 TablaErrores.insertarError("Error semantico, no se ha cargado archivo CSV a memoria.", cont_ambito, cont_ambito);
             }
-        }
-        
+        }        
     }
 
     private static void donde(Nodo procesar,Nodo donde) {
@@ -793,7 +791,7 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
         LinkedList<Dato>datos=new LinkedList<>();
         //tabla resultante del proceso
         LinkedList<Dato>datos_resultado=new LinkedList<>();        
-        Dato encabezado=FormInicio.tabla_datos.get(0);
+        Dato encabezado=FormInicio.tabla_datos.get(0);        
         encabezado.columnas.add(new Valor(Constante.tcadena, "Resultado"));
         datos_resultado.add(encabezado);
         for(int i=1;i<FormInicio.tabla_datos.size();i++){
@@ -812,11 +810,74 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
     }
 
     private static void dondeCada(Nodo procesar,Nodo donde) {
+        //indice_col indica el numero de columna a evaluar en la condicion
+        Valor indice_col=evaluarEXP(donde.hijos.get(0));        
+        //tabla temporal que almacena los datos a los cuales se podra aplicar la funcion procesar
+        LinkedList<Dato>datos=new LinkedList<>();
+        //tabla resultante del proceso
+        LinkedList<Dato>datos_resultado=new LinkedList<>();        
+        Dato encabezado=FormInicio.tabla_datos.get(0);        
+        encabezado.columnas.add(new Valor(Constante.tcadena, "Resultado"));
+        datos_resultado.add(encabezado);
+        for(int i=1;i<FormInicio.tabla_datos.size();i++){
+            Dato d=FormInicio.tabla_datos.get(i);
+            int indice=Integer.parseInt(indice_col.getValor())-1;            
+            String actual=d.columnas.get(indice).getValor();
+            //sobre este valor se trabaja el metodo procesar
+            FormInicio.fila=i;
+            Valor proc=evaluarEXP(procesar.hijos.get(0));
+            //buscar si existe una fila con ese nombre si no se agrega
+            int pos=buscarDato(actual,indice,datos_resultado);
+            if(pos==-1){
+                //no existe fila con ese valor se inserta
+                d.columnas.add(proc);
+                datos_resultado.add(d);                
+            }else{
+                //ya existe fila con ese valor, se agrega a valor final         
+                int pos_res=datos_resultado.get(pos).columnas.size()-1;
+                Valor total=datos_resultado.get(pos).columnas.get(pos_res);
+                double t=Double.parseDouble(total.getValor())+Double.parseDouble(proc.getValor());
+                total.setValor(t+"");
+            }            
+        }
+        //se muestra la tabla con los datos de resultado
+        HTML.mostrarDatos(datos_resultado);        
         
+    }
+    public static int buscarDato(String valor,int col,LinkedList <Dato> datos_resultado){
+        for(int i=0;i<datos_resultado.size();i++){
+            Dato actual=datos_resultado.get(i);
+            if(actual.columnas.get(col).getValor().equals(valor)){
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static void dondeTodo(Nodo procesar,Nodo donde) {
-        
+        //indice_col indica el numero de columna a evaluar en la condicion
+        Valor indice_col=evaluarEXP(donde.hijos.get(0));        
+        //tabla temporal que almacena los datos a los cuales se podra aplicar la funcion procesar
+        LinkedList<Dato>datos=new LinkedList<>();
+        //tabla resultante del proceso
+        LinkedList<Dato>datos_resultado=new LinkedList<>();        
+        Dato encabezado=new Dato();        
+        encabezado.columnas.add(new Valor(Constante.tcadena,"Donde"));
+        encabezado.columnas.add(new Valor(Constante.tcadena, "Resultado"));
+        datos_resultado.add(encabezado);
+        double res=0;
+        for(int i=1;i<FormInicio.tabla_datos.size();i++){
+            Dato d=FormInicio.tabla_datos.get(i);
+            FormInicio.fila=i;
+            res+=Double.parseDouble(evaluarEXP(procesar.hijos.get(0)).getValor());                   
+        }
+        Valor fin=new Valor(Constante.tdecimal, res+"");
+        Dato d=new Dato();
+        d.columnas.add(new Valor(Constante.tcadena,"Todo"));
+        d.columnas.add(fin);
+        datos_resultado.add(d);
+        //se muestra la tabla con los datos de resultado
+        HTML.mostrarDatos(datos_resultado);        
     }
 
     
