@@ -26,6 +26,7 @@ public class TS {
             Ambito clase_inicio=lista_ambitos.get(0);
             Nodo cuerpo=als.hijos.get(1);            
             nuevoALS(cuerpo,clase_inicio);
+            
         }
         public static void nuevoALS(Nodo cuerpo, Ambito ambito){
             for (Nodo hijo : cuerpo.hijos){

@@ -44,8 +44,14 @@ public class Recorrido {
         }
         if(TablaErrores.error){
             HTML.mostrarErrores();
-        }else{            
-            recorrerInicio(raiz);                        
+        }else{  
+            //aplicar herencia a los ALS     
+            //recorrer als de lista de als y aplicar herencia a cada uno
+            for(Nodo als:raiz.hijos.get(1).hijos){                
+                herencia(als);
+            }
+            recorrerInicio(raiz);            
+            TS.eliminarAmbito();//elimina ambito 0
         }
         }
         private static Nodo buscarNodo (Nodo padre, String nombre)
@@ -60,10 +66,8 @@ public class Recorrido {
         }
         public static Nodo buscarClase(String nombre){
             for(Nodo hijo : raiz.hijos.get(1).hijos){
-                if (hijo.getValor().equals(nombre))
-                {
-                    return hijo;
-                }
+                if (hijo.getValor().equals(nombre))                
+                    return hijo;                
             }
             return null;
         }
@@ -106,7 +110,7 @@ public class Recorrido {
                 //recorrer las sentencias del cuerpo de inicio
                 TS.insertarAmbito(TS.cont_ambito);
                 recorrerSent(cuerpo_inicio);
-                //TS.eliminarAmbito();
+                TS.eliminarAmbito();
             }else{
                 //error metodo inicio no existe
                 TablaErrores.insertarError("Error semantico, metodo Inicio no fue declarado.", 1, 1);
@@ -305,13 +309,50 @@ public class Recorrido {
                     SintacticoG sintactico= new SintacticoG(lexico);
                     try {
                         sintactico.parse();   
-                        if(TablaErrores.error)
+                        if(TablaErrores.error){
                             JOptionPane.showMessageDialog(null,"Verifique errores lexicos y sintacticos, en archivo "+ruta_archivo+".");                                                                                
+                            return null;
+                        }
                         return sintactico.raiz;                        
                     } catch (Exception ex) {
                         System.out.println("Error al ejecutar archivo GK "+ruta_archivo+"\n"+ex.getMessage());
                     }
                 }
         return null;
+    }
+
+    private static void herencia(Nodo hijo) {
+        //recorrer lista de als obteniendo el hijo 0 que es hereda        
+            Nodo herencia=hijo.getHijo(0);
+            String nombre_hereda=herencia.getValor();
+            //verificar si es diferente de ""
+            if(!nombre_hereda.equals("")){
+                //hereda de otro als
+                //buscar als del que se hereda
+                Nodo padre=buscarClase(nombre_hereda);
+                if(padre!=null){
+                    //mandar nodo padre a herencia
+                    herencia(padre);
+                    //modificar herencia de padre porque ya se ejecuto
+                    padre.hijos.get(0).setValor("");
+                    //recorrer atributos y metodos de padre y agregarlos a hijo si tiene visibilidad publico o protegido
+                    Nodo cuerpo_padre=padre.hijos.get(1);
+                    for(Nodo n:cuerpo_padre.hijos){
+                        if(n.getNombre().equals(Constante.dec)){
+                            //es una declaracion de variable
+                            Nodo id=n.hijos.get(0);
+                            if(id.getVisibilidad()==Constante.publico || id.getVisibilidad()==Constante.protegido){
+                                hijo.hijos.get(1).hijos.add(n);
+                            }
+                        }else{
+                            //es una declaracion de funcion
+                            if(n.getVisibilidad()==Constante.publico || n.getVisibilidad()==Constante.protegido){
+                                hijo.hijos.get(1).hijos.add(n);
+                            }
+                        }
+                    }
+                }
+                hijo.hijos.get(0).setValor("");
+            }        
     }
 }

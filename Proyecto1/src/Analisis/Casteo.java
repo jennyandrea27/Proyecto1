@@ -22,7 +22,8 @@ public class Casteo {
                 res=new Valor(Constante.tnum,Integer.parseInt(op1.getValor())+Integer.parseInt(op2.getValor())+"");
                 break;
             case 4: //numero con cadena
-            case 6://cadena con cadena                
+            case 6://cadena con cadena    
+            case 10://cadena con boolean
             case 13://decimal con cadena
             case 18://cadena con caracter
             case 30://caracter con caracter
@@ -61,8 +62,7 @@ public class Casteo {
                     res = new Valor(Constante.tdecimal,(int)op1.getValor().charAt(0)+Double.parseDouble(op2.getValor())+"");
                 else
                     res = new Valor(Constante.tdecimal,Double.parseDouble(op1.getValor())+(int)op2.getValor().charAt(0)+"");                
-                break;
-            case 10://cadena con boolean
+                break;            
             case 22://boolean con caracter
                 res=new Valor(Constante.terror,"Error semantico, no se puede realizar suma entre: "+valTipo(op1.getTipo())+" y "+valTipo(op2.getTipo()));
                 break;                                
@@ -632,6 +632,7 @@ public class Casteo {
            case 14: //bool con bool
                if(op1.getValor().equals(Constante.verdadero) && op2.getValor().equals(Constante.verdadero))
                    res.setValor(Constante.verdadero);
+               break;
            case 2://numero con numero
            case 8: //numero con bool
            case 11: // numero con decimal
@@ -735,15 +736,10 @@ public class Casteo {
                         case Constante.tdecimal:
                             //verificar si puede obtenerse unicamente la parte entera
                             Double temp=Double.parseDouble(valor2.getValor());
-                            int temp2=temp.intValue();
-                            if(temp2-temp == 0){
-                                //se puede asignar a tipo entero
-                                valor2.setTipo(Constante.tnum);
-                                valor2.setValor(temp2+"");
-                            }else{                                
-                                valor2.setValor("Error semantico, no se puede asignar un tipo "+valTipo(valor2.getTipo())+" a un tipo Entero.");
-                                valor2.setTipo(Constante.terror);
-                            }
+                            int temp2=temp.intValue();                            
+                            //se puede asignar a tipo entero
+                            valor2.setTipo(Constante.tnum);
+                            valor2.setValor(temp2+"");
                             break;
                         case Constante.tbool:
                             valor2.setTipo(Constante.tnum);

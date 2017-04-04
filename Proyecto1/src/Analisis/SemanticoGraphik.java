@@ -692,9 +692,15 @@ public class SemanticoGraphik {
 public static int mapeo(NodoTS v1,Nodo dimensiones)    {
     LinkedList<Integer> indices=new LinkedList<>();
     for(int i=0;i<dimensiones.hijos.size();i++){
-        indices.add(Integer.parseInt(dimensiones.hijos.get(i).getValor()));
-        if(indices.get(i) > v1.dimensiones.get(i)){
-            TablaErrores.insertarError("Error sematico, el indice "+indices.get(i)+" se encuentra fuera de rango en la dimension "+v1.dimensiones.get(i)+" del arreglo "+v1.getNombre(), i, i);
+    Valor pos=evaluarEXP(dimensiones.hijos.get(i));
+        if(pos.getTipo()==Constante.tnum){
+            indices.add(Integer.parseInt(pos.getValor()));
+            if(indices.get(i) > v1.dimensiones.get(i)){
+                TablaErrores.insertarError("Error sematico, el indice "+indices.get(i)+" se encuentra fuera de rango en la dimension "+v1.dimensiones.get(i)+" del arreglo "+v1.getNombre(), i, i);
+                return 0;
+            }            
+        }else{            
+            TablaErrores.insertarError("Error sematico, el indice es de tipo "+Casteo.valTipo(dimensiones.hijos.get(i).getTipo())+",no se puede acceder a posicion del arreglo "+v1.getNombre(), i, i);
             return 0;
         }
     }
