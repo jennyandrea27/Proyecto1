@@ -295,7 +295,8 @@ public class SemanticoHaskell {
     public static Valor max(Nodo max) {
         Nodo lasig=max.hijos.get(0);
         Valor res=new Valor();
-        double m=0;
+        double m=-9999999;
+        boolean c=false;
         if(lasig.getNombre().equals(Constante.lasig)){
             res=max_lista(lasig);
         }else{
@@ -309,6 +310,7 @@ public class SemanticoHaskell {
                         double actual=0;
                         if(v.getTipo()==Constante.tcaracter){                            
                             actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            c=true;
                         }else{                            
                             actual=Double.parseDouble(v.getValor());
                         }
@@ -324,6 +326,7 @@ public class SemanticoHaskell {
                             double actual=0;
                             if(v.getTipo()==Constante.tcaracter){                            
                                 actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                                c=true;
                             }else{                            
                                 actual=Double.parseDouble(v.getValor());
                             }
@@ -332,17 +335,24 @@ public class SemanticoHaskell {
                             }
                         }                        
                     }            
-                }                
-                res=new Valor(Constante.tdecimal,m+"");
+                }                                
             }else{
                 //la variable no existe
                 res=new Valor(Constante.terror,"Error semantic, la lista "+lasig.hijos.get(0).getValor()+" no ha sido declarada.");                
             }            
+            if(c){
+                //se evaluan caracteres, se devuelve la letra
+                char letra=(char)Math.round(m);            
+                res=new Valor(Constante.tcaracter,letra+"");
+            }else{            
+                res=new Valor(Constante.tdecimal,m+"");
+            }
         }        
         return res;
     }
     public static Valor max_lista(Nodo lasig){
-        double m=1;
+        double m=-9999999;
+        boolean c=false;
         Valor res=new Valor();
         if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
             //tiene dos dimensiones
@@ -354,6 +364,7 @@ public class SemanticoHaskell {
                         double actual=0;
                         if(v.getTipo()==Constante.tcaracter){                            
                             actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            c=true;
                         }else{                            
                             actual=Double.parseDouble(v.getValor());
                         }
@@ -362,7 +373,7 @@ public class SemanticoHaskell {
                         }
                     }
                 }                
-            }            
+            }                        
         }else{
             //tiene una dimension
             Valor dimension=lista_asig(lasig);
@@ -375,6 +386,7 @@ public class SemanticoHaskell {
                     double actual=0;
                         if(v.getTipo()==Constante.tcaracter){                            
                             actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            c=true;
                         }else{                            
                             actual=Double.parseDouble(v.getValor());
                         }
@@ -384,13 +396,20 @@ public class SemanticoHaskell {
                 }
             }
         }
-        res=new Valor(Constante.tdecimal,m+"");
+        if(c){
+            //se evaluan caracteres, se devuelve la letra
+            char letra=(char)Math.round(m);            
+            res=new Valor(Constante.tcaracter,letra+"");
+        }else{            
+            res=new Valor(Constante.tdecimal,m+"");
+        }
         return res;
     }
     public static Valor min(Nodo min) {
         Nodo lasig=min.hijos.get(0);
         Valor res=new Valor();
-        double m=0;
+        double m=99999999;
+        boolean c=false;
         if(lasig.getNombre().equals(Constante.lasig)){
             res=min_lista(lasig);
         }else{
@@ -404,6 +423,7 @@ public class SemanticoHaskell {
                         double actual=0;
                         if(v.getTipo()==Constante.tcaracter){                            
                             actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            c=true;
                         }else{                            
                             actual=Double.parseDouble(v.getValor());
                         }
@@ -419,6 +439,7 @@ public class SemanticoHaskell {
                             double actual=0;
                             if(v.getTipo()==Constante.tcaracter){                            
                                 actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                                c=true;
                             }else{                            
                                 actual=Double.parseDouble(v.getValor());
                             }
@@ -432,13 +453,21 @@ public class SemanticoHaskell {
             }else{
                 //la variable no existe
                 res=new Valor(Constante.terror,"Error semantic, la lista "+lasig.hijos.get(0).getValor()+" no ha sido declarada.");                
+            }
+            if(c){
+                //se evaluan caracteres, se devuelve la letra
+                char letra=(char)Math.round(m);            
+                res=new Valor(Constante.tcaracter,letra+"");
+            }else{            
+                res=new Valor(Constante.tdecimal,m+"");
             }            
         }        
         return res;
     }
     public static Valor min_lista(Nodo lasig){
-        double m=1;
+        double m=9999999;
         Valor res=new Valor();
+        boolean c=false;
         if(lasig.hijos.get(0).getNombre().equals(Constante.asig)){
             //tiene dos dimensiones
             for(Nodo asig:lasig.hijos){
@@ -449,6 +478,7 @@ public class SemanticoHaskell {
                         double actual=0;
                         if(v.getTipo()==Constante.tcaracter){                            
                             actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            c=true;
                         }else{                            
                             actual=Double.parseDouble(v.getValor());
                         }
@@ -470,6 +500,7 @@ public class SemanticoHaskell {
                     double actual=0;
                         if(v.getTipo()==Constante.tcaracter){                            
                             actual=Double.parseDouble(((int)v.getValor().charAt(0))+"");
+                            c=true;
                         }else{                            
                             actual=Double.parseDouble(v.getValor());
                         }
@@ -479,7 +510,13 @@ public class SemanticoHaskell {
                 }
             }
         }
-        res=new Valor(Constante.tdecimal,m+"");
+        if(c){
+            //se evaluan caracteres, se devuelve la letra
+            char letra=(char)Math.round(m);            
+            res=new Valor(Constante.tcaracter,letra+"");
+        }else{            
+            res=new Valor(Constante.tdecimal,m+"");
+        }        
         return res;
     }
     public static Valor length(Nodo length) {

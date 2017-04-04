@@ -425,4 +425,12 @@ public class Fabrica {
         }
         return arr;
     }
+    public static Nodo crearNodoCadena(String nombre,String cadena){
+        Nodo cad=new Nodo(nombre);
+        for(int i=0;i<cadena.length();i++){
+            Nodo c=new Nodo(Constante.caracter,cadena.charAt(i)+"",Constante.tcaracter);
+            cad.insertarHijo(c);
+        }
+        return cad;
+    }
 }

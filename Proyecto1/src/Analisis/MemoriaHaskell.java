@@ -54,16 +54,29 @@ public class MemoriaHaskell {
                 {
                     String nombre = l_par_fun.hijos.get(i).getValor();                    
                     int tipo = par_llamado.get(i).getTipo();
-                    if(tipo==Constante.tnum){
-                        tipo=Constante.tdecimal;
-                    }
-                    String valor = par_llamado.get(i).getValor();
-                    NodoTS par = new NodoTS(nombre, tipo, valor);
-                    if(par_llamado.get(i).getTipo()==Constante.tid){
-                        res=new Valor(Constante.terror, "Error semantico, funcion de haskell no permite tipo ALS como parametros.");                        
-                    }else{                                                
+                    //se pregunta si el parametro es cadena se transforma a arreglo que almacena caracteres
+                    if(tipo == Constante.tcadena){
+                        NodoTS par=new NodoTS(nombre,Constante.tcaracter,"");
+                        par.dimensiones=new LinkedList<>();
+                        par.dimensiones.add(par_llamado.get(i).getValor().length());
+                        par.valores=new LinkedList<>();
+                        for(int j=0;j<par.dimensiones.get(0);j++){
+                            par.valores.add(new Valor(Constante.tcaracter, par_llamado.get(i).getValor().charAt(j)+""));
+                        }
                         TS.insertarVariable(par);
+                    }else{
+                        if(tipo==Constante.tnum){
+                            tipo=Constante.tdecimal;
+                        }
+                        if(tipo ==Constante.tid){
+                            res=new Valor(Constante.terror, "Error semantico, funcion de haskell no permite tipo ALS como parametros.");                        
+                        }else{                                                
+                            String valor = par_llamado.get(i).getValor();
+                            NodoTS par = new NodoTS(nombre, tipo, valor);
+                            TS.insertarVariable(par);
+                        }
                     }
+                    
                 }            
                 //ejecutar sentencias de la funcion
                 res=RecorridoHT.ejecutarCuerpo(fun.hijos.get(1));                

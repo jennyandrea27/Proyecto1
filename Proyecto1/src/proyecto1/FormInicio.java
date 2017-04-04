@@ -18,18 +18,23 @@ import Extras.Constante;
 import Reportes.HTML;
 import Reportes.TablaErrores;
 import TablaSimbolos.*;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,6 +42,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Highlighter;
 
 /**
  *
@@ -68,8 +76,6 @@ public class FormInicio extends javax.swing.JFrame {
 
         jMenuItem3 = new javax.swing.JMenuItem();
         tpPestanas = new javax.swing.JTabbedPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tbArchivo = new javax.swing.JTextArea();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbSalida = new javax.swing.JTextArea();
         tbEntrada = new javax.swing.JTextField();
@@ -79,10 +85,12 @@ public class FormInicio extends javax.swing.JFrame {
         bCargarHK = new javax.swing.JButton();
         bCargarGK = new javax.swing.JButton();
         bCargar = new javax.swing.JButton();
+        bCerrar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         bAbrir = new javax.swing.JMenu();
         bNuevo = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         bGuardar = new javax.swing.JMenuItem();
         bGuardarComo = new javax.swing.JMenuItem();
@@ -98,15 +106,6 @@ public class FormInicio extends javax.swing.JFrame {
 
         tpPestanas.setBackground(new java.awt.Color(0, 153, 102));
         tpPestanas.setOpaque(true);
-
-        tbArchivo.setColumns(20);
-        tbArchivo.setFont(new java.awt.Font("Monospaced", 0, 20)); // NOI18N
-        tbArchivo.setRows(5);
-        tbArchivo.setText("importar Nodo.gk?\nincluir_HK FormCuadraticaPositiva?\nincluir_HK FormCuadraticaNegativa?\nincluir_HK Permutacion?\nincluir_HK FuncionPolinomial1?\n\nALS obj1 : publico {\nvar entero c,b,d?\nvar Nodo a:publico=nuevo Nodo()?\n\tvacio inicio(){\n\ta.nombre = 4?\n\tvar entero arr1[5]={1,2,3,4,5}?\n\tllamar Datos()?\n\t}\n\n\tvacio Datos(){\n\tProcesar = llamar suma(columna(2), columna(3))?\n\tDonde(1)=\"Guatemala\"?\n\t}\n\tentero suma(entero a,entero b){\n\tretornar a+b?\n\t}\n\tcadena FormCuadraticaPositiva(){\n\ta = (5*2)^2 - 4?\n\tvar entero b = 3?\n\tvar entero c = 8?\n\n\tretornar \"Primer función ejecutada con éxito\"?\n\t}\n\n\tcadena FormCuadraticaNegativa():privado{\n\tvar decimal arreglo[3] = {96, 3, 8}?\n\t\n\tretornar \"Segunda función ejecutada con éxito\"?\n\t}\n\n\tvacio FuncionPolinomial1(entero valor_entrada){\n\tvar entero arreglo[5]?\n\tvar entero i?\n\tPara(i=0: i<5: i++){\n\n\timprimir(\"polinomial: \" + i)?\n\t}\n\t}\n\n\tentero Permutacion_gk(entero n, entero r){\n\tMientras(r>0){\n\tsi(r == n){\n\t\tretornar n?\n\t\t\n\t}\n\timprimir(r)?\n\tr=r - 1?\n\t}\n\t}\n\n\tNodo creacion_nodos(){\n\tvar Nodo nod1 = nuevo Nodo()?\n\tnod1.nombre = \"primero\"?\n\tnod1.numero = 1?\n\tretornar nod1?\n\t}\n}\nALS Nodo : publico{\n\tvar cadena nombre : publico = \"\"?\n\tvar entero numero :publico = 0?\n\tvar bool bandera : publico = verdadero?\n\tvar Nodo2 n=nuevo Nodo2()?\n\tbool cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\tretornar bandera?\n\t}\n}\nALS Nodo2 : publico{\n\tvar cadena nombre2 : publico = \"\"?\n\tvar entero numero2 :publico = 2?\n\tvar bool bandera2 : publico = falso?\n\tvacio cambiar_bandera(){\n\t\tSi(bandera == falso){\n\t\t\tbandera = verdadero?\n\t\t\t}Sino{\n\t\t\tSi(bandera == verdadero){\n\t\t\tbandera = false?\n\t\t\t}\n\t\t}\n\t}\n}\n\n");
-        jScrollPane2.setViewportView(tbArchivo);
-
-        tpPestanas.addTab("tab1", jScrollPane2);
-
         getContentPane().add(tpPestanas);
         tpPestanas.setBounds(12, 92, 889, 410);
 
@@ -137,6 +136,7 @@ public class FormInicio extends javax.swing.JFrame {
         bIniciarSesion.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         bIniciarSesion.setText("Iniciar Sesion");
         bIniciarSesion.setContentAreaFilled(false);
+        bIniciarSesion.setEnabled(false);
         bIniciarSesion.setOpaque(true);
         getContentPane().add(bIniciarSesion);
         bIniciarSesion.setBounds(952, 92, 139, 31);
@@ -198,6 +198,19 @@ public class FormInicio extends javax.swing.JFrame {
         getContentPane().add(bCargar);
         bCargar.setBounds(950, 250, 140, 30);
 
+        bCerrar.setBackground(new java.awt.Color(153, 0, 0));
+        bCerrar.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        bCerrar.setForeground(new java.awt.Color(255, 255, 255));
+        bCerrar.setText("X");
+        bCerrar.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        bCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCerrarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(bCerrar);
+        bCerrar.setBounds(850, 60, 50, 33);
+
         jLabel2.setBackground(new java.awt.Color(204, 255, 204));
         jLabel2.setOpaque(true);
         getContentPane().add(jLabel2);
@@ -209,13 +222,22 @@ public class FormInicio extends javax.swing.JFrame {
         bAbrir.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
 
         bNuevo.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        bNuevo.setText("Nuevo");
+        bNuevo.setText("Nuevo Graphik");
         bNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bNuevoActionPerformed(evt);
             }
         });
         bAbrir.add(bNuevo);
+
+        jMenuItem2.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        jMenuItem2.setText("Nuevo Haskell");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        bAbrir.add(jMenuItem2);
 
         jMenuItem1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jMenuItem1.setText("Abrir");
@@ -237,10 +259,20 @@ public class FormInicio extends javax.swing.JFrame {
 
         bGuardarComo.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         bGuardarComo.setText("Guardar Como");
+        bGuardarComo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bGuardarComoActionPerformed(evt);
+            }
+        });
         bAbrir.add(bGuardarComo);
 
         bCerrarPestana.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         bCerrarPestana.setText("Cerrar Pestaña");
+        bCerrarPestana.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bCerrarPestanaActionPerformed(evt);
+            }
+        });
         bAbrir.add(bCerrarPestana);
 
         jMenuBar1.add(bAbrir);
@@ -257,6 +289,21 @@ public class FormInicio extends javax.swing.JFrame {
 
     private void bGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardarActionPerformed
         // TODO add your handling code here:
+        if(tpPestanas.getSelectedIndex()>=0){            
+            JScrollPane sp=(JScrollPane)tpPestanas.getSelectedComponent().getComponentAt(0,0);
+            JTextArea tb=(JTextArea)sp.getViewport().getView();
+            String texto=tb.getText();                        
+            try{            
+                FileWriter fw = new FileWriter(tpPestanas.getTitleAt(tpPestanas.getSelectedIndex()));
+                PrintWriter pw = new PrintWriter(fw);
+                pw.print(texto);
+                fw.close();        
+                JOptionPane.showMessageDialog(null, "Archivo guardado, "+tpPestanas.getTitleAt(tpPestanas.getSelectedIndex()));
+            }catch(Exception e){
+                System.out.println("No se pudo guardar archivo "+tpPestanas.getTitleAt(tpPestanas.getSelectedIndex()));
+            }
+        }
+        
     }//GEN-LAST:event_bGuardarActionPerformed
 
     private void tbEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbEntradaKeyPressed
@@ -284,7 +331,11 @@ public class FormInicio extends javax.swing.JFrame {
                     }else{                        
                         Ambito a=new Ambito(-1,0);
                         TSH.lista_ambitos.add(a);
-                        RecorridoHT.recorrerArbol(sintactico.raiz);
+                        try{                            
+                            RecorridoHT.recorrerArbol(sintactico.raiz);
+                        }catch(Exception e){
+                            System.out.println("No se ha podido ejecutar instruccion en Terminal Haskell.");
+                        }
                     }
                     if(TablaErrores.error){
                         JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");
@@ -319,10 +370,6 @@ public class FormInicio extends javax.swing.JFrame {
                     if(TablaErrores.error){                        
                         JOptionPane.showMessageDialog(null,"Verifique errores lexicos y sintacticos.");
                         HTML.mostrarErrores();
-                    }
-                    if(TablaErrores.error){
-                        JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");
-                        HTML.mostrarErrores();
                     }else{                                                
                         //TS.recorrerListaAmbitos();                        
                         MemoriaHaskell.raiz.hijos.addAll(sintactico.raiz.hijos);
@@ -340,7 +387,7 @@ public class FormInicio extends javax.swing.JFrame {
 
     private void bCargarGKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarGKActionPerformed
         // TODO add your handling code here:
-        
+        pintar();
         JScrollPane sp=(JScrollPane)tpPestanas.getSelectedComponent().getComponentAt(0,0);
         JTextArea tb=(JTextArea)sp.getViewport().getView();
         String entrada=tb.getText();      
@@ -360,8 +407,12 @@ public class FormInicio extends javax.swing.JFrame {
                     if(TablaErrores.error){                        
                         JOptionPane.showMessageDialog(null,"Verifique errores lexicos y sintacticos.");
                         HTML.mostrarErrores();
-                    }else{                        
-                        Recorrido.recorrerArbol(sintactico.raiz);
+                    }else{     
+                        try{                            
+                            Recorrido.recorrerArbol(sintactico.raiz);
+                        }catch(Exception e){
+                            System.out.println("Error al ejecutar analisis semantico en archivo Graphik.");
+                        }
                     }
                     if(TablaErrores.error){
                         JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");
@@ -440,14 +491,7 @@ public class FormInicio extends javax.swing.JFrame {
                 }
              }
           }            
-        }
-        for(Dato d:tabla_datos){
-            System.out.println("Dato:");            
-            for(Valor v:d.columnas){
-                System.out.println("----->"+v.getValor()+" - "+v.getTipo());
-            }
-            System.out.println("\n");
-        }
+        }        
         texto_salida+="Archivo CSV cargado a memoria.";
         tbSalida.setText(texto_salida);
     }//GEN-LAST:event_bCargarActionPerformed
@@ -462,6 +506,39 @@ public class FormInicio extends javax.swing.JFrame {
             JScrollPane sp=new JScrollPane(tb);
             return sp;
         }
+    public void pintar()
+    {        
+        JScrollPane sp=(JScrollPane)tpPestanas.getSelectedComponent().getComponentAt(0,0);
+        JTextArea tb=(JTextArea)sp.getViewport().getView();
+        try {
+            pintarPalabra(tb,"(?i)(entero|decimal|cadena|vacio|caracter|bool|publico|privado|protegido|var|importar|als|hereda|nuevo|retornar|llamarhk|llamar|inicio|incluir|sino|seleccion|caso|defecto|para|mientras|hacer|continuar|terminar|graphikar_funcion|datos|columa|procesar|dondecada|dondetodo|donde|imprimir|falso|verdadero)",new Color(48,179,245));//palabras reservadas
+            pintarPalabra(tb,"\\w", Color.ORANGE);//identificador
+            pintarPalabra(tb,"([\"](.)*[\"])|(['](.)*['])",Color.green);
+            pintarPalabra(tb,"[#][/](.|\n)*[/][#]",Color.DARK_GRAY);//comentarios
+            pintarPalabra(tb,"[#](.)*[\n]",Color.DARK_GRAY);//comentario una linea
+            
+            
+        } catch (BadLocationException ex) {
+            System.out.println("Error al pintar archivo.");
+        }
+    }
+    
+    public void pintarPalabra(JTextArea tb, String texto, Color color) throws BadLocationException {
+        if (texto.length() >= 1) {
+            DefaultHighlightPainter highlightPainter = new DefaultHighlightPainter(color);
+            Highlighter h = tb.getHighlighter();
+            //h.removeAllHighlights();
+            String text = tb.getText();
+            String caracteres = texto;
+            Pattern p = Pattern.compile(caracteres);
+            Matcher m = p.matcher(text);
+            while (m.find()) {
+                h.addHighlight(m.start(), m.end(), highlightPainter);
+            }
+        } else {
+            JOptionPane.showMessageDialog(tb, "Error al seleccionar palabra a pintar.");
+        }
+    }
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
@@ -484,12 +561,11 @@ public class FormInicio extends javax.swing.JFrame {
                 lineas = br.readLine();                
              }             
              tpPestanas.add(ruta, crearTextBox(texto));             
-             tpPestanas.setSelectedIndex(tpPestanas.getComponentCount()-1);
+             tpPestanas.setSelectedIndex(tpPestanas.getComponentCount()-1);             
              //quitar nombre del archivo a ruta
              while(!ruta.endsWith("\\")){
                  ruta=ruta.substring(0,ruta.length()-1);
-             }
-              System.out.println(ruta);
+             }              
           } catch (Exception e) {
              System.err.println("Error: "+e.getMessage());
           } finally {
@@ -500,15 +576,59 @@ public class FormInicio extends javax.swing.JFrame {
                    System.err.println("Error al cerrar archivo. "+e.getMessage());
                 }
              }
-          }            
-        }
+          }                      
+        }        
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void bNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNuevoActionPerformed
         // TODO add your handling code here:               
-        tpPestanas.add("Nuevo",crearTextBox(""));        
-        tpPestanas.setSelectedIndex(tpPestanas.getTabCount()-1);          
+        tpPestanas.add("Nuevo.gk",crearTextBox(""));        
+        tpPestanas.setSelectedIndex(tpPestanas.getTabCount()-1);                 
     }//GEN-LAST:event_bNuevoActionPerformed
+
+    private void bCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCerrarActionPerformed
+        // TODO add your handling code here:        
+        if(tpPestanas.getSelectedIndex()>=0)
+            tpPestanas.remove(tpPestanas.getSelectedIndex());
+    }//GEN-LAST:event_bCerrarActionPerformed
+
+    private void bCerrarPestanaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCerrarPestanaActionPerformed
+        // TODO add your handling code here:        
+        if(tpPestanas.getSelectedIndex()>=0)
+            tpPestanas.remove(tpPestanas.getSelectedIndex());
+    }//GEN-LAST:event_bCerrarPestanaActionPerformed
+
+    private void bGuardarComoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardarComoActionPerformed
+        // TODO add your handling code here:
+        if(tpPestanas.getSelectedIndex()>=0){            
+            JScrollPane sp=(JScrollPane)tpPestanas.getSelectedComponent().getComponentAt(0,0);
+            JTextArea tb=(JTextArea)sp.getViewport().getView();
+            String texto=tb.getText();
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+            fileChooser.setFileFilter(new FileNameExtensionFilter("HK - GK","hk","gk"));
+            int result = fileChooser.showSaveDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {            
+                File arch = fileChooser.getSelectedFile();                        
+                try{            
+                    FileWriter fw = new FileWriter(arch.getAbsolutePath());
+                    PrintWriter pw = new PrintWriter(fw);
+                    pw.print(texto);
+                    fw.close();    
+                    tpPestanas.setTitleAt(tpPestanas.getSelectedIndex(), arch.getAbsolutePath());
+                    JOptionPane.showMessageDialog(null, "Archivo guardado, "+arch.getAbsolutePath());
+                }catch(Exception e){
+                    System.out.println("No se pudo guardar archivo "+arch.getAbsolutePath());
+                }
+            }
+        }
+    }//GEN-LAST:event_bGuardarComoActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        tpPestanas.add("Nuevo.hk",crearTextBox(""));        
+        tpPestanas.setSelectedIndex(tpPestanas.getTabCount()-1);                 
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -550,6 +670,7 @@ public class FormInicio extends javax.swing.JFrame {
     private javax.swing.JButton bCargar;
     private javax.swing.JButton bCargarGK;
     private javax.swing.JButton bCargarHK;
+    private javax.swing.JButton bCerrar;
     private javax.swing.JMenuItem bCerrarPestana;
     private javax.swing.JMenuItem bGuardar;
     private javax.swing.JMenuItem bGuardarComo;
@@ -561,10 +682,9 @@ public class FormInicio extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea tbArchivo;
     private javax.swing.JTextField tbEntrada;
     private javax.swing.JTextArea tbSalida;
     private javax.swing.JTabbedPane tpPestanas;

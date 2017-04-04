@@ -27,10 +27,21 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Times New Roman" size="24" style="0"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Nuevo"/>
+                <Property name="text" type="java.lang.String" value="Nuevo Graphik"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bNuevoActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Times New Roman" size="24" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Nuevo Haskell"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem2ActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
@@ -62,6 +73,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Guardar Como"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bGuardarComoActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="bCerrarPestana">
               <Properties>
@@ -70,6 +84,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cerrar Pesta&#xf1;a"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bCerrarPestanaActionPerformed"/>
+              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>
@@ -128,34 +145,6 @@
       </Constraints>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
-      <SubComponents>
-        <Container class="javax.swing.JScrollPane" name="jScrollPane2">
-          <AuxValues>
-            <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-          </AuxValues>
-          <Constraints>
-            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="tab1">
-                <Property name="tabTitle" type="java.lang.String" value="tab1"/>
-              </JTabbedPaneConstraints>
-            </Constraint>
-          </Constraints>
-
-          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-          <SubComponents>
-            <Component class="javax.swing.JTextArea" name="tbArchivo">
-              <Properties>
-                <Property name="columns" type="int" value="20"/>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Monospaced" size="20" style="0"/>
-                </Property>
-                <Property name="rows" type="int" value="5"/>
-                <Property name="text" type="java.lang.String" value="importar Nodo.gk?&#xa;incluir_HK FormCuadraticaPositiva?&#xa;incluir_HK FormCuadraticaNegativa?&#xa;incluir_HK Permutacion?&#xa;incluir_HK FuncionPolinomial1?&#xa;&#xa;ALS obj1 : publico {&#xa;var entero c,b,d?&#xa;var Nodo a:publico=nuevo Nodo()?&#xa;&#x9;vacio inicio(){&#xa;&#x9;a.nombre = 4?&#xa;&#x9;var entero arr1[5]={1,2,3,4,5}?&#xa;&#x9;llamar Datos()?&#xa;&#x9;}&#xa;&#xa;&#x9;vacio Datos(){&#xa;&#x9;Procesar = llamar suma(columna(2), columna(3))?&#xa;&#x9;Donde(1)=&quot;Guatemala&quot;?&#xa;&#x9;}&#xa;&#x9;entero suma(entero a,entero b){&#xa;&#x9;retornar a+b?&#xa;&#x9;}&#xa;&#x9;cadena FormCuadraticaPositiva(){&#xa;&#x9;a = (5*2)^2 - 4?&#xa;&#x9;var entero b = 3?&#xa;&#x9;var entero c = 8?&#xa;&#xa;&#x9;retornar &quot;Primer funci&#xf3;n ejecutada con &#xe9;xito&quot;?&#xa;&#x9;}&#xa;&#xa;&#x9;cadena FormCuadraticaNegativa():privado{&#xa;&#x9;var decimal arreglo[3] = {96, 3, 8}?&#xa;&#x9;&#xa;&#x9;retornar &quot;Segunda funci&#xf3;n ejecutada con &#xe9;xito&quot;?&#xa;&#x9;}&#xa;&#xa;&#x9;vacio FuncionPolinomial1(entero valor_entrada){&#xa;&#x9;var entero arreglo[5]?&#xa;&#x9;var entero i?&#xa;&#x9;Para(i=0: i&lt;5: i++){&#xa;&#xa;&#x9;imprimir(&quot;polinomial: &quot; + i)?&#xa;&#x9;}&#xa;&#x9;}&#xa;&#xa;&#x9;entero Permutacion_gk(entero n, entero r){&#xa;&#x9;Mientras(r&gt;0){&#xa;&#x9;si(r == n){&#xa;&#x9;&#x9;retornar n?&#xa;&#x9;&#x9;&#xa;&#x9;}&#xa;&#x9;imprimir(r)?&#xa;&#x9;r=r - 1?&#xa;&#x9;}&#xa;&#x9;}&#xa;&#xa;&#x9;Nodo creacion_nodos(){&#xa;&#x9;var Nodo nod1 = nuevo Nodo()?&#xa;&#x9;nod1.nombre = &quot;primero&quot;?&#xa;&#x9;nod1.numero = 1?&#xa;&#x9;retornar nod1?&#xa;&#x9;}&#xa;}&#xa;ALS Nodo : publico{&#xa;&#x9;var cadena nombre : publico = &quot;&quot;?&#xa;&#x9;var entero numero :publico = 0?&#xa;&#x9;var bool bandera : publico = verdadero?&#xa;&#x9;var Nodo2 n=nuevo Nodo2()?&#xa;&#x9;bool cambiar_bandera(){&#xa;&#x9;&#x9;Si(bandera == falso){&#xa;&#x9;&#x9;&#x9;bandera = verdadero?&#xa;&#x9;&#x9;&#x9;}Sino{&#xa;&#x9;&#x9;&#x9;Si(bandera == verdadero){&#xa;&#x9;&#x9;&#x9;bandera = false?&#xa;&#x9;&#x9;&#x9;}&#xa;&#x9;&#x9;}&#xa;&#x9;retornar bandera?&#xa;&#x9;}&#xa;}&#xa;ALS Nodo2 : publico{&#xa;&#x9;var cadena nombre2 : publico = &quot;&quot;?&#xa;&#x9;var entero numero2 :publico = 2?&#xa;&#x9;var bool bandera2 : publico = falso?&#xa;&#x9;vacio cambiar_bandera(){&#xa;&#x9;&#x9;Si(bandera == falso){&#xa;&#x9;&#x9;&#x9;bandera = verdadero?&#xa;&#x9;&#x9;&#x9;}Sino{&#xa;&#x9;&#x9;&#x9;Si(bandera == verdadero){&#xa;&#x9;&#x9;&#x9;bandera = false?&#xa;&#x9;&#x9;&#x9;}&#xa;&#x9;&#x9;}&#xa;&#x9;}&#xa;}&#xa;&#xa;"/>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
-      </SubComponents>
     </Container>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
@@ -215,6 +204,7 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Iniciar Sesion"/>
         <Property name="contentAreaFilled" type="boolean" value="false"/>
+        <Property name="enabled" type="boolean" value="false"/>
         <Property name="opaque" type="boolean" value="true"/>
       </Properties>
       <Constraints>
@@ -323,6 +313,31 @@
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
           <AbsoluteConstraints x="950" y="250" width="140" height="30"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="javax.swing.JButton" name="bCerrar">
+      <Properties>
+        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="99" type="rgb"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Times New Roman" size="18" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="ff" red="ff" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="X"/>
+        <Property name="margin" type="java.awt.Insets" editor="org.netbeans.beaninfo.editors.InsetsEditor">
+          <Insets value="[2, 2, 2, 2]"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bCerrarActionPerformed"/>
+      </Events>
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
+          <AbsoluteConstraints x="850" y="60" width="50" height="33"/>
         </Constraint>
       </Constraints>
     </Component>

@@ -50,11 +50,7 @@ CALCULAR ::= dolar calcular EXP:exp dolar{:RESULT=Fabrica.crearNodoCalcular(exp)
 LISTA ::=  dolar let id:id igual VALLISTA:val dolar{:RESULT = Fabrica.crearNodoLista(id,val);:};
 
 VALLISTA ::=   CONCAT:concat{:RESULT = Fabrica.crearNodoAsigLista(Constante.concat,Constante.concat,concat);:}
-                          | cadena:cadena 
-                            {:                               
-                                Nodo cad= Fabrica.crearNodoHoja(Constante.cadena,cadena,Constante.tcadena+"");
-                                RESULT=Fabrica.crearNodoAsigLista(Constante.cadena,Constante.cadena,cad);
-                            :}
+                          | cadena:cadena {:RESULT=Fabrica.crearNodoCadena(Constante.lasig,cadena);:}
                           | id:id
                             {:
                                 Nodo identificador= Fabrica.crearNodoHoja(Constante.id,id+"");
@@ -67,10 +63,10 @@ VALLISTA ::=   CONCAT:concat{:RESULT = Fabrica.crearNodoAsigLista(Constante.conc
 LPARLISTA ::= LPARLISTA:lparlista coma PARLISTA:parlista{:RESULT = Fabrica.insertarAsigLista(lparlista,parlista);:}
                           | PARLISTA:parlista{:RESULT = Fabrica.crearNodoAsigLista(Constante.lasig,parlista.getValor(),parlista);:};
 PARLISTA ::= CALCULAR:calc{:RESULT = calc;:}
-                         | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:}
+                         | cadena:cadena {:RESULT = Fabrica.crearNodoCadena(Constante.asig,cadena);:}
+                         | caracter:caracter {:RESULT = Fabrica.crearNodoHoja(Constante.caracter,caracter,Constante.tcaracter+"");:} 
                          | OTRA:otra{:RESULT = otra;:};
 OTRA::= corchetea LVOTRA:valotra corchetec{:RESULT = valotra;:};
-
 
 LVOTRA ::= LVOTRA:lvotra coma VOTRA:votra{:RESULT = Fabrica.insertarAsigLista(lvotra,votra);:}
                     | VOTRA:votra{:RESULT = Fabrica.crearNodoAsigLista(Constante.asig,Constante.dim,votra);:};
