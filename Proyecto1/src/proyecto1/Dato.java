@@ -13,5 +13,15 @@ import java.util.LinkedList;
  * @author Jenny
  */
 public class Dato {
-    public LinkedList<Valor> columnas=new LinkedList<>();        
+    public LinkedList<Valor> columnas=new LinkedList<>();     
+    
+    public Dato(Dato d){
+        for(Valor v:d.columnas){
+            Valor nuevo=new Valor(v.getTipo(), v.getValor());
+            this.columnas.add(nuevo);
+        }
+    }
+    public Dato(){
+        this.columnas=new LinkedList<>();     
+    }
 }

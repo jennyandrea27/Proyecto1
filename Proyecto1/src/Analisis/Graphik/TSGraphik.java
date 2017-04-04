@@ -33,6 +33,7 @@ public class TSGraphik {
   public static final int decimal = 57;
   public static final int terminar = 25;
   public static final int caso = 19;
+  public static final int idgk = 10;
   public static final int igualacion = 48;
   public static final int y = 51;
   public static final int dondetodo = 64;
@@ -64,7 +65,6 @@ public class TSGraphik {
   public static final int tcaracter = 6;
   public static final int publico = 69;
   public static final int potencia = 43;
-  public static final int gk = 10;
   public static final int verdadero = 73;
   public static final int error = 1;
   public static final int corchetec = 56;
@@ -94,7 +94,7 @@ public class TSGraphik {
   "tvacio",
   "tbool",
   "importar",
-  "gk",
+  "idgk",
   "als",
   "hereda",
   "nuevo",

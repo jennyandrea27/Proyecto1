@@ -5,10 +5,23 @@
  */
 package Analisis;
 
+import Analisis.Graphik.LexicoG;
+import Analisis.Graphik.SintacticoG;
+import Analisis.HaskellArchivo.LexicoH;
+import Analisis.HaskellArchivo.SintacticoH;
 import Extras.Constante;
+import Reportes.HTML;
 import Reportes.TablaErrores;
 import TablaSimbolos.TS;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import proyecto1.FormInicio;
 
 /**
  *
@@ -21,15 +34,19 @@ public class Recorrido {
         public static void recorrerArbol(Nodo raiz_arbol)
         {
             raiz = raiz_arbol;
-            //Ejecutar Incluye y Define
-//            Nodo encabezado = buscarNodo(raiz, Constante.ENCABEZADO);
-//            ejecutarEncabezado(encabezado);
-//            //CrearTablaSimbolos
-//            Nodo ldec = buscarNodo(raiz, Constante.LDEC);
-//            TS.AmbitoGlobal(ldec);
-
-            //Buscar metodo principal            
+            //Ejecutar Importar            
+            Nodo encabezado = buscarNodo(raiz, Constante.encabezado);
+            ejecutarEncabezado(encabezado,raiz);
+        try {
+            ArchivoDot.graficar(raiz, "ASTGraphik");
+        } catch (IOException ex) {
+            Logger.getLogger(Recorrido.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(TablaErrores.error){
+            HTML.mostrarErrores();
+        }else{            
             recorrerInicio(raiz);                        
+        }
         }
         private static Nodo buscarNodo (Nodo padre, String nombre)
         {
@@ -239,5 +256,62 @@ public class Recorrido {
             }
         }
         return false;
+    }
+
+    private static void ejecutarEncabezado(Nodo encabezado,Nodo raiz) {
+        for(Nodo hijo:encabezado.hijos){
+            if(hijo.getNombre().equals(Constante.importar)){
+                //se debe buscar el archivo utilizando la ruta de FormInicio
+                String ruta_archivo=FormInicio.ruta+hijo.hijos.get(0).getValor();
+                Nodo raiz_archivo=ejecutarArchivoGK(ruta_archivo);
+                
+                if(raiz_archivo!=null){
+                    Nodo encabezado2=raiz_archivo.hijos.get(0);
+                    ejecutarEncabezado(encabezado2, raiz_archivo);
+                    Nodo lals=raiz_archivo.hijos.get(1);
+                    //recorrer als para agregarlos a raiz de Recorrido
+                    for(Nodo als:lals.hijos){
+                        raiz.hijos.get(1).insertarHijo(als);
+                    }
+                    
+                }
+                                                
+            }
+        }
+    }
+
+    public static String cargarArchivo(String ruta_archivo) {                
+        BufferedReader br = null;      
+        try {
+           br =new BufferedReader(new FileReader(ruta_archivo));             
+           String lineas= br.readLine();
+           String texto="";
+           while (lineas!=null) {               
+              texto+=lineas+"\n";
+              lineas = br.readLine();                
+           }
+           return texto;
+           } catch (Exception e) {
+             System.err.println("Error al cargar archivo "+ruta_archivo+"\n"+e.getMessage());
+          } 
+        return "";
+    }
+
+    private static Nodo ejecutarArchivoGK(String ruta_archivo) {
+        String entrada=cargarArchivo(ruta_archivo);
+        //verificar si es archivo haskell o graphik
+                if(ruta_archivo.endsWith(".gk")){//es archivo de grafica                  
+                    LexicoG lexico = new LexicoG(new BufferedReader( new StringReader(entrada)));
+                    SintacticoG sintactico= new SintacticoG(lexico);
+                    try {
+                        sintactico.parse();   
+                        if(TablaErrores.error)
+                            JOptionPane.showMessageDialog(null,"Verifique errores lexicos y sintacticos, en archivo "+ruta_archivo+".");                                                                                
+                        return sintactico.raiz;                        
+                    } catch (Exception ex) {
+                        System.out.println("Error al ejecutar archivo GK "+ruta_archivo+"\n"+ex.getMessage());
+                    }
+                }
+        return null;
     }
 }

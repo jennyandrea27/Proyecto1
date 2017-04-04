@@ -791,11 +791,11 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
         LinkedList<Dato>datos=new LinkedList<>();
         //tabla resultante del proceso
         LinkedList<Dato>datos_resultado=new LinkedList<>();        
-        Dato encabezado=FormInicio.tabla_datos.get(0);        
+        Dato encabezado=new Dato(FormInicio.tabla_datos.get(0));        
         encabezado.columnas.add(new Valor(Constante.tcadena, "Resultado"));
         datos_resultado.add(encabezado);
-        for(int i=1;i<FormInicio.tabla_datos.size();i++){
-            Dato d=FormInicio.tabla_datos.get(i);
+        for(int i=1;i<FormInicio.tabla_datos.size();i++){            
+            Dato d=new Dato(FormInicio.tabla_datos.get(i));
             int indice=Integer.parseInt(indice_col.getValor())-1;
             if(d.columnas.get(indice).getValor().equals(v_compara.getValor())){
                 //sobre este valor se trabaja el metodo procesar
@@ -816,11 +816,11 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
         LinkedList<Dato>datos=new LinkedList<>();
         //tabla resultante del proceso
         LinkedList<Dato>datos_resultado=new LinkedList<>();        
-        Dato encabezado=FormInicio.tabla_datos.get(0);        
+        Dato encabezado=new Dato(FormInicio.tabla_datos.get(0));        
         encabezado.columnas.add(new Valor(Constante.tcadena, "Resultado"));
         datos_resultado.add(encabezado);
         for(int i=1;i<FormInicio.tabla_datos.size();i++){
-            Dato d=FormInicio.tabla_datos.get(i);
+            Dato d=new Dato(FormInicio.tabla_datos.get(i));
             int indice=Integer.parseInt(indice_col.getValor())-1;            
             String actual=d.columnas.get(indice).getValor();
             //sobre este valor se trabaja el metodo procesar
@@ -866,8 +866,7 @@ public static int mapeo(NodoTS v1,Nodo dimensiones)    {
         encabezado.columnas.add(new Valor(Constante.tcadena, "Resultado"));
         datos_resultado.add(encabezado);
         double res=0;
-        for(int i=1;i<FormInicio.tabla_datos.size();i++){
-            Dato d=FormInicio.tabla_datos.get(i);
+        for(int i=1;i<FormInicio.tabla_datos.size();i++){            
             FormInicio.fila=i;
             res+=Double.parseDouble(evaluarEXP(procesar.hijos.get(0)).getValor());                   
         }

@@ -39,7 +39,7 @@ public class SintacticoG extends java_cup.runtime.lr_parser {
     "\000\002\071\002\000\002\006\005\000\002\006\006\000" +
     "\002\006\010\000\002\004\003\000\002\004\002\000\002" +
     "\003\004\000\002\003\003\000\002\055\003\000\002\055" +
-    "\003\000\002\007\006\000\002\005\004\000\002\005\003" +
+    "\003\000\002\007\005\000\002\005\004\000\002\005\003" +
     "\000\002\012\011\000\002\011\004\000\002\011\003\000" +
     "\002\026\003\000\002\026\004\000\002\026\003\000\002" +
     "\026\003\000\002\010\004\000\002\010\002\000\002\014" +
@@ -86,12 +86,12 @@ public class SintacticoG extends java_cup.runtime.lr_parser {
   /** Parse-action table. */
   protected static final short[][] _action_table = 
     unpackFromStrings(new String[] {
-    "\000\u013e\000\010\013\012\015\ufff6\023\006\001\002\000" +
-    "\010\013\012\015\ufff7\023\006\001\002\000\004\002\u013f" +
-    "\001\002\000\004\076\u013d\001\002\000\010\013\ufff4\015" +
+    "\000\u013d\000\010\013\012\015\ufff6\023\006\001\002\000" +
+    "\010\013\012\015\ufff7\023\006\001\002\000\004\002\u013e" +
+    "\001\002\000\004\076\u013c\001\002\000\010\013\ufff4\015" +
     "\ufff4\023\ufff4\001\002\000\010\013\ufff2\015\ufff2\023\ufff2" +
     "\001\002\000\010\013\ufff3\015\ufff3\023\ufff3\001\002\000" +
-    "\004\076\u013a\001\002\000\004\015\016\001\002\000\006" +
+    "\004\014\u013a\001\002\000\004\015\016\001\002\000\006" +
     "\002\uffef\015\uffef\001\002\000\006\002\000\015\016\001" +
     "\002\000\004\076\017\001\002\000\010\016\021\043\uffe6" +
     "\045\uffe6\001\002\000\006\043\024\045\ufffb\001\002\000" +
@@ -540,11 +540,10 @@ public class SintacticoG extends java_cup.runtime.lr_parser {
     "\104\075\074\076\114\077\107\104\115\113\113\114\120" +
     "\001\002\000\012\042\u0138\064\126\065\127\066\125\001" +
     "\002\000\004\046\uff77\001\002\000\006\002\ufff0\015\ufff0" +
-    "\001\002\000\004\014\u013b\001\002\000\004\042\u013c\001" +
-    "\002\000\010\013\ufff1\015\ufff1\023\ufff1\001\002\000\004" +
-    "\042\u013e\001\002\000\010\013\uffbc\015\uffbc\023\uffbc\001" +
-    "\002\000\004\002\001\001\002\000\010\013\ufff5\015\ufff5" +
-    "\023\ufff5\001\002" });
+    "\001\002\000\004\042\u013b\001\002\000\010\013\ufff1\015" +
+    "\ufff1\023\ufff1\001\002\000\004\042\u013d\001\002\000\010" +
+    "\013\uffbc\015\uffbc\023\uffbc\001\002\000\004\002\001\001" +
+    "\002\000\010\013\ufff5\015\ufff5\023\ufff5\001\002" });
 
   /** Access to parse-action table. */
   public short[][] action_table() {return _action_table;}
@@ -552,8 +551,8 @@ public class SintacticoG extends java_cup.runtime.lr_parser {
   /** <code>reduce_goto</code> table. */
   protected static final short[][] _reduce_table = 
     unpackFromStrings(new String[] {
-    "\000\u013e\000\016\002\004\003\003\004\012\007\010\034" +
-    "\007\055\006\001\001\000\010\007\010\034\007\055\u013f" +
+    "\000\u013d\000\016\002\004\003\003\004\012\007\010\034" +
+    "\007\055\006\001\001\000\010\007\010\034\007\055\u013e" +
     "\001\001\000\002\001\001\000\002\001\001\000\002\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\006\005\014\012\013\001\001\000\002\001\001\000" +
@@ -733,8 +732,7 @@ public class SintacticoG extends java_cup.runtime.lr_parser {
     "\021\u0136\022\110\031\115\056\076\057\074\060\104\001" +
     "\001\000\002\001\001\000\002\001\001\000\002\001\001" +
     "\000\002\001\001\000\002\001\001\000\002\001\001\000" +
-    "\002\001\001\000\002\001\001\000\002\001\001\000\002" +
-    "\001\001" });
+    "\002\001\001\000\002\001\001\000\002\001\001" });
 
   /** Access to <code>reduce_goto</code> table. */
   public short[][] reduce_table() {return _reduce_table;}
@@ -1028,17 +1026,17 @@ class CUP$SintacticoG$actions {
           return CUP$SintacticoG$result;
 
           /*. . . . . . . . . . . . . . . . . . . .*/
-          case 16: // IMPORTAR ::= importar id gk pregc 
+          case 16: // IMPORTAR ::= importar idgk pregc 
             {
               Nodo RESULT =null;
-		int idleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-2)).left;
-		int idright = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-2)).right;
-		String id = (String)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-2)).value;
+		int idleft = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).left;
+		int idright = ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).right;
+		String id = (String)((java_cup.runtime.Symbol) CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-1)).value;
 		
                             Nodo id_imp = Fabrica.crearNodoHoja(Constante.id,id);
                             RESULT = Fabrica.crearNodoImportar(id_imp);
                          
-              CUP$SintacticoG$result = parser.getSymbolFactory().newSymbol("IMPORTAR",5, ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-3)), ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.peek()), RESULT);
+              CUP$SintacticoG$result = parser.getSymbolFactory().newSymbol("IMPORTAR",5, ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.elementAt(CUP$SintacticoG$top-2)), ((java_cup.runtime.Symbol)CUP$SintacticoG$stack.peek()), RESULT);
             }
           return CUP$SintacticoG$result;
 

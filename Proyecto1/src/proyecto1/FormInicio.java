@@ -18,6 +18,8 @@ import Extras.Constante;
 import Reportes.HTML;
 import Reportes.TablaErrores;
 import TablaSimbolos.*;
+import java.awt.Font;
+import java.awt.ScrollPane;
 import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +31,12 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import java.util.LinkedList;
 import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -39,7 +47,9 @@ public class FormInicio extends javax.swing.JFrame {
     //para uso de funcion Datos
     public static LinkedList <Dato> tabla_datos=new LinkedList<>();
     public static int fila=0;
-    public static int col=0;
+    public static int col=0;    
+    public static String ruta="";
+    
     /**
      * Creates new form FormInicio
      */
@@ -71,12 +81,12 @@ public class FormInicio extends javax.swing.JFrame {
         bCargar = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
+        bAbrir = new javax.swing.JMenu();
+        bNuevo = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
+        bGuardar = new javax.swing.JMenuItem();
+        bGuardarComo = new javax.swing.JMenuItem();
+        bCerrarPestana = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         jMenuItem3.setText("jMenuItem3");
@@ -195,35 +205,45 @@ public class FormInicio extends javax.swing.JFrame {
 
         jMenuBar1.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
 
-        jMenu1.setText("Archivo");
-        jMenu1.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
+        bAbrir.setText("Archivo");
+        bAbrir.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
 
-        jMenuItem4.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jMenuItem4.setText("Nuevo");
-        jMenu1.add(jMenuItem4);
+        bNuevo.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        bNuevo.setText("Nuevo");
+        bNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bNuevoActionPerformed(evt);
+            }
+        });
+        bAbrir.add(bNuevo);
 
         jMenuItem1.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
         jMenuItem1.setText("Abrir");
-        jMenu1.add(jMenuItem1);
-
-        jMenuItem2.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jMenuItem2.setText("Guardar");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                jMenuItem1ActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        bAbrir.add(jMenuItem1);
 
-        jMenuItem5.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jMenuItem5.setText("Guardar Como");
-        jMenu1.add(jMenuItem5);
+        bGuardar.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        bGuardar.setText("Guardar");
+        bGuardar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bGuardarActionPerformed(evt);
+            }
+        });
+        bAbrir.add(bGuardar);
 
-        jMenuItem6.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
-        jMenuItem6.setText("Cerrar Pestaña");
-        jMenu1.add(jMenuItem6);
+        bGuardarComo.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        bGuardarComo.setText("Guardar Como");
+        bAbrir.add(bGuardarComo);
 
-        jMenuBar1.add(jMenu1);
+        bCerrarPestana.setFont(new java.awt.Font("Times New Roman", 0, 24)); // NOI18N
+        bCerrarPestana.setText("Cerrar Pestaña");
+        bAbrir.add(bCerrarPestana);
+
+        jMenuBar1.add(bAbrir);
 
         jMenu2.setText("Reportes");
         jMenu2.setFont(new java.awt.Font("Times New Roman", 1, 24)); // NOI18N
@@ -235,9 +255,9 @@ public class FormInicio extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void bGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bGuardarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_bGuardarActionPerformed
 
     private void tbEntradaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tbEntradaKeyPressed
         if(evt.getKeyCode() == KeyEvent.VK_ENTER){
@@ -281,7 +301,9 @@ public class FormInicio extends javax.swing.JFrame {
 
     private void bCargarHKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarHKActionPerformed
         // TODO add your handling code here:
-        String entrada=tbArchivo.getText();       
+        JScrollPane sp=(JScrollPane)tpPestanas.getSelectedComponent().getComponentAt(0,0);
+        JTextArea tb=(JTextArea)sp.getViewport().getView();
+        String entrada=tb.getText();
         texto_salida="";
             if(entrada.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");
@@ -318,7 +340,10 @@ public class FormInicio extends javax.swing.JFrame {
 
     private void bCargarGKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bCargarGKActionPerformed
         // TODO add your handling code here:
-        String entrada=tbArchivo.getText();           
+        
+        JScrollPane sp=(JScrollPane)tpPestanas.getSelectedComponent().getComponentAt(0,0);
+        JTextArea tb=(JTextArea)sp.getViewport().getView();
+        String entrada=tb.getText();      
         texto_salida="";
             if(entrada.equals("")){
                 JOptionPane.showMessageDialog(null, "Entrada incorrecta");
@@ -354,6 +379,7 @@ public class FormInicio extends javax.swing.JFrame {
         tabla_datos.clear();
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("CSV","csv"));
         int result = fileChooser.showOpenDialog(this);
         if (result == JFileChooser.APPROVE_OPTION) {
             // user selects a file
@@ -400,17 +426,17 @@ public class FormInicio extends javax.swing.JFrame {
                     }
                     dato.columnas.add(v);
                 }
-                tabla_datos.add(dato);
+                tabla_datos.add(dato);                
                 lineas = br.readLine();                
              }        
           } catch (Exception e) {
-             System.err.println("Error! "+e.getMessage());
+             System.err.println("Error: "+e.getMessage());
           } finally {
              if (null!=br){
                 try {
                    br.close();
                 } catch (IOException e) {
-                   System.err.println("Error closing file !! "+e.getMessage());
+                   System.err.println("Error al cerrar elarchivo"+e.getMessage());
                 }
              }
           }            
@@ -425,6 +451,64 @@ public class FormInicio extends javax.swing.JFrame {
         texto_salida+="Archivo CSV cargado a memoria.";
         tbSalida.setText(texto_salida);
     }//GEN-LAST:event_bCargarActionPerformed
+
+    public JScrollPane crearTextBox(String texto)
+        {
+            JTextArea tb = new JTextArea();
+            tb.setSize(tpPestanas.getWidth()-1, tpPestanas.getHeight()-30);            
+            tb.setFont(new Font("Times New Roman",0,24));
+            tb.setAutoscrolls(true);           
+            tb.setText(texto);                        
+            JScrollPane sp=new JScrollPane(tb);
+            return sp;
+        }
+    
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("HK - GK","hk","gk"));
+        int result = fileChooser.showOpenDialog(this);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            // user selects a file
+            File arch = fileChooser.getSelectedFile();            
+            File archivo = new File(arch.getAbsolutePath());            
+            ruta=arch.getAbsolutePath();            
+          BufferedReader br = null;      
+          try {
+             br =new BufferedReader(new FileReader(ruta));             
+             String lineas= br.readLine();
+             String texto="";
+             while (lineas!=null) {               
+                texto+=lineas+"\n";
+                lineas = br.readLine();                
+             }             
+             tpPestanas.add(ruta, crearTextBox(texto));             
+             tpPestanas.setSelectedIndex(tpPestanas.getComponentCount()-1);
+             //quitar nombre del archivo a ruta
+             while(!ruta.endsWith("\\")){
+                 ruta=ruta.substring(0,ruta.length()-1);
+             }
+              System.out.println(ruta);
+          } catch (Exception e) {
+             System.err.println("Error: "+e.getMessage());
+          } finally {
+             if (null!=br){
+                try {
+                   br.close();
+                } catch (IOException e) {
+                   System.err.println("Error al cerrar archivo. "+e.getMessage());
+                }
+             }
+          }            
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void bNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bNuevoActionPerformed
+        // TODO add your handling code here:               
+        tpPestanas.add("Nuevo",crearTextBox(""));        
+        tpPestanas.setSelectedIndex(tpPestanas.getTabCount()-1);          
+    }//GEN-LAST:event_bNuevoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -462,22 +546,22 @@ public class FormInicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu bAbrir;
     private javax.swing.JButton bCargar;
     private javax.swing.JButton bCargarGK;
     private javax.swing.JButton bCargarHK;
+    private javax.swing.JMenuItem bCerrarPestana;
+    private javax.swing.JMenuItem bGuardar;
+    private javax.swing.JMenuItem bGuardarComo;
     private javax.swing.JButton bImportar;
     private javax.swing.JButton bIniciarSesion;
+    private javax.swing.JMenuItem bNuevo;
     private javax.swing.JButton bPublicar;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea tbArchivo;

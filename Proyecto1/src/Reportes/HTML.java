@@ -38,6 +38,14 @@ public class HTML {
         }catch(Exception e){
             System.out.println("No se pudo generar Errores.html");
         }
+        Runtime r = Runtime.getRuntime(); 
+        Process p = null; 
+        String comando[] = {"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe","C:\\Users\\Jenny\\Desktop\\Errores.html"}; 
+
+        try { 
+            p = r.exec(comando); 
+        } catch (Exception e) {
+        }
         TablaErrores.error=false;
     }
     public static void mostrarDatos(LinkedList<Dato> datos_resultado) {
@@ -57,7 +65,14 @@ public class HTML {
         }catch(Exception e){
             System.out.println("No se pudo generar Datos.html");
         }
-        TablaErrores.error=false;
+        Runtime r = Runtime.getRuntime(); 
+        Process p = null; 
+        String comando[] = {"C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe","C:\\Users\\Jenny\\Desktop\\Datos.html"}; 
+
+        try { 
+            p = r.exec(comando); 
+        } catch (Exception e) {
+        } 
     }
 
     private static String generarTablaDatos(LinkedList<Dato> datos_resultado) {

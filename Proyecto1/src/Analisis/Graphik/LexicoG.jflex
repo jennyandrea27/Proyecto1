@@ -22,6 +22,7 @@ StringBuffer string=new StringBuffer();
 num = [0-9]+
 dec = [0-9]+("."[0-9]+)?
 id=[a-zA-Z]([a-zA-Z] | [0-9] | "_")*
+idgk=[a-zA-Z]([a-zA-Z] | [0-9] | "_")*".gk"
 caracter="'"."'"
 enter= \r|\n|\r\n
 espacio={enter}|[ \t\f]
@@ -57,8 +58,6 @@ comentario_linea=#(\\.|[^\n])*\n
 {return new Symbol (TSGraphik.privado, yycolumn, yyline, yytext());}
 "importar"             
 {return new Symbol (TSGraphik.importar, yycolumn, yyline, yytext());}
-".gk"             
-{return new Symbol (TSGraphik.gk, yycolumn, yyline, yytext());}
 "als"               
 {return new Symbol (TSGraphik.als, yycolumn, yyline, yytext());}
 "hereda"                  
@@ -179,6 +178,8 @@ comentario_linea=#(\\.|[^\n])*\n
 { return new Symbol(TSGraphik.cadena, yycolumn, yyline, yytext().replace("\"", "")); }
 {caracter}          
 {return new Symbol (TSGraphik.caracter, yycolumn, yyline, yytext().replace("\'", ""));}
+{idgk}          
+{return new Symbol (TSGraphik.idgk, yycolumn, yyline, yytext());}
 {id}          
 {return new Symbol (TSGraphik.id, yycolumn, yyline, yytext().toLowerCase());}
 {comentario_parrafo}          
