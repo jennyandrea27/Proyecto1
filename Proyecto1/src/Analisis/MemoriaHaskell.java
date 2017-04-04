@@ -48,6 +48,7 @@ public class MemoriaHaskell {
             if(fun!=null){
                 //agregar ambito de llamado como global
                 TS.insertarAmbito(-1);
+                TSH.insertarAmbito(-1);
                 //agregar variables al ambito de la funcion que viene en parametros
                 Nodo l_par_fun = fun.hijos.get(0);
                 for (int i = 0; i < l_par_fun.hijos.size(); i++)
@@ -63,7 +64,8 @@ public class MemoriaHaskell {
                         for(int j=0;j<par.dimensiones.get(0);j++){
                             par.valores.add(new Valor(Constante.tcaracter, par_llamado.get(i).getValor().charAt(j)+""));
                         }
-                        TS.insertarVariable(par);
+                        //como es una lista se agrega a ambito global de haskell
+                        TSH.insertarVariable(par);
                     }else{
                         if(tipo==Constante.tnum){
                             tipo=Constante.tdecimal;
@@ -81,6 +83,7 @@ public class MemoriaHaskell {
                 //ejecutar sentencias de la funcion
                 res=RecorridoHT.ejecutarCuerpo(fun.hijos.get(1));                
                 TS.eliminarAmbito();
+                TSH.eliminarAmbito();
             }else{
                 res=new Valor(Constante.terror, "Error semantico, funcion de haskell "+sent.getValor()+" no ha sido declarada.");
             }

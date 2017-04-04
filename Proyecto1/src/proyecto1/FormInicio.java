@@ -62,7 +62,9 @@ public class FormInicio extends javax.swing.JFrame {
      * Creates new form FormInicio
      */
     public FormInicio() {
-        initComponents();                
+        initComponents();      
+        Ambito a=new Ambito(-1,0);
+        TSH.lista_ambitos.add(a);
     }
 
     /**
@@ -209,7 +211,7 @@ public class FormInicio extends javax.swing.JFrame {
             }
         });
         getContentPane().add(bCerrar);
-        bCerrar.setBounds(850, 60, 50, 33);
+        bCerrar.setBounds(850, 60, 51, 33);
 
         jLabel2.setBackground(new java.awt.Color(204, 255, 204));
         jLabel2.setOpaque(true);
@@ -328,9 +330,7 @@ public class FormInicio extends javax.swing.JFrame {
                     if(TablaErrores.error){                        
                         JOptionPane.showMessageDialog(null,"Verifique errores lexio y sintacticos.");
                         HTML.mostrarErrores();
-                    }else{                        
-                        Ambito a=new Ambito(-1,0);
-                        TSH.lista_ambitos.add(a);
+                    }else{                                                
                         try{                            
                             RecorridoHT.recorrerArbol(sintactico.raiz);
                         }catch(Exception e){
@@ -372,6 +372,7 @@ public class FormInicio extends javax.swing.JFrame {
                         HTML.mostrarErrores();
                     }else{                                                
                         //TS.recorrerListaAmbitos();                        
+                        
                         MemoriaHaskell.raiz.hijos.addAll(sintactico.raiz.hijos);
                         texto_salida+="Archivo Haskell ha sido cargado a memoria.";
                         try {
@@ -408,11 +409,7 @@ public class FormInicio extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(null,"Verifique errores lexicos y sintacticos.");
                         HTML.mostrarErrores();
                     }else{     
-                        try{                            
-                            Recorrido.recorrerArbol(sintactico.raiz);
-                        }catch(Exception e){
-                            System.out.println("Error al ejecutar analisis semantico en archivo Graphik.");
-                        }
+                        Recorrido.recorrerArbol(sintactico.raiz);                        
                     }
                     if(TablaErrores.error){
                         JOptionPane.showMessageDialog(null,"Verifique errores semanticos.");

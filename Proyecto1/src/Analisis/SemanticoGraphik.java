@@ -153,6 +153,10 @@ public class SemanticoGraphik {
                                  res.setTals(lid.getTals());
                                  res.ambito=(Ambito)lid.ambito;
                              }
+                             if(lid.dimensiones!=null){
+                                 res.dimensiones=lid.dimensiones;
+                                 res.valores=lid.valores;
+                             }
                         }
                     }else{
                         String er="";
@@ -298,7 +302,7 @@ public class SemanticoGraphik {
             for(Nodo hijo : lpar.hijos)
             {
                 Valor par = SemanticoGraphik.evaluarEXP(hijo);
-                p += Casteo.valTipo(par.getTipo())+"_";
+                p += Casteo.valTipo(par.getTipo())+"_";                
                 par_llamado.add(par);
             }
             //buscar funcion
@@ -445,6 +449,10 @@ public class SemanticoGraphik {
                     par.ambito=(Ambito)par_llamado.get(i).ambito;
                     par.setTals(par_llamado.get(i).getTals());
                 }
+                if(par_llamado.get(i).dimensiones!=null){
+                    par.dimensiones=par_llamado.get(i).dimensiones;
+                    par.valores=par_llamado.get(i).valores;
+                }                
                 TS.insertarVariable(par);
             }            
         //ejecutar cuerpo funcion
